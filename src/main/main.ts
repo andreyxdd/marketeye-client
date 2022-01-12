@@ -34,7 +34,7 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
-ipcMain.handle('test-api-call', async (event, arg) => {
+ipcMain.handle('test-api-call', async (_event, arg) => {
   let macd = 0;
 
   try {
