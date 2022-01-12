@@ -12,11 +12,11 @@
     <div id="root"></div>
   </body>
   <script>
-    window.electron.conn.once('ipc-example', (arg) => {
+    window.electronAPI.conn.once('ipc-example', (arg) => {
       // eslint-disable-next-line no-console
       console.log(arg);
     });
 
-    window.electron.conn.myPing();
+    window.electronAPI.conn.myPing();
   </script>
 </html>

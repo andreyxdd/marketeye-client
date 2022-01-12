@@ -6,8 +6,6 @@ import SampleButton from './components/SampleButton';
 import icon from '../../assets/icon.svg';
 import './App.css';
 
-const ipcRenderer = window.electron.conn;
-
 const rows: GridRowsProp = [
   { id: 1, col1: 'Hello', col2: 'World' },
   { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
@@ -26,7 +24,7 @@ const Hello = () => {
   const handleClick = async (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
 
-    const result = await ipcRenderer.getTickerAnalytics({
+    const result = await window.electronAPI.getTickerAnalytics({
       date: '2021-12-29',
       ticker: 'TSLA',
     });
