@@ -6,8 +6,7 @@ import SampleButton from './components/SampleButton';
 import icon from '../../assets/icon.svg';
 import './App.css';
 
-// @ts-expect-error: electron is globally defined during runtime
-const ipcRenderer = electron.conn;
+const ipcRenderer = window.electron.conn;
 
 const rows: GridRowsProp = [
   { id: 1, col1: 'Hello', col2: 'World' },
