@@ -1,8 +1,25 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
 import icon from '../../assets/icon.svg';
 import './App.css';
 
+// @ts-expect-error: electron is globally defined during runtime
+const ipcRenderer = electron.conn;
+
 const Hello = () => {
+  const [macd, setMacd] = useState<number>(0);
+
+  const handleClick = async (ev: React.MouseEvent<HTMLButtonElement>) => {
+    ev.preventDefault();
+
+    const result = await ipcRenderer.getTickerAnalytics({
+      date: '2021-12-29',
+      ticker: 'TSLA',
+    });
+
+    setMacd(result);
+  };
+
   return (
     <div>
       <div className="Hello">
@@ -22,19 +39,15 @@ const Hello = () => {
             Read our docs
           </button>
         </a>
-        <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
+        <button type="button" onClick={handleClick}>
+          <span role="img" aria-label="books">
+            🙏
+          </span>
+          Donate
+        </button>
       </div>
+
+      <p style={{ textAlign: 'center' }}>TSLA MACD: {macd}</p>
     </div>
   );
 };

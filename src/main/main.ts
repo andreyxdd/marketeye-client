@@ -13,6 +13,7 @@ import 'regenerator-runtime/runtime';
 import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import axios from 'axios';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
@@ -31,6 +32,26 @@ ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
+});
+
+ipcMain.handle('test-api-call', async (event, arg) => {
+  let macd = 0;
+
+  try {
+    const response = await axios.get(process.env.MARKETEYE_API_URL as string, {
+      params: {
+        date: arg.date,
+        ticker: arg.ticker,
+        api_key: process.env.MARKETEYE_API_KEY,
+      },
+    });
+
+    macd = response.data.macd;
+  } catch (e) {
+    console.log(e);
+  }
+
+  return macd;
 });
 
 if (process.env.NODE_ENV === 'production') {
