@@ -1,4 +1,4 @@
-import { IDataProps } from 'types';
+import { IDataProps, IDateProps } from 'types';
 
 export interface IRequest {
   date: string;
@@ -13,6 +13,7 @@ export interface IElectronAPIConn {
 
 export interface IElectronAPI {
   getTickerAnalytics: (req: IRequest) => Promise<IDataProps | null>;
+  getDates: () => Promise<Array<IDateProps>>;
   conn: IElectronAPIConn;
 }
 

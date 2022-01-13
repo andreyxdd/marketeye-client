@@ -17,7 +17,7 @@ import axios from 'axios';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { IDataProps } from '../types';
+import { IDataProps, IDateProps } from '../types';
 
 export default class AppUpdater {
   constructor() {
@@ -35,15 +35,21 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
-ipcMain.handle('test-api-call', async (_event, arg) => {
+// ---
+// Communication routes
+
+ipcMain.handle('get-ticker-analytics', async (_event, arg) => {
   try {
-    const response = await axios.get(process.env.MARKETEYE_API_URL as string, {
-      params: {
-        date: arg.date,
-        ticker: arg.ticker,
-        api_key: process.env.MARKETEYE_API_KEY,
-      },
-    });
+    const response = await axios.get(
+      `${process.env.MARKETEYE_API_URL}/get_ticker_analytics`,
+      {
+        params: {
+          date: arg.date,
+          ticker: arg.ticker,
+          api_key: process.env.MARKETEYE_API_KEY,
+        },
+      }
+    );
 
     const tickerData: IDataProps = response.data;
     return tickerData;
@@ -52,6 +58,27 @@ ipcMain.handle('test-api-call', async (_event, arg) => {
     return null;
   }
 });
+
+ipcMain.handle('get-dates', async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.MARKETEYE_API_URL}/get_dates`,
+      {
+        params: {
+          api_key: process.env.MARKETEYE_API_KEY,
+        },
+      }
+    );
+
+    const dates: IDateProps = response.data;
+    return dates;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+});
+
+// ---
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

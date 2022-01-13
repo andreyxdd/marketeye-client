@@ -1,10 +1,5 @@
 import React, { useState, createContext, useEffect } from 'react';
-import {
-  IAppContextProps,
-  IDateProps,
-  IDataByTypesProps,
-  IDataProps,
-} from '../../types';
+import { IAppContextProps, IDataByTypesProps, IDataProps } from '../../types';
 
 export const AppContext = createContext<IAppContextProps | null>(null);
 
@@ -15,7 +10,7 @@ interface IAppContextProviderProps {
 const AppContextProvider: React.FC<IAppContextProviderProps> = ({
   children,
 }) => {
-  const [dates, setDates] = useState<Array<IDateProps>>([]);
+  const [date, setDate] = useState<Date | null>(null);
   const [data, setData] = useState<IDataByTypesProps>({
     by_one_day_avg_mf: [],
     by_three_day_avg_mf: [],
@@ -26,8 +21,8 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
   const [dataType, setDataType] = useState<string>('by_one_day_avg_mf');
 
   const providerValue: IAppContextProps = {
-    dates,
-    setDates,
+    date,
+    setDate,
     data,
     setData,
     dataType,
