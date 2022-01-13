@@ -17,6 +17,7 @@ import axios from 'axios';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import { IDataProps } from '../types';
 
 export default class AppUpdater {
   constructor() {
@@ -35,8 +36,6 @@ ipcMain.on('ipc-example', async (event, arg) => {
 });
 
 ipcMain.handle('test-api-call', async (_event, arg) => {
-  let macd = 0;
-
   try {
     const response = await axios.get(process.env.MARKETEYE_API_URL as string, {
       params: {
@@ -46,12 +45,12 @@ ipcMain.handle('test-api-call', async (_event, arg) => {
       },
     });
 
-    macd = response.data.macd;
+    const tickerData: IDataProps = response.data;
+    return [tickerData];
   } catch (e) {
     console.log(e);
+    return [];
   }
-
-  return macd;
 });
 
 if (process.env.NODE_ENV === 'production') {
