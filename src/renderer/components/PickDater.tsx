@@ -17,16 +17,20 @@ const PickDater = () => {
   useEffect(() => {
     // eslint-disable-next-line func-names
     (async function () {
-      const response: Array<IDateProps> = await window.electronAPI.getDates();
-      const datesArray = response.map(({ date_string }) => date_string);
-      const nDates = datesArray.length;
+      try {
+        const response: Array<IDateProps> = await window.electronAPI.getDates();
+        const datesArray = response.map(({ date_string }) => date_string);
+        const nDates = datesArray.length;
 
-      setAvailableDates(datesArray);
+        setAvailableDates(datesArray);
 
-      if (nDates > 0) {
-        setDate(new Date(datesArray[nDates - 1]));
-      } else {
-        setDate(null);
+        if (nDates > 0) {
+          setDate(new Date(datesArray[nDates - 1]));
+        } else {
+          setDate(null);
+        }
+      } catch (e) {
+        console.log(e);
       }
     })();
   }, [setDate]);

@@ -32,20 +32,24 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
   useEffect(() => {
     // eslint-disable-next-line func-names
     (async function () {
-      const response: IDataProps | null =
-        await window.electronAPI.getTickerAnalytics({
-          date: '2021-12-29',
-          ticker: 'TSLA',
-        });
+      try {
+        const response: IDataProps | null =
+          await window.electronAPI.getTickerAnalytics({
+            date: '2021-12-29',
+            ticker: 'TSLA',
+          });
 
-      if (response) {
-        setData({
-          by_one_day_avg_mf: [response],
-          by_three_day_avg_mf: [response],
-          by_five_prec_open_close_change: [response],
-          by_volume: [response],
-          by_three_day_avg_volume: [response],
-        });
+        if (response) {
+          setData({
+            by_one_day_avg_mf: [response],
+            by_three_day_avg_mf: [response],
+            by_five_prec_open_close_change: [response],
+            by_volume: [response],
+            by_three_day_avg_volume: [response],
+          });
+        }
+      } catch (e) {
+        console.log(e);
       }
     })();
   }, []);
