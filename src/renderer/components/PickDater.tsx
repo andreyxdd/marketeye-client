@@ -3,8 +3,8 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import TextField from '@mui/material/TextField';
-import useAppContext from 'renderer/context/useAppContext';
 import { IDateProps } from 'types';
+import useAppContext from '../context/useAppContext';
 
 const PickDater = () => {
   const { date, setDate } = useAppContext();
