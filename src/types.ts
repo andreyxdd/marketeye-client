@@ -40,3 +40,12 @@ export interface IDateProps {
   epoch: number;
   date_string: string;
 }
+
+export interface IAppContextProps {
+  dates: Array<IDateProps>;
+  setDates: React.Dispatch<React.SetStateAction<Array<IDateProps>>>;
+  data: IDataByTypesProps;
+  setData: React.Dispatch<React.SetStateAction<IDataByTypesProps>>;
+  dataType: string;
+  setDataType: React.Dispatch<React.SetStateAction<string>>;
+}

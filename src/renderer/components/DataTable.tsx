@@ -1,5 +1,5 @@
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { IDataProps } from '../../types';
+import useAppContext from '../context/useAppContext';
 
 const columns: GridColDef[] = [
   { field: 'ticker', headerName: 'ticker', width: 150 },
@@ -7,17 +7,15 @@ const columns: GridColDef[] = [
   { field: 'one_day_avg_mf', headerName: 'Money Flow', width: 150 },
 ];
 
-interface IDataTableProps {
-  dataArray: Array<IDataProps> | null;
-}
+const DataTable = () => {
+  const { data } = useAppContext();
 
-const DataTable = ({ dataArray }: IDataTableProps) => {
-  if (dataArray) {
+  if (data) {
     return (
       <div style={{ height: 300, width: '100%' }}>
         <DataGrid
           getRowId={(row) => row.ticker}
-          rows={dataArray}
+          rows={data.by_one_day_avg_mf}
           columns={columns}
         />
       </div>

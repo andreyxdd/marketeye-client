@@ -12,7 +12,7 @@ export interface IElectronAPIConn {
 }
 
 export interface IElectronAPI {
-  getTickerAnalytics: (req: IRequest) => Promise<Array<IDataProps> | null>;
+  getTickerAnalytics: (req: IRequest) => Promise<IDataProps | null>;
   conn: IElectronAPIConn;
 }
 

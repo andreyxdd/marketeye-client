@@ -8,13 +8,11 @@ import {
   IconButton,
 } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import useAppContext from '../context/useAppContext';
 
-interface INavbarProps {
-  dataType: string;
-  setDataType: React.Dispatch<React.SetStateAction<string>>;
-}
+const Navbar = () => {
+  const { dataType, setDataType } = useAppContext();
 
-const Navbar = ({ dataType, setDataType }: INavbarProps) => {
   const handleClick = (
     e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
     NewDataType: string

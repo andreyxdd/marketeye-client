@@ -46,10 +46,10 @@ ipcMain.handle('test-api-call', async (_event, arg) => {
     });
 
     const tickerData: IDataProps = response.data;
-    return [tickerData];
+    return tickerData;
   } catch (e) {
     console.log(e);
-    return [];
+    return null;
   }
 });
 
@@ -93,13 +93,15 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
+    width: 1280,
+    height: 960,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
+
+  mainWindow.maximize();
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
