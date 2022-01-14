@@ -18,6 +18,13 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
     by_volume: [],
     by_three_day_avg_volume: [],
   });
+  const [dataToPresent, setDataToPresent] = useState<IDataByTypesProps>({
+    by_one_day_avg_mf: [],
+    by_three_day_avg_mf: [],
+    by_five_prec_open_close_change: [],
+    by_volume: [],
+    by_three_day_avg_volume: [],
+  });
   const [dataType, setDataType] = useState<string>('by_one_day_avg_mf');
 
   const providerValue: IAppContextProps = {
@@ -25,6 +32,8 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
     setDate,
     data,
     setData,
+    dataToPresent,
+    setDataToPresent,
     dataType,
     setDataType,
   };
@@ -40,13 +49,16 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
           });
 
         if (response) {
-          setData({
+          const temp = {
             by_one_day_avg_mf: [response],
             by_three_day_avg_mf: [response],
             by_five_prec_open_close_change: [response],
             by_volume: [response],
             by_three_day_avg_volume: [response],
-          });
+          };
+
+          setData(temp);
+          setDataToPresent(temp);
         }
       } catch (e) {
         console.log(e);

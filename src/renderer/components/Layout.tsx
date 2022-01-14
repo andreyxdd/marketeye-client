@@ -17,42 +17,71 @@ interface ILayoutProps {
 }
 
 const Layout = ({ children }: ILayoutProps) => {
-  const { date, setData } = useAppContext();
-
-  const [searchString, setSearchString] = useState<string>('');
+  const { date, data, setDataToPresent } = useAppContext();
+  const [textField, setTextField] = useState({
+    searchString: '',
+    helperText: '',
+    error: false,
+  });
 
   const handleSearchStringChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const currentValue = (e.target as HTMLInputElement).value;
-    setSearchString(currentValue);
+    setTextField({
+      ...textField,
+      searchString: currentValue.toUpperCase(),
+      helperText: '',
+      error: false,
+    });
   };
 
   const handleSearch = async (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
 
-    if (date) {
-      const offset = date.getTimezoneOffset();
-      const dateUTC = new Date(date.getTime() - offset * 60 * 1000);
+    if (textField.searchString) {
+      if (date) {
+        const offset = date.getTimezoneOffset();
+        const dateUTC = new Date(date.getTime() - offset * 60 * 1000);
 
-      const response: IDataProps | null =
-        await window.electronAPI.getTickerAnalytics({
-          date: dateUTC.toISOString().split('T')[0],
-          ticker: searchString,
-        });
+        const response: IDataProps | null =
+          await window.electronAPI.getTickerAnalytics({
+            date: dateUTC.toISOString().split('T')[0],
+            ticker: textField.searchString,
+          });
 
-      if (response) {
-        setData({
-          by_one_day_avg_mf: [response],
-          by_three_day_avg_mf: [response],
-          by_five_prec_open_close_change: [response],
-          by_volume: [response],
-          by_three_day_avg_volume: [response],
-        });
+        if (response) {
+          setDataToPresent({
+            by_one_day_avg_mf: [response],
+            by_three_day_avg_mf: [response],
+            by_five_prec_open_close_change: [response],
+            by_volume: [response],
+            by_three_day_avg_volume: [response],
+          });
+        } else {
+          setTextField({
+            ...textField,
+            helperText: 'Incorrect input ticker symbol',
+            error: true,
+          });
+        }
       }
+    } else {
+      setTextField({
+        ...textField,
+        helperText: 'Input is empty',
+        error: true,
+      });
     }
   };
 
   const handleClear = async (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
+    setTextField({
+      ...textField,
+      searchString: '',
+      helperText: '',
+      error: false,
+    });
+    setDataToPresent(data);
   };
 
   return (
@@ -77,8 +106,11 @@ const Layout = ({ children }: ILayoutProps) => {
             <TextField
               size="small"
               label="Search for ticker"
-              helperText={false && 'Hellow'}
+              inputProps={{ maxLength: 5 }}
               onChange={handleSearchStringChange}
+              value={textField.searchString}
+              helperText={textField.helperText}
+              error={textField.error}
             />
           </Grid>
           <Grid item>

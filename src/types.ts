@@ -46,6 +46,8 @@ export interface IAppContextProps {
   setDate: React.Dispatch<React.SetStateAction<Date | null>>;
   data: IDataByTypesProps;
   setData: React.Dispatch<React.SetStateAction<IDataByTypesProps>>;
+  dataToPresent: IDataByTypesProps;
+  setDataToPresent: React.Dispatch<React.SetStateAction<IDataByTypesProps>>;
   dataType: string;
   setDataType: React.Dispatch<React.SetStateAction<string>>;
 }

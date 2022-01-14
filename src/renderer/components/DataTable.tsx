@@ -8,14 +8,14 @@ const columns: GridColDef[] = [
 ];
 
 const DataTable = () => {
-  const { data } = useAppContext();
+  const { dataToPresent } = useAppContext();
 
-  if (data) {
+  if (dataToPresent) {
     return (
       <div style={{ height: 300, width: '100%' }}>
         <DataGrid
           getRowId={(row) => row.ticker}
-          rows={data.by_one_day_avg_mf}
+          rows={dataToPresent.by_one_day_avg_mf}
           columns={columns}
         />
       </div>
