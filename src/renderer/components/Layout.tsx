@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Typography,
   Container,
@@ -10,19 +9,13 @@ import {
 import Navbar from './Navbar';
 import PickDater from './PickDater';
 import useAppContext from '../context/useAppContext';
-import { IDataProps } from '../../types';
 
 interface ILayoutProps {
   children: React.ReactNode;
 }
 
 const Layout = ({ children }: ILayoutProps) => {
-  const { date, data, setDataToPresent } = useAppContext();
-  const [textField, setTextField] = useState({
-    searchString: '',
-    helperText: '',
-    error: false,
-  });
+  const { data, setDataToPresent, textField, setTextField } = useAppContext();
 
   const handleSearchStringChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const currentValue = (e.target as HTMLInputElement).value;
@@ -31,46 +24,16 @@ const Layout = ({ children }: ILayoutProps) => {
       searchString: currentValue.toUpperCase(),
       helperText: '',
       error: false,
+      on: false,
     });
   };
 
   const handleSearch = async (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
-
-    if (textField.searchString) {
-      if (date) {
-        const offset = date.getTimezoneOffset();
-        const dateUTC = new Date(date.getTime() - offset * 60 * 1000);
-
-        const response: IDataProps | null =
-          await window.electronAPI.getTickerAnalytics({
-            date: dateUTC.toISOString().split('T')[0],
-            ticker: textField.searchString,
-          });
-
-        if (response) {
-          setDataToPresent({
-            by_one_day_avg_mf: [response],
-            by_three_day_avg_mf: [response],
-            by_five_prec_open_close_change: [response],
-            by_volume: [response],
-            by_three_day_avg_volume: [response],
-          });
-        } else {
-          setTextField({
-            ...textField,
-            helperText: 'Incorrect input ticker symbol',
-            error: true,
-          });
-        }
-      }
-    } else {
-      setTextField({
-        ...textField,
-        helperText: 'Input is empty',
-        error: true,
-      });
-    }
+    setTextField({
+      ...textField,
+      on: true,
+    });
   };
 
   const handleClear = async (ev: React.MouseEvent<HTMLButtonElement>) => {
@@ -78,8 +41,7 @@ const Layout = ({ children }: ILayoutProps) => {
     setTextField({
       ...textField,
       searchString: '',
-      helperText: '',
-      error: false,
+      on: false,
     });
     setDataToPresent(data);
   };
@@ -111,6 +73,7 @@ const Layout = ({ children }: ILayoutProps) => {
               value={textField.searchString}
               helperText={textField.helperText}
               error={textField.error}
+              style={{ width: 150 }}
             />
           </Grid>
           <Grid item>

@@ -2,6 +2,8 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
   getTickerAnalytics: (req) => ipcRenderer.invoke('get-ticker-analytics', req),
+  getAnalyticsListsByCriteria: (req) =>
+    ipcRenderer.invoke('get-analytics-lists-by-criteria', req),
   getDates: () => ipcRenderer.invoke('get-dates'),
   conn: {
     myPing() {

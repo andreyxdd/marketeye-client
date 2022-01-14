@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 export interface IDataProps {
+  id?: number;
   ticker: string;
   date: number;
   macd: number;
@@ -26,6 +27,7 @@ export interface IDataProps {
   ema20: number;
   ema26: number;
   ema50: number;
+  [key: string]: number | string | Array<string> | undefined;
 }
 
 export interface IDataByTypesProps {
@@ -34,6 +36,7 @@ export interface IDataByTypesProps {
   by_five_prec_open_close_change: Array<IDataProps>;
   by_volume: Array<IDataProps>;
   by_three_day_avg_volume: Array<IDataProps>;
+  [key: string]: Array<IDataProps>;
 }
 
 export interface IDateProps {
@@ -41,13 +44,26 @@ export interface IDateProps {
   date_string: string;
 }
 
+export interface ITextFieldProps {
+  searchString: string;
+  helperText: string;
+  error: boolean;
+  on: boolean;
+}
+
 export interface IAppContextProps {
-  date: Date | null;
-  setDate: React.Dispatch<React.SetStateAction<Date | null>>;
-  data: IDataByTypesProps;
-  setData: React.Dispatch<React.SetStateAction<IDataByTypesProps>>;
-  dataToPresent: IDataByTypesProps;
-  setDataToPresent: React.Dispatch<React.SetStateAction<IDataByTypesProps>>;
+  textField: ITextFieldProps;
+  setTextField: React.Dispatch<React.SetStateAction<ITextFieldProps>>;
+  date: string;
+  setDate: React.Dispatch<React.SetStateAction<string>>;
+  availableDates: Array<string>;
+  setAvailableDates: React.Dispatch<React.SetStateAction<Array<string>>>;
+  data: IDataByTypesProps | null;
+  setData: React.Dispatch<React.SetStateAction<IDataByTypesProps | null>>;
+  dataToPresent: IDataByTypesProps | null;
+  setDataToPresent: React.Dispatch<
+    React.SetStateAction<IDataByTypesProps | null>
+  >;
   dataType: string;
   setDataType: React.Dispatch<React.SetStateAction<string>>;
 }
