@@ -10,6 +10,15 @@ export interface IRequest {
   ticker?: string;
 }
 
+export interface IEmail {
+  email_body: string;
+}
+
+export interface INotificationStatus {
+  ok: boolean;
+  error: string;
+}
+
 export interface IElectronAPIConn {
   myPing: () => Promise<void>;
   on: () => Promise<void>;
@@ -23,6 +32,7 @@ export interface IElectronAPI {
   ) => Promise<IDataByTypesProps | null>;
   getDates: () => Promise<Array<IDateProps>>;
   getMarketAnalytics: (req: IRequest) => Promise<IMarketDataProps | null>;
+  notifyDeveloper: (req: IEmail) => Promise<INotificationStatus>;
   conn: IElectronAPIConn;
 }
 

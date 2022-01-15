@@ -9,9 +9,13 @@ import {
 } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import useAppContext from '../context/useAppContext';
+import ModalForm from './ModalForm';
 
 const Navbar = () => {
   const { dataType, setDataType } = useAppContext();
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
 
   const handleClick = (
     e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
@@ -95,6 +99,14 @@ const Navbar = () => {
           >
             3-day Volume
           </Button>
+          <Button
+            style={{ backgroundColor: 'white' }}
+            sx={{ mr: 2 }}
+            onClick={handleOpen}
+          >
+            Report a Problem
+          </Button>
+          <ModalForm open={open} setOpen={setOpen} />
         </Toolbar>
       </AppBar>
     </Box>

@@ -41,7 +41,7 @@ ipcMain.on('ipc-example', async (event, arg) => {
 ipcMain.handle('get-ticker-analytics', async (_event, arg) => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL}/get_ticker_analytics`,
+      `${process.env.MARKETEYE_API_URL_ANALYTICS}/get_ticker_analytics`,
       {
         params: {
           date: arg.date,
@@ -62,7 +62,7 @@ ipcMain.handle('get-ticker-analytics', async (_event, arg) => {
 ipcMain.handle('get-analytics-lists-by-criteria', async (_event, arg) => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL}/get_analytics_lists_by_criteria`,
+      `${process.env.MARKETEYE_API_URL_ANALYTICS}/get_analytics_lists_by_criteria`,
       {
         params: {
           date: arg.date,
@@ -81,7 +81,7 @@ ipcMain.handle('get-analytics-lists-by-criteria', async (_event, arg) => {
 ipcMain.handle('get-dates', async () => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL}/get_dates`,
+      `${process.env.MARKETEYE_API_URL_ANALYTICS}/get_dates`,
       {
         params: {
           api_key: process.env.MARKETEYE_API_KEY,
@@ -100,7 +100,7 @@ ipcMain.handle('get-dates', async () => {
 ipcMain.handle('get-market-analytics', async (_event, arg) => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL}/get_market_analytics`,
+      `${process.env.MARKETEYE_API_URL_ANALYTICS}/get_market_analytics`,
       {
         params: {
           date: arg.date,
@@ -113,6 +113,25 @@ ipcMain.handle('get-market-analytics', async (_event, arg) => {
   } catch (e) {
     console.log(e);
     return null;
+  }
+});
+
+ipcMain.handle('notify-developer', async (_event, arg) => {
+  try {
+    await axios.post(
+      `${process.env.MARKETEYE_API_URL_NOTIFICATIONS}/notify_developer`,
+      { email_body: arg.email_body },
+      {
+        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+        params: {
+          api_key: process.env.MARKETEYE_API_KEY,
+        },
+      }
+    );
+    return { ok: true };
+  } catch (e) {
+    console.log(e);
+    return { ok: false, error: e };
   }
 });
 

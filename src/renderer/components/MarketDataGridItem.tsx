@@ -5,7 +5,7 @@ import { IMarketDataProps } from '../../types';
 
 const MarketDataGridItem = () => {
   const { date } = useAppContext();
-  const [marketData, setMarketData] = useState<IMarketDataProps>({});
+  const [marketData, setMarketData] = useState<IMarketDataProps | null>(null);
 
   useEffect(() => {
     // eslint-disable-next-line func-names
@@ -61,8 +61,16 @@ const MarketDataGridItem = () => {
           alignItems="flex-start"
           xs={2}
         >
-          <Grid item>{(marketData.SP500 as number).toFixed(2)}</Grid>
-          <Grid item>{(marketData.VIX1 as number).toFixed(2)}</Grid>
+          <Grid item>
+            <Typography variant="body2">
+              {(marketData.SP500 as number).toFixed(2)}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2">
+              {(marketData.VIX1 as number).toFixed(2)}
+            </Typography>
+          </Grid>
         </Grid>
 
         {/* CVI and VIX2 column */}
@@ -90,12 +98,18 @@ const MarketDataGridItem = () => {
           xs={2}
         >
           <Grid item>
-            {((marketData.normalazied_CVI_slope as number) * 100).toPrecision(
-              4
-            )}
+            <Typography variant="body2">
+              {((marketData.normalazied_CVI_slope as number) * 100).toPrecision(
+                4
+              )}
+            </Typography>
           </Grid>
 
-          <Grid item>{(marketData.VIX2 as number).toFixed(2)}</Grid>
+          <Grid item>
+            <Typography variant="body2">
+              {(marketData.VIX2 as number).toFixed(2)}
+            </Typography>
+          </Grid>
         </Grid>
 
         {/* VIX and VIX_avg_50 column */}
@@ -122,8 +136,16 @@ const MarketDataGridItem = () => {
           alignItems="flex-start"
           xs={2}
         >
-          <Grid item>{(marketData.VIX as number).toFixed(2)}</Grid>
-          <Grid item>{(marketData.VIX_50days_EMA as number).toFixed(2)}</Grid>
+          <Grid item>
+            <Typography variant="body2">
+              {(marketData.VIX as number).toFixed(2)}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2">
+              {(marketData.VIX_50days_EMA as number).toFixed(2)}
+            </Typography>
+          </Grid>
         </Grid>
       </Grid>
     );
