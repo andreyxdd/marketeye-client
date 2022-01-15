@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Grid, Typography } from '@mui/material';
+import SkeletonLoader from 'tiny-skeleton-loader-react';
 import useAppContext from '../context/useAppContext';
 import { IMarketDataProps } from '../../types';
 
 const MarketDataGridItem = () => {
   const { date } = useAppContext();
   const [marketData, setMarketData] = useState<IMarketDataProps | null>(null);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
+    setIsLoaded(false);
+
     // eslint-disable-next-line func-names
     (async function () {
       if (date) {
@@ -19,6 +23,7 @@ const MarketDataGridItem = () => {
 
           if (response) {
             setMarketData(response);
+            setIsLoaded(true);
           }
         } catch (e) {
           console.log(e);
@@ -27,7 +32,7 @@ const MarketDataGridItem = () => {
     })();
   }, [date]);
 
-  if (marketData !== null) {
+  if (isLoaded && marketData !== null) {
     return (
       <Grid
         item
@@ -151,7 +156,11 @@ const MarketDataGridItem = () => {
     );
   }
 
-  return <div>No available market data</div>;
+  return (
+    <div style={{ width: '100%', height: 40 }}>
+      <SkeletonLoader style={{ width: '100%', height: '100%' }} />
+    </div>
+  );
 };
 
 export default MarketDataGridItem;

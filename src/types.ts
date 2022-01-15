@@ -75,4 +75,6 @@ export interface IAppContextProps {
   >;
   dataType: string;
   setDataType: React.Dispatch<React.SetStateAction<string>>;
+  dataIsLoaded: boolean;
+  setDataIsLoaded: React.Dispatch<React.SetStateAction<boolean>>;
 }

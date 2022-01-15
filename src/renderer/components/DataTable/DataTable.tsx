@@ -1,12 +1,12 @@
 import { DataGrid } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
+import SkeletonLoader from 'tiny-skeleton-loader-react';
 import useAppContext from '../../context/useAppContext';
 import { columnsDefinition, columnsToShow } from './columnsDefenition';
 import processData from './dataProcessing';
 
 const DataTable = () => {
-  const { dataToPresent, dataType } = useAppContext();
-
+  const { dataToPresent, dataType, dataIsLoaded } = useAppContext();
   const [columns, setColumns] = useState(columnsDefinition);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const DataTable = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataType]);
 
-  if (dataToPresent !== null) {
+  if (dataIsLoaded && dataToPresent !== null) {
     return (
       <div style={{ width: '100%' }}>
         <DataGrid
@@ -35,7 +35,11 @@ const DataTable = () => {
     );
   }
 
-  return <div style={{ width: '100%' }}>No data to present</div>;
+  return (
+    <div style={{ width: '100%', height: 500 }}>
+      <SkeletonLoader style={{ width: '100%', height: '100%' }} />
+    </div>
+  );
 };
 
 export default DataTable;

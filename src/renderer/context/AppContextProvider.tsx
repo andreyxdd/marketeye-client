@@ -29,6 +29,7 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
     null
   );
   const [dataType, setDataType] = useState<string>('by_one_day_avg_mf');
+  const [dataIsLoaded, setDataIsLoaded] = useState<boolean>(false);
 
   const providerValue: IAppContextProps = {
     textField,
@@ -43,6 +44,8 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
     setDataToPresent,
     dataType,
     setDataType,
+    dataIsLoaded,
+    setDataIsLoaded,
   };
 
   useEffect(() => {
@@ -93,6 +96,7 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
   }, []);
 
   useEffect(() => {
+    setDataIsLoaded(false);
     if (date) {
       // eslint-disable-next-line func-names
       (async function () {
@@ -113,6 +117,7 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
                   by_volume: [response],
                   by_three_day_avg_volume: [response],
                 });
+                setDataIsLoaded(true);
               } else {
                 setTextField({
                   ...textField,
@@ -128,23 +133,15 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
               });
             }
           } else {
-            const response: IDataProps | null =
-              await window.electronAPI.getTickerAnalytics({
+            const response: IDataByTypesProps | null =
+              await window.electronAPI.getAnalyticsListsByCriteria({
                 date,
-                ticker: 'TSLA',
               });
 
             if (response) {
-              const temp = {
-                by_one_day_avg_mf: [response],
-                by_three_day_avg_mf: [response],
-                by_five_prec_open_close_change: [response],
-                by_volume: [response],
-                by_three_day_avg_volume: [response],
-              };
-
-              setData(temp);
-              setDataToPresent(temp);
+              setData(response);
+              setDataToPresent(response);
+              setDataIsLoaded(true);
             }
           }
         } catch (e) {
