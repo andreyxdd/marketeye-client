@@ -1,12 +1,20 @@
 import { useState } from 'react';
-import { Box, Typography, Modal, Button, TextField, Grid } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Modal,
+  Button,
+  TextField,
+  Grid,
+  Alert,
+} from '@mui/material';
 
 interface IModalFormProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const style = {
+const boxStyle = {
   position: 'absolute' as const,
   top: '50%',
   left: '50%',
@@ -17,6 +25,13 @@ const style = {
   borderRadius: '10px',
   boxShadow: 24,
   p: 4,
+};
+
+const alertStyle = {
+  position: 'absolute' as const,
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
 };
 
 const textfieldPLaceholder = 'Hi Andrey,\n\nI have an issue with ...';
@@ -56,85 +71,79 @@ const ModalForm = ({ open, setOpen }: IModalFormProps) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
-        <Grid
-          container
-          justifyContent="center"
-          alignContent="center"
-          spacing={2}
-        >
-          {status === null ? (
-            <>
-              <Grid item xs={12}>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Report a Problem
-                </Typography>
+      {status === null ? (
+        <Box sx={boxStyle}>
+          <Grid
+            container
+            justifyContent="center"
+            alignContent="center"
+            spacing={2}
+          >
+            <Grid item xs={12}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Report a Problem
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Please, describe the issues you have experienced with the{' '}
+                <i>MarketEye desktop app</i> by submitting the below form:
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                onChange={handleModalTextFieldChange}
+                value={modalTextField}
+                sx={{ mt: 2 }}
+                fullWidth
+                placeholder={textfieldPLaceholder}
+                multiline
+                rows={8}
+              />
+            </Grid>
+            <Grid
+              item
+              container
+              justifyContent="space-evenly"
+              alignItems="center"
+              xs={12}
+              direction="row"
+            >
+              <Grid item>
+                <Button
+                  onClick={handleReport}
+                  variant="contained"
+                  style={{ width: 150 }}
+                >
+                  Submit
+                </Button>
               </Grid>
-              <Grid item xs={12}>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                  Please, describe the issues you have experienced with the{' '}
-                  <i>MarketEye desktop app</i> by submitting the below form:
-                </Typography>
+              <Grid item>
+                <Button
+                  onClick={handleClose}
+                  variant="outlined"
+                  color="error"
+                  style={{ width: 150 }}
+                >
+                  Cancel
+                </Button>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  onChange={handleModalTextFieldChange}
-                  value={modalTextField}
-                  sx={{ mt: 2 }}
-                  fullWidth
-                  placeholder={textfieldPLaceholder}
-                  multiline
-                  rows={8}
-                />
-              </Grid>
-              <Grid
-                item
-                container
-                justifyContent="space-evenly"
-                alignItems="center"
-                xs={12}
-                direction="row"
-              >
-                <Grid item>
-                  <Button
-                    onClick={handleReport}
-                    variant="contained"
-                    style={{ width: 150 }}
-                  >
-                    Submit
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    onClick={handleClose}
-                    variant="outlined"
-                    color="error"
-                    style={{ width: 150 }}
-                  >
-                    Cancel
-                  </Button>
-                </Grid>
-              </Grid>
-            </>
+            </Grid>
+          </Grid>
+        </Box>
+      ) : (
+        <div>
+          {status === true ? (
+            <Alert severity="success" sx={alertStyle}>
+              Message have been sent successfully!
+            </Alert>
           ) : (
-            <div>
-              {status === true ? (
-                <Grid item xs={12}>
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Message have been sent successfully!
-                  </Typography>
-                </Grid>
-              ) : (
-                <Grid item xs={12}>
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Something went wrong. Please contact developer.
-                  </Typography>
-                </Grid>
-              )}
-            </div>
+            <Alert severity="error" sx={alertStyle}>
+              Sorry, something went wrong ... Please, contact developer.
+            </Alert>
           )}
-        </Grid>
-      </Box>
+        </div>
+      )}
     </Modal>
   );
 };

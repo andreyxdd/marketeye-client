@@ -36,7 +36,7 @@ const DataTable = () => {
   }
 
   return (
-    <div style={{ width: '100%', height: 500 }}>
+    <div style={{ width: '100%', height: 600 }}>
       <SkeletonLoader style={{ width: '100%', height: '100%' }} />
     </div>
   );

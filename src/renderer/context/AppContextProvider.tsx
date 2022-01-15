@@ -6,6 +6,7 @@ import {
   IDateProps,
   ITextFieldProps,
 } from '../../types';
+import usePrevious from './usePrevious';
 
 export const AppContext = createContext<IAppContextProps | null>(null);
 
@@ -31,6 +32,8 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
   const [dataType, setDataType] = useState<string>('by_one_day_avg_mf');
   const [dataIsLoaded, setDataIsLoaded] = useState<boolean>(false);
 
+  const prevDate = usePrevious(date);
+
   const providerValue: IAppContextProps = {
     textField,
     setTextField,
@@ -48,26 +51,9 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
     setDataIsLoaded,
   };
 
+  // fetch avaiable dates and show the last one on the view
+  // on mount
   useEffect(() => {
-    // eslint-disable-next-line func-names
-    // eslint-disable-next-line spaced-comment
-    /*
-    (async function () {
-      try {
-        const response: IDataByTypesProps | null =
-          await window.electronAPI.getAnalyticsListsByCriteria({
-            date: '2021-12-29',
-          });
-
-        if (response) {
-          setData(response);
-          setDataToPresent(response);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    })();*/
-
     // eslint-disable-next-line func-names
     (async function () {
       try {
@@ -97,57 +83,70 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
 
   useEffect(() => {
     setDataIsLoaded(false);
-    if (date) {
-      // eslint-disable-next-line func-names
-      (async function () {
-        try {
-          if (textField.on) {
-            if (textField.searchString) {
-              const response: IDataProps | null =
-                await window.electronAPI.getTickerAnalytics({
-                  date,
-                  ticker: textField.searchString,
-                });
 
-              if (response) {
-                setDataToPresent({
-                  by_one_day_avg_mf: [response],
-                  by_three_day_avg_mf: [response],
-                  by_five_prec_open_close_change: [response],
-                  by_volume: [response],
-                  by_three_day_avg_volume: [response],
-                });
-                setDataIsLoaded(true);
-              } else {
-                setTextField({
-                  ...textField,
-                  helperText: 'Incorrect input ticker symbol',
-                  error: true,
-                });
-              }
-            } else {
-              setTextField({
-                ...textField,
-                helperText: 'Input is empty',
-                error: true,
-              });
-            }
-          } else {
-            const response: IDataByTypesProps | null =
-              await window.electronAPI.getAnalyticsListsByCriteria({
-                date,
-              });
+    const fetchDataByType = async () => {
+      try {
+        const response: IDataByTypesProps | null =
+          await window.electronAPI.getAnalyticsListsByCriteria({
+            date,
+          });
 
-            if (response) {
-              setData(response);
-              setDataToPresent(response);
-              setDataIsLoaded(true);
-            }
-          }
-        } catch (e) {
-          console.log(e);
+        if (response) {
+          setData(response);
+          setDataToPresent(response);
+          setDataIsLoaded(true);
         }
-      })();
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    const fetchOneTickerData = async () => {
+      try {
+        if (textField.searchString) {
+          const response: IDataProps | null =
+            await window.electronAPI.getTickerAnalytics({
+              date,
+              ticker: textField.searchString,
+            });
+
+          if (response) {
+            setDataToPresent({
+              by_one_day_avg_mf: [response],
+              by_three_day_avg_mf: [response],
+              by_five_prec_open_close_change: [response],
+              by_volume: [response],
+              by_three_day_avg_volume: [response],
+            });
+            setDataIsLoaded(true);
+          } else {
+            setTextField({
+              ...textField,
+              helperText: 'Incorrect input ticker symbol',
+              error: true,
+            });
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    if (date) {
+      // no date - no data
+
+      if (textField.on) {
+        // search ticker is on
+        fetchOneTickerData();
+        if (date !== prevDate) {
+          // check if date not equal to the previous date
+          // and update the data
+          fetchDataByType();
+        }
+      } else {
+        // serach ticker is off
+        fetchDataByType();
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date, textField.on]);

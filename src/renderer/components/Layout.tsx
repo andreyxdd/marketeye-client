@@ -16,8 +16,7 @@ interface ILayoutProps {
 }
 
 const Layout = ({ children }: ILayoutProps) => {
-  const { data, setDataToPresent, textField, setTextField, dataType } =
-    useAppContext();
+  const { textField, setTextField, dataType } = useAppContext();
 
   const handleSearchStringChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const currentValue = (e.target as HTMLInputElement).value;
@@ -32,20 +31,27 @@ const Layout = ({ children }: ILayoutProps) => {
 
   const handleSearch = async (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
-    setTextField({
-      ...textField,
-      on: true,
-    });
+    if (textField.searchString) {
+      setTextField({
+        ...textField,
+        on: true,
+      });
+    } else {
+      setTextField({
+        ...textField,
+        helperText: 'Input is empty',
+        error: true,
+      });
+    }
   };
 
-  const handleClear = async (ev: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSearchClear = async (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
     setTextField({
       ...textField,
       searchString: '',
       on: false,
     });
-    setDataToPresent(data);
   };
 
   const handleDataTypeTitle = (type: string) => {
@@ -113,7 +119,7 @@ const Layout = ({ children }: ILayoutProps) => {
               size="small"
               variant="outlined"
               color="error"
-              onClick={handleClear}
+              onClick={handleSearchClear}
             >
               Clear
             </Button>
