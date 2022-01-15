@@ -97,6 +97,25 @@ ipcMain.handle('get-dates', async () => {
   }
 });
 
+ipcMain.handle('get-market-analytics', async (_event, arg) => {
+  try {
+    const response = await axios.get(
+      `${process.env.MARKETEYE_API_URL}/get_market_analytics`,
+      {
+        params: {
+          date: arg.date,
+          api_key: process.env.MARKETEYE_API_KEY,
+        },
+      }
+    );
+    const { data } = response;
+    return data;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+});
+
 // ---
 
 if (process.env.NODE_ENV === 'production') {

@@ -72,6 +72,11 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
         const datesArray: Array<string> = response.map(
           ({ date_string }) => date_string
         );
+
+        // to avoid error when computing nomarlized CVI the last date
+        // (with index '0') is removed from available dates
+        datesArray.shift();
+
         const nDates = datesArray.length;
 
         setAvailableDates(datesArray);

@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getAnalyticsListsByCriteria: (req) =>
     ipcRenderer.invoke('get-analytics-lists-by-criteria', req),
   getDates: () => ipcRenderer.invoke('get-dates'),
+  getMarketAnalytics: (req) => ipcRenderer.invoke('get-market-analytics', req),
   conn: {
     myPing() {
       ipcRenderer.send('ipc-example', 'ping');

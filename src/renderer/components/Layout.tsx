@@ -1,12 +1,13 @@
 import {
-  Typography,
   Container,
   Button,
   Grid,
   Divider,
   TextField,
+  Typography,
 } from '@mui/material';
 import Navbar from './Navbar';
+import MarketDataGridItem from './MarketDataGridItem';
 import PickDater from './PickDater';
 import useAppContext from '../context/useAppContext';
 
@@ -15,7 +16,8 @@ interface ILayoutProps {
 }
 
 const Layout = ({ children }: ILayoutProps) => {
-  const { data, setDataToPresent, textField, setTextField } = useAppContext();
+  const { data, setDataToPresent, textField, setTextField, dataType } =
+    useAppContext();
 
   const handleSearchStringChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const currentValue = (e.target as HTMLInputElement).value;
@@ -44,6 +46,25 @@ const Layout = ({ children }: ILayoutProps) => {
       on: false,
     });
     setDataToPresent(data);
+  };
+
+  const handleDataTypeTitle = (type: string) => {
+    if (textField.on) {
+      return `Analytics for the ${textField.searchString} ticker`;
+    }
+
+    switch (type) {
+      case 'by_three_day_avg_mf':
+        return 'Top 20 stocks by 3-day average money flow';
+      case 'by_five_prec_open_close_change':
+        return 'Top stocks that overcame 5% change between open and close prices';
+      case 'by_volume':
+        return 'Top 20 stocks by 1-day volume';
+      case 'by_three_day_avg_volume':
+        return 'Top 20 stocks by 3-day average volume';
+      default:
+        return 'Top 20 stocks by 1-day money flow';
+    }
   };
 
   return (
@@ -98,8 +119,11 @@ const Layout = ({ children }: ILayoutProps) => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item xs={6}>
-          <Typography variant="h5">Hello</Typography>
+        <Grid container item xs={6}>
+          <Grid item container xs={12} justifyContent="center" sx={{ mb: 1 }}>
+            <Typography variant="h6">Market-as-a-whole Analytics</Typography>
+          </Grid>
+          <MarketDataGridItem />
         </Grid>
         <Grid
           item
@@ -114,6 +138,9 @@ const Layout = ({ children }: ILayoutProps) => {
       </Grid>
       <Divider />
       <Container sx={{ mt: 4 }} maxWidth="xl">
+        <Typography variant="h6" sx={{ mb: 3, mt: 2 }}>
+          {handleDataTypeTitle(dataType)}
+        </Typography>
         {children}
       </Container>
     </div>

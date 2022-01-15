@@ -51,6 +51,15 @@ export interface ITextFieldProps {
   on: boolean;
 }
 
+export interface IMarketDataProps {
+  SP500?: number;
+  VIX?: number;
+  VIX1?: number;
+  VIX2?: number;
+  VIX_50days_EMA?: number;
+  normalazied_CVI_slope?: number;
+}
+
 export interface IAppContextProps {
   textField: ITextFieldProps;
   setTextField: React.Dispatch<React.SetStateAction<ITextFieldProps>>;

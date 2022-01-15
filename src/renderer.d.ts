@@ -1,4 +1,9 @@
-import { IDataProps, IDateProps, IDataByTypesProps } from 'types';
+import {
+  IDataProps,
+  IDateProps,
+  IDataByTypesProps,
+  IMarketDataProps,
+} from 'types';
 
 export interface IRequest {
   date: string;
@@ -17,6 +22,7 @@ export interface IElectronAPI {
     req: IRequest
   ) => Promise<IDataByTypesProps | null>;
   getDates: () => Promise<Array<IDateProps>>;
+  getMarketAnalytics: (req: IRequest) => Promise<IMarketDataProps | null>;
   conn: IElectronAPIConn;
 }
 
