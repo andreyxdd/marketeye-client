@@ -145,7 +145,14 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
         }
       } else {
         // serach ticker is off
-        fetchDataByType();
+        // eslint-disable-next-line no-lonely-if
+        if (data !== null) {
+          // use existing data
+          setDataToPresent(data);
+          setDataIsLoaded(true);
+        } else {
+          fetchDataByType();
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

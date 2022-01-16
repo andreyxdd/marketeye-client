@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -27,42 +27,69 @@ const boxStyle = {
   p: 4,
 };
 
-const alertStyle = {
-  position: 'absolute' as const,
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-};
+const alertStyle = { marginTop: 4 };
 
 const textfieldPLaceholder = 'Hi Andrey,\n\nI have an issue with ...';
 
 const ModalForm = ({ open, setOpen }: IModalFormProps) => {
-  const [modalTextField, setModaltextfield] = useState<string>('');
+  const [modalTextField, setModaltextfield] = useState({
+    text: '',
+    helper: '',
+    error: false,
+    disabled: false,
+  });
   const [status, setStatus] = useState<boolean | null>(null);
 
   const handleModalTextFieldChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const currentValue = (e.target as HTMLInputElement).value;
-    setModaltextfield(currentValue);
+    setModaltextfield({
+      ...modalTextField,
+      text: currentValue,
+      helper: '',
+      error: false,
+    });
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
     setStatus(null);
-    setModaltextfield('');
-  };
+    setModaltextfield({
+      ...modalTextField,
+      text: '',
+      disabled: false,
+    });
 
-  const handleReport = async () => {
-    try {
-      const { ok } = await window.electronAPI.notifyDeveloper({
-        email_body: modalTextField,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSubmit = async () => {
+    if (modalTextField.text) {
+      setModaltextfield({
+        ...modalTextField,
+        disabled: true,
       });
-      setStatus(ok);
-    } catch (e) {
-      console.log(e);
+      try {
+        const { ok } = await window.electronAPI.notifyDeveloper({
+          email_body: modalTextField.text,
+        });
+        setStatus(ok);
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      setModaltextfield({
+        ...modalTextField,
+        helper: 'Empty message cannot be submitted',
+        error: true,
+      });
     }
   };
+
+  useEffect(() => {
+    setTimeout(handleClose, 6000);
+  }, [status, handleClose]);
 
   return (
     <Modal
@@ -71,79 +98,85 @@ const ModalForm = ({ open, setOpen }: IModalFormProps) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      {status === null ? (
-        <Box sx={boxStyle}>
+      <Box sx={boxStyle}>
+        <Grid
+          container
+          justifyContent="center"
+          alignContent="center"
+          spacing={2}
+        >
+          <Grid item xs={12}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Report a Problem
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              Please, describe the issues you have experienced with the{' '}
+              <i>MarketEye desktop app</i> by submitting the below form:
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              onChange={handleModalTextFieldChange}
+              value={modalTextField.text}
+              sx={{ mt: 2 }}
+              fullWidth
+              placeholder={textfieldPLaceholder}
+              multiline
+              rows={8}
+              helperText={modalTextField.helper}
+              error={modalTextField.error}
+              disabled={modalTextField.disabled}
+            />
+          </Grid>
           <Grid
+            item
             container
-            justifyContent="center"
-            alignContent="center"
-            spacing={2}
+            justifyContent="space-evenly"
+            alignItems="center"
+            xs={12}
+            direction="row"
           >
-            <Grid item xs={12}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Report a Problem
-              </Typography>
+            <Grid item>
+              <Button
+                onClick={handleSubmit}
+                variant="contained"
+                style={{ width: 150 }}
+                disabled={modalTextField.disabled}
+              >
+                Submit
+              </Button>
             </Grid>
-            <Grid item xs={12}>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Please, describe the issues you have experienced with the{' '}
-                <i>MarketEye desktop app</i> by submitting the below form:
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                onChange={handleModalTextFieldChange}
-                value={modalTextField}
-                sx={{ mt: 2 }}
-                fullWidth
-                placeholder={textfieldPLaceholder}
-                multiline
-                rows={8}
-              />
-            </Grid>
-            <Grid
-              item
-              container
-              justifyContent="space-evenly"
-              alignItems="center"
-              xs={12}
-              direction="row"
-            >
-              <Grid item>
-                <Button
-                  onClick={handleReport}
-                  variant="contained"
-                  style={{ width: 150 }}
-                >
-                  Submit
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  onClick={handleClose}
-                  variant="outlined"
-                  color="error"
-                  style={{ width: 150 }}
-                >
-                  Cancel
-                </Button>
-              </Grid>
+            <Grid item>
+              <Button
+                onClick={handleClose}
+                variant="outlined"
+                color="error"
+                style={{ width: 150 }}
+                disabled={modalTextField.disabled}
+              >
+                Cancel
+              </Button>
             </Grid>
           </Grid>
-        </Box>
-      ) : (
-        <div>
-          {status === true ? (
-            <Alert severity="success" sx={alertStyle}>
-              Message have been sent successfully!
-            </Alert>
-          ) : (
-            <Alert severity="error" sx={alertStyle}>
-              Sorry, something went wrong ... Please, contact developer.
-            </Alert>
-          )}
-        </div>
-      )}
+        </Grid>
+        {status === null ? (
+          <></>
+        ) : (
+          <div>
+            {status === true ? (
+              <Alert severity="success" sx={alertStyle}>
+                Message have been sent successfully!
+              </Alert>
+            ) : (
+              <Alert severity="error" sx={alertStyle}>
+                Sorry, something went wrong. Please, contact developer.
+              </Alert>
+            )}
+          </div>
+        )}
+      </Box>
     </Modal>
   );
 };
