@@ -29,7 +29,7 @@ const Layout = ({ children }: ILayoutProps) => {
     });
   };
 
-  const handleSearch = async (ev: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSearchStart = async (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
     if (textField.searchString) {
       setTextField({
@@ -108,7 +108,7 @@ const Layout = ({ children }: ILayoutProps) => {
               style={{ width: 70, height: 35 }}
               size="small"
               variant="contained"
-              onClick={handleSearch}
+              onClick={handleSearchStart}
             >
               Search
             </Button>
@@ -143,11 +143,28 @@ const Layout = ({ children }: ILayoutProps) => {
         </Grid>
       </Grid>
       <Divider />
-      <Container sx={{ mt: 4 }} maxWidth="xl">
-        <Typography variant="h6" sx={{ mb: 3, mt: 2 }}>
+      <Container
+        maxWidth="xl"
+        style={{ display: 'flex', minHeight: '70vh', flexDirection: 'column' }}
+      >
+        <Typography variant="h6" sx={{ mb: 1, mt: 2 }}>
           {handleDataTypeTitle(dataType)}
         </Typography>
         {children}
+        <footer style={{ textAlign: 'center', marginTop: 'auto' }}>
+          <Typography variant="caption" component="p">
+            Copyright @ {new Date().getFullYear()}
+          </Typography>
+          <Typography variant="caption" component="p">
+            Proudly created by{' '}
+            <a
+              href="https://linktr.ee/andreyxdd"
+              style={{ textDecoration: 'none', color: 'grey' }}
+            >
+              Andrey Volkov
+            </a>
+          </Typography>
+        </footer>
       </Container>
     </div>
   );

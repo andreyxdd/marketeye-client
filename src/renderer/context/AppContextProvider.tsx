@@ -33,6 +33,7 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
   const [dataIsLoaded, setDataIsLoaded] = useState<boolean>(false);
 
   const prevDate = usePrevious(date);
+  const prevTextField = usePrevious(textField);
 
   const providerValue: IAppContextProps = {
     textField,
@@ -84,6 +85,7 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
   useEffect(() => {
     setDataIsLoaded(false);
 
+    // --- FUNCTIONS INITIALIZATION ---
     const fetchDataByType = async () => {
       try {
         const response: IDataByTypesProps | null =
@@ -131,27 +133,26 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
         console.log(e);
       }
     };
+    // -------------------------------
 
     if (date) {
-      // no date - no data
-
+      // make sure date is not empty
       if (textField.on) {
+        console.log('textField is on');
         // search ticker is on
         fetchOneTickerData();
-        if (date !== prevDate) {
-          // check if date not equal to the previous date
-          // and update the data
-          fetchDataByType();
-        }
       } else {
-        // serach ticker is off
         // eslint-disable-next-line no-lonely-if
-        if (data !== null) {
-          // use existing data
+        if (
+          prevDate !== date ||
+          data === null ||
+          prevTextField?.on !== textField.on
+        ) {
+          // on mount and on date change
+          fetchDataByType();
+        } else {
           setDataToPresent(data);
           setDataIsLoaded(true);
-        } else {
-          fetchDataByType();
         }
       }
     }

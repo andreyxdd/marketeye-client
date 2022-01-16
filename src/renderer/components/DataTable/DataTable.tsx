@@ -23,7 +23,7 @@ const DataTable = () => {
 
   if (dataIsLoaded && dataToPresent !== null) {
     return (
-      <div style={{ width: '100%' }}>
+      <div style={{ width: '100%', marginBottom: 12 }}>
         <DataGrid
           rows={processData(dataToPresent[dataType], dataType)}
           columns={columns}
@@ -36,7 +36,7 @@ const DataTable = () => {
   }
 
   return (
-    <div style={{ width: '100%', height: 600 }}>
+    <div style={{ width: '100%', height: 600, marginBottom: 12 }}>
       <SkeletonLoader style={{ width: '100%', height: '100%' }} />
     </div>
   );
