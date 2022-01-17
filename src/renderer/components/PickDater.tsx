@@ -25,8 +25,10 @@ const PickDater = () => {
           new Date(date).getTime() + new Date(date).getTimezoneOffset() * 60000
         }
         onChange={handleChange}
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        renderInput={(params) => <TextField {...params} />}
+        renderInput={(params) => (
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          <TextField {...params} style={{ width: 300 }} />
+        )}
         shouldDisableDate={disableDates}
       />
     </LocalizationProvider>

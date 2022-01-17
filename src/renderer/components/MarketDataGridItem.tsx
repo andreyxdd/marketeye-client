@@ -26,6 +26,7 @@ const MarketDataGridItem = () => {
             setIsLoaded(true);
           }
         } catch (e) {
+          // eslint-disable-next-line no-console
           console.log(e);
         }
       }
@@ -40,7 +41,7 @@ const MarketDataGridItem = () => {
         direction="row"
         alignItems="space-evenly"
         xs={12}
-        spacing={1}
+        spacing={0.5}
       >
         {/* SP500 and VIX1 column */}
         <Grid
@@ -49,13 +50,14 @@ const MarketDataGridItem = () => {
           direction="column"
           justifyContent="center"
           alignItems="flex-end"
-          xs={2}
+          xs={3}
+          spacing={1}
         >
           <Grid item>
             <Typography variant="body2">SP500:</Typography>
           </Grid>
           <Grid item>
-            <Typography variant="body2">VIX1:</Typography>
+            <Typography variant="body2">VIX-1:</Typography>
           </Grid>
         </Grid>
         <Grid
@@ -64,7 +66,8 @@ const MarketDataGridItem = () => {
           direction="column"
           justifyContent="center"
           alignItems="flex-start"
-          xs={2}
+          xs={1}
+          spacing={1}
         >
           <Grid item>
             <Typography variant="body2">
@@ -85,13 +88,14 @@ const MarketDataGridItem = () => {
           direction="column"
           justifyContent="center"
           alignItems="flex-end"
-          xs={2}
+          xs={3}
+          spacing={1}
         >
           <Grid item>
             <Typography variant="body2">CVI:</Typography>
           </Grid>
           <Grid item>
-            <Typography variant="body2">VIX2:</Typography>
+            <Typography variant="body2">VIX-2:</Typography>
           </Grid>
         </Grid>
         <Grid
@@ -100,7 +104,8 @@ const MarketDataGridItem = () => {
           direction="column"
           justifyContent="center"
           alignItems="flex-start"
-          xs={2}
+          xs={1}
+          spacing={1}
         >
           <Grid item>
             <Typography variant="body2">
@@ -124,7 +129,8 @@ const MarketDataGridItem = () => {
           direction="column"
           justifyContent="center"
           alignItems="flex-end"
-          xs={2}
+          xs={3}
+          spacing={1}
         >
           <Grid item>
             <Typography variant="body2">VIX:</Typography>
@@ -139,7 +145,8 @@ const MarketDataGridItem = () => {
           direction="column"
           justifyContent="center"
           alignItems="flex-start"
-          xs={2}
+          xs={1}
+          spacing={1}
         >
           <Grid item>
             <Typography variant="body2">

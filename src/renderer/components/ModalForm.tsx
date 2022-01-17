@@ -75,6 +75,7 @@ const ModalForm = ({ open, setOpen }: IModalFormProps) => {
         });
         setStatus(ok);
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.log(e);
       }
     } else {
@@ -166,7 +167,7 @@ const ModalForm = ({ open, setOpen }: IModalFormProps) => {
           <div>
             {status === true ? (
               <Alert severity="success" sx={alertStyle}>
-                Message have been sent successfully!
+                Message has been sent successfully!
               </Alert>
             ) : (
               <Alert severity="error" sx={alertStyle}>

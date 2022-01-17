@@ -8,6 +8,7 @@ import processData from './dataProcessing';
 const DataTable = () => {
   const { dataToPresent, dataType, dataIsLoaded } = useAppContext();
   const [columns, setColumns] = useState(columnsDefinition);
+  const [pageSize, setPageSize] = useState<number>(10);
 
   useEffect(() => {
     const newColumns = columns.map((column) => {
@@ -23,23 +24,20 @@ const DataTable = () => {
 
   if (dataIsLoaded && dataToPresent !== null) {
     return (
-      <div style={{ width: '100%', marginBottom: 12 }}>
+      <>
         <DataGrid
           rows={processData(dataToPresent[dataType], dataType)}
           columns={columns}
           autoHeight
-          pageSize={10}
-          rowsPerPageOptions={[10]}
+          rowsPerPageOptions={[5, 10, 20]}
+          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          pageSize={pageSize}
         />
-      </div>
+      </>
     );
   }
 
-  return (
-    <div style={{ width: '100%', height: 600, marginBottom: 12 }}>
-      <SkeletonLoader style={{ width: '100%', height: '100%' }} />
-    </div>
-  );
+  return <SkeletonLoader style={{ width: '100%', minHeight: 630 }} />;
 };
 
 export default DataTable;

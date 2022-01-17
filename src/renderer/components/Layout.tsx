@@ -9,6 +9,7 @@ import {
 import Navbar from './Navbar';
 import MarketDataGridItem from './MarketDataGridItem';
 import PickDater from './PickDater';
+import Footer from './Footer';
 import useAppContext from '../context/useAppContext';
 
 interface ILayoutProps {
@@ -16,7 +17,7 @@ interface ILayoutProps {
 }
 
 const Layout = ({ children }: ILayoutProps) => {
-  const { textField, setTextField, dataType } = useAppContext();
+  const { textField, setTextField, dataType, dataIsLoaded } = useAppContext();
 
   const handleSearchStringChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const currentValue = (e.target as HTMLInputElement).value;
@@ -85,7 +86,6 @@ const Layout = ({ children }: ILayoutProps) => {
         <Grid
           item
           container
-          direction="row"
           justifyContent="flex-start"
           alignItems="center"
           xs={3}
@@ -105,35 +105,41 @@ const Layout = ({ children }: ILayoutProps) => {
           </Grid>
           <Grid item>
             <Button
-              style={{ width: 70, height: 35 }}
+              style={{ width: 70, height: 35, marginRight: 5 }}
               size="small"
               variant="contained"
               onClick={handleSearchStart}
+              disabled={!dataIsLoaded}
             >
               Search
             </Button>
-          </Grid>
-          <Grid item>
             <Button
-              style={{ width: 70, height: 35 }}
+              style={{ width: 70, height: 35, marginLeft: 5 }}
               size="small"
               variant="outlined"
               color="error"
               onClick={handleSearchClear}
+              disabled={!dataIsLoaded}
             >
               Clear
             </Button>
           </Grid>
         </Grid>
-        <Grid container item xs={6}>
-          <Grid item container xs={12} justifyContent="center" sx={{ mb: 1 }}>
+        <Grid container item xs={5}>
+          <Grid
+            item
+            container
+            xs={12}
+            justifyContent="center"
+            sx={{ mb: 1, pl: 15 }}
+          >
             <Typography variant="h6">Market-as-a-whole Analytics</Typography>
           </Grid>
           <MarketDataGridItem />
         </Grid>
         <Grid
           item
-          xs={3}
+          xs={4}
           container
           direction="row"
           justifyContent="flex-end"
@@ -143,28 +149,14 @@ const Layout = ({ children }: ILayoutProps) => {
         </Grid>
       </Grid>
       <Divider />
-      <Container
-        maxWidth="xl"
-        style={{ display: 'flex', minHeight: '70vh', flexDirection: 'column' }}
-      >
+      <Container maxWidth="xl" style={{ minHeight: 630 }}>
         <Typography variant="h6" sx={{ mb: 1, mt: 2 }}>
           {handleDataTypeTitle(dataType)}
         </Typography>
-        {children}
-        <footer style={{ textAlign: 'center', marginTop: 'auto' }}>
-          <Typography variant="caption" component="p">
-            Copyright @ {new Date().getFullYear()}
-          </Typography>
-          <Typography variant="caption" component="p">
-            Proudly created by{' '}
-            <a
-              href="https://linktr.ee/andreyxdd"
-              style={{ textDecoration: 'none', color: 'grey' }}
-            >
-              Andrey Volkov
-            </a>
-          </Typography>
-        </footer>
+        <div style={{ width: '100%', minHeight: 630, marginBottom: 20 }}>
+          {children}
+        </div>
+        <Footer />
       </Container>
     </div>
   );

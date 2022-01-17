@@ -77,6 +77,7 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
           throw new Error('datesArray is empty');
         }
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.log(e);
       }
     })();
@@ -99,6 +100,7 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
           setDataIsLoaded(true);
         }
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.log(e);
       }
     };
@@ -130,6 +132,7 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
           }
         }
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.log(e);
       }
     };
@@ -138,9 +141,7 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
     if (date) {
       // make sure date is not empty
       if (textField.on) {
-        console.log('textField is on');
-        // search ticker is on
-        fetchOneTickerData();
+        fetchOneTickerData(); // search ticker is on
       } else {
         // eslint-disable-next-line no-lonely-if
         if (
@@ -148,8 +149,7 @@ const AppContextProvider: React.FC<IAppContextProviderProps> = ({
           data === null ||
           prevTextField?.on !== textField.on
         ) {
-          // on mount and on date change
-          fetchDataByType();
+          fetchDataByType(); // on mount and on date change
         } else {
           setDataToPresent(data);
           setDataIsLoaded(true);
