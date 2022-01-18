@@ -88,7 +88,7 @@ const Layout = ({ children }: ILayoutProps) => {
           container
           justifyContent="flex-start"
           alignItems="center"
-          xs={3}
+          xs={3.5}
           spacing={1}
         >
           <Grid item>
@@ -100,12 +100,12 @@ const Layout = ({ children }: ILayoutProps) => {
               value={textField.searchString}
               helperText={textField.helperText}
               error={textField.error}
-              style={{ width: 150 }}
+              style={{ width: 120 }}
             />
           </Grid>
           <Grid item>
             <Button
-              style={{ width: 70, height: 35, marginRight: 5 }}
+              style={{ width: 65, height: 35, marginRight: 4 }}
               size="small"
               variant="contained"
               onClick={handleSearchStart}
@@ -114,7 +114,7 @@ const Layout = ({ children }: ILayoutProps) => {
               Search
             </Button>
             <Button
-              style={{ width: 70, height: 35, marginLeft: 5 }}
+              style={{ width: 65, height: 35, marginLeft: 4 }}
               size="small"
               variant="outlined"
               color="error"
@@ -139,7 +139,7 @@ const Layout = ({ children }: ILayoutProps) => {
         </Grid>
         <Grid
           item
-          xs={4}
+          xs={3.5}
           container
           direction="row"
           justifyContent="flex-end"

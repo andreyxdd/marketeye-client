@@ -27,7 +27,7 @@ const PickDater = () => {
         onChange={handleChange}
         renderInput={(params) => (
           // eslint-disable-next-line react/jsx-props-no-spreading
-          <TextField {...params} style={{ width: 300 }} />
+          <TextField {...params} style={{ width: 200 }} />
         )}
         shouldDisableDate={disableDates}
       />

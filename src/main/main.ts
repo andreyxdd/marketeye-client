@@ -120,7 +120,7 @@ ipcMain.handle('notify-developer', async (_event, arg) => {
   try {
     await axios.post(
       `${process.env.MARKETEYE_API_URL_NOTIFICATIONS}/notify_developer`,
-      { email_body: arg.email_body },
+      { email_body: arg.body, email_subject: arg.subject },
       {
         headers: { 'Content-Type': 'application/json; charset=UTF-8' },
         params: {

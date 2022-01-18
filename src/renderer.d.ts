@@ -11,7 +11,8 @@ export interface IRequest {
 }
 
 export interface IEmail {
-  email_body: string;
+  body: string;
+  subject: string;
 }
 
 export interface INotificationStatus {

@@ -71,7 +71,9 @@ const ModalForm = ({ open, setOpen }: IModalFormProps) => {
       });
       try {
         const { ok } = await window.electronAPI.notifyDeveloper({
-          email_body: modalTextField.text,
+          body: modalTextField.text,
+          subject:
+            'MarketEye Desktop App: Report-a-Problem form has been submitted',
         });
         setStatus(ok);
       } catch (e) {
