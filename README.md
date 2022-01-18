@@ -15,7 +15,7 @@ MarketEye desktop app is a private app to analyze the stock market.
 
 MarketEye API provides the most recent stock market analytics by calculating individual stock indicators (EMAs, MFI, etc.) as well as market-as-a-whole parameters (VIX, CVI, etc.) using the end-of-day (EOD) historical data. MarketEye API stores the last three months of data and computes new analytics every working (trading) day at 6 PM EST.
 
-*Note*: MarketEye API is accessible only by a private key.
+*Note*: MarketEye API is accessible only by a private key (should be initiated in the ```.env``` locally).
 
 ## Installing, running, and packaging
 
