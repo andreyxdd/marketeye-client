@@ -1,12 +1,12 @@
 {
-  "name": "electron-react-boilerplate",
-  "version": "4.5.0",
-  "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
+  "name": "marketeye-desktop-app",
+  "version": "1.0.0",
+  "description": "A private desktop app to analyze the stock market based on MarketEye API and electron-react-boilerplate",
   "main": "./dist/main/main.js",
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://github.com/electron-react-boilerplate"
+    "name": "Andrey Volkov",
+    "email": "volkov@ualberta.ca",
+    "url": "https://linktr.ee/andreyxdd"
   },
   "scripts": {
     "electron-rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
@@ -14,5 +14,5 @@
     "postinstall": "npm run electron-rebuild && npm run link-modules"
   },
   "dependencies": {},
-  "license": "MIT"
+  "license": "UNLICENSED"
 }

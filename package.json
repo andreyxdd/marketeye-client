@@ -1,6 +1,6 @@
 {
   "name": "marketeye-desktop-app",
-  "description": "Desktop app for view stock market analytics. The app is based on electron/react boilerplate.",
+  "description": "A private desktop app to analyze the stock market based on MarketEye API and electron-react-boilerplate",
   "scripts": {
     "build": "npm run build:main && npm run build:renderer",
     "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
@@ -102,9 +102,6 @@
     "url": "https://linktr.ee/andreyxdd"
   },
   "license": "UNLICENSED",
-  "bugs": {
-    "url": "https://github.com/andreyxdd/marketeye-desktop-app/issues"
-  },
   "keywords": [
     "electron",
     "react",
