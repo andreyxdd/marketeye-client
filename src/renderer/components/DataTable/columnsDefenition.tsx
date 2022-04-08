@@ -4,7 +4,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'id',
     headerName: '#',
-    width: 10,
+    width: 5,
     align: 'center',
     headerAlign: 'center',
     description: 'Ranking for the given creteria',
@@ -12,7 +12,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'ticker',
     headerName: 'Ticker',
-    width: 80,
+    width: 64,
     renderCell: (params) => (
       <a
         href={`https://finance.yahoo.com/quote/${params.value}`}
@@ -30,7 +30,7 @@ export const columnsDefinition: GridColDef[] = [
     field: 'macd',
     headerName: 'MACD',
     type: 'number',
-    width: 80,
+    width: 70,
     align: 'center',
     headerAlign: 'center',
     valueFormatter: (params: GridValueFormatterParams) => {
@@ -42,7 +42,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'one_day_avg_mf',
     headerName: '1-day Money Flow, $',
-    width: 200,
+    width: 145,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -57,7 +57,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'three_day_avg_mf',
     headerName: '3-day Avg Money Flow, $',
-    width: 200,
+    width: 164,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -73,7 +73,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'one_day_open_close_change',
     headerName: '1-day Open-Close Change, %',
-    width: 220,
+    width: 185,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -88,7 +88,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'volume',
     headerName: 'Volume',
-    width: 150,
+    width: 100,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -118,7 +118,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'one_day_volume_change',
     headerName: '1-day Volume Change, %',
-    width: 220,
+    width: 165,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -134,7 +134,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'three_day_avg_volume_change',
     headerName: '3-day Avg Volume Change, %',
-    width: 220,
+    width: 194,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -150,7 +150,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'one_day_close_change',
     headerName: '1-day Close Change, %',
-    width: 220,
+    width: 164,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -166,7 +166,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'three_day_avg_close_change',
     headerName: '3-day Avg Close Change, %',
-    width: 220,
+    width: 176,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -182,7 +182,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'ema_3over9',
     headerName: 'EMA 3/9',
-    width: 100,
+    width: 80,
     type: 'string',
     align: 'center',
     headerAlign: 'center',
@@ -194,7 +194,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'ema_12over9',
     headerName: 'EMA 12/9',
-    width: 100,
+    width: 90,
     type: 'string',
     align: 'center',
     headerAlign: 'center',
@@ -206,7 +206,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'ema_12over26',
     headerName: 'EMA 12/26',
-    width: 100,
+    width: 90,
     type: 'string',
     align: 'center',
     headerAlign: 'center',
@@ -218,7 +218,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'ema_50over20',
     headerName: 'EMA 50/20',
-    width: 100,
+    width: 90,
     type: 'string',
     align: 'center',
     headerAlign: 'center',
@@ -230,7 +230,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'closingPriceChangeDay12',
     headerName: 'Days 1-2 Close Change, %',
-    width: 200,
+    width: 170,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -246,7 +246,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'closingPriceChangeDay23',
     headerName: 'Days 2-3 Close Change, %',
-    width: 200,
+    width: 170,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -262,7 +262,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'mfi',
     headerName: 'Money Flow Index',
-    width: 150,
+    width: 128,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -278,7 +278,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'ema3',
     headerName: 'EMA3',
-    width: 100,
+    width: 80,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -294,7 +294,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'ema9',
     headerName: 'EMA9',
-    width: 100,
+    width: 80,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -310,7 +310,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'ema12',
     headerName: 'EMA12',
-    width: 100,
+    width: 80,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -326,7 +326,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'ema20',
     headerName: 'EMA20',
-    width: 100,
+    width: 80,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -342,7 +342,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'ema26',
     headerName: 'EMA26',
-    width: 100,
+    width: 80,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -358,7 +358,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'ema50',
     headerName: 'EMA50',
-    width: 100,
+    width: 80,
     type: 'number',
     align: 'center',
     headerAlign: 'center',

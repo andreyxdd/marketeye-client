@@ -63,7 +63,7 @@ const Navbar = () => {
           >
             3-day Money Flow
           </Button>
-          <Button
+          {/* <Button
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             variant={
@@ -76,7 +76,7 @@ const Navbar = () => {
             onClick={(e) => handleClick(e, 'by_five_prec_open_close_change')}
           >
             5% change
-          </Button>
+          </Button> */}
           <Button
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore

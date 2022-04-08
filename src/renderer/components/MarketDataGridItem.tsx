@@ -54,10 +54,14 @@ const MarketDataGridItem = () => {
           spacing={1}
         >
           <Grid item>
-            <Typography variant="body2">SP500:</Typography>
+            <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+              SP500:
+            </Typography>
           </Grid>
           <Grid item>
-            <Typography variant="body2">VIX-1:</Typography>
+            <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+              VIX-1:
+            </Typography>
           </Grid>
         </Grid>
         <Grid
@@ -92,10 +96,14 @@ const MarketDataGridItem = () => {
           spacing={1}
         >
           <Grid item>
-            <Typography variant="body2">CVI:</Typography>
+            <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+              CVI:
+            </Typography>
           </Grid>
           <Grid item>
-            <Typography variant="body2">VIX-2:</Typography>
+            <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+              VIX-2:
+            </Typography>
           </Grid>
         </Grid>
         <Grid
@@ -133,10 +141,14 @@ const MarketDataGridItem = () => {
           spacing={1}
         >
           <Grid item>
-            <Typography variant="body2">VIX:</Typography>
+            <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+              VIX:
+            </Typography>
           </Grid>
           <Grid item>
-            <Typography variant="body2">VIX 50-EMA:</Typography>
+            <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+              VIX 50-EMA:
+            </Typography>
           </Grid>
         </Grid>
         <Grid
@@ -164,9 +176,15 @@ const MarketDataGridItem = () => {
   }
 
   return (
-    <div style={{ width: '100%', height: 40 }}>
+    <Grid
+      item
+      container
+      justifyContent="center"
+      sx={{ mb: 1, pl: 15 }}
+      style={{ width: '100%', height: 40 }}
+    >
       <SkeletonLoader style={{ width: '100%', height: '100%' }} />
-    </div>
+    </Grid>
   );
 };
 

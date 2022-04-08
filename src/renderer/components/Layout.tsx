@@ -94,13 +94,14 @@ const Layout = ({ children }: ILayoutProps) => {
           <Grid item>
             <TextField
               size="small"
-              label="Search for ticker"
-              inputProps={{ maxLength: 5 }}
+              label="Search for tickers"
+              inputProps={{ maxLength: 5, style: { fontSize: 16 } }}
               onChange={handleSearchStringChange}
               value={textField.searchString}
               helperText={textField.helperText}
               error={textField.error}
               style={{ width: 120 }}
+              InputLabelProps={{ style: { fontSize: 12 } }}
             />
           </Grid>
           <Grid item>
@@ -133,7 +134,9 @@ const Layout = ({ children }: ILayoutProps) => {
             justifyContent="center"
             sx={{ mb: 1, pl: 15 }}
           >
-            <Typography variant="h6">Market-as-a-whole Analytics</Typography>
+            <Typography variant="h6" sx={{ fontSize: 18 }}>
+              Market-as-a-whole Analytics
+            </Typography>
           </Grid>
           <MarketDataGridItem />
         </Grid>
@@ -150,7 +153,7 @@ const Layout = ({ children }: ILayoutProps) => {
       </Grid>
       <Divider />
       <Container maxWidth="xl" style={{ minHeight: 630 }}>
-        <Typography variant="h6" sx={{ mb: 1, mt: 2 }}>
+        <Typography variant="h6" sx={{ mb: 1, mt: 2, fontSize: 16 }}>
           {handleDataTypeTitle(dataType)}
         </Typography>
         <div style={{ width: '100%', minHeight: 630, marginBottom: 20 }}>
