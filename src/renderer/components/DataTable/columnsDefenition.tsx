@@ -371,6 +371,36 @@ export const columnsDefinition: GridColDef[] = [
     description:
       'Exponential Moving Average for the period of 50 days from the given date (including)',
   },
+  {
+    field: 'mentions_over_one_day',
+    headerName: 'Metnions Over One Day',
+    width: 165,
+    type: 'number',
+    align: 'center',
+    headerAlign: 'center',
+    description:
+      'Number of times the exact ticker string was mentioned in the news media within the last day',
+  },
+  {
+    field: 'mentions_over_two_days',
+    headerName: 'Metnions Over Two Days',
+    width: 170,
+    type: 'number',
+    align: 'center',
+    headerAlign: 'center',
+    description:
+      'Number of times the exact ticker string was mentioned in the news media within the last two days',
+  },
+  {
+    field: 'mentions_over_three_days',
+    headerName: 'Metnions Over Three Days',
+    width: 176,
+    type: 'number',
+    align: 'center',
+    headerAlign: 'center',
+    description:
+      'Number of times the exact ticker string was mentioned in the news media within the last three days',
+  },
 ];
 
 interface IColumnsToShowProps {

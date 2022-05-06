@@ -27,6 +27,9 @@ export interface IDataProps {
   ema20: number;
   ema26: number;
   ema50: number;
+  mentions_over_one_day: number;
+  mentions_over_two_days: number;
+  mentions_over_three_days: number;
   [key: string]: number | string | Array<string> | undefined;
 }
 
