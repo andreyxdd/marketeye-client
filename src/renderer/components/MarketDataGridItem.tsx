@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 import SkeletonLoader from 'tiny-skeleton-loader-react';
-import useAppContext from '../context/useAppContext';
 import { IMarketDataProps } from '../../types';
+import useStore, { IStore } from '../hooks/useStore';
 
 const MarketDataGridItem = () => {
-  const { date } = useAppContext();
+  const date = useStore((state: IStore) => state.selectedDate);
   const [marketData, setMarketData] = useState<IMarketDataProps | null>(null);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 

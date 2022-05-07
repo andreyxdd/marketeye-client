@@ -10,7 +10,7 @@ import Navbar from './Navbar';
 import MarketDataGridItem from './MarketDataGridItem';
 import PickDater from './PickDater';
 import Footer from './Footer';
-import useAppContext from '../context/useAppContext';
+import useAppContext from '../hooks/useAppContext';
 
 interface ILayoutProps {
   children: React.ReactNode;

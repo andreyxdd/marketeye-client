@@ -1,12 +1,17 @@
 import { DataGrid } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import SkeletonLoader from 'tiny-skeleton-loader-react';
-import useAppContext from '../../context/useAppContext';
+import shallow from 'zustand/shallow';
+import useStore, { IStore } from '../../hooks/useStore';
 import { columnsDefinition, columnsToShow } from './columnsDefenition';
 import processData from './dataProcessing';
 
 const DataTable = () => {
-  const { dataToPresent, dataType, dataIsLoaded } = useAppContext();
+  const [currentData, dataType] = useStore(
+    (state: IStore) => [state.currentData, state.dataType],
+    shallow
+  );
+
   const [columns, setColumns] = useState(columnsDefinition);
   const [pageSize, setPageSize] = useState<number>(10);
 
@@ -22,11 +27,11 @@ const DataTable = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataType]);
 
-  if (dataIsLoaded && dataToPresent !== null) {
+  if (currentData !== null) {
     return (
       <>
         <DataGrid
-          rows={processData(dataToPresent[dataType], dataType)}
+          rows={processData(currentData[dataType], dataType)}
           columns={columns}
           autoHeight
           rowsPerPageOptions={[5, 10, 20]}

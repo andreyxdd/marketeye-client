@@ -8,11 +8,15 @@ import {
   IconButton,
 } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import useAppContext from '../context/useAppContext';
+import shallow from 'zustand/shallow';
 import ModalForm from './ModalForm';
+import useStore, { IStore } from '../hooks/useStore';
 
 const Navbar = () => {
-  const { dataType, setDataType } = useAppContext();
+  const [dataType, setDataType] = useStore(
+    (state: IStore) => [state.dataType, state.setDataType],
+    shallow
+  );
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);

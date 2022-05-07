@@ -406,7 +406,7 @@ export const columnsDefinition: GridColDef[] = [
 interface IColumnsToShowProps {
   by_one_day_avg_mf: Array<string>;
   by_three_day_avg_mf: Array<string>;
-  by_five_prec_open_close_change: Array<string>;
+  // by_five_prec_open_close_change: Array<string>;
   by_volume: Array<string>;
   by_three_day_avg_volume: Array<string>;
   [key: string]: Array<string>;

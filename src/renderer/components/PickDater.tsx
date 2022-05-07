@@ -2,14 +2,22 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import TextField from '@mui/material/TextField';
-import useAppContext from '../context/useAppContext';
+import shallow from 'zustand/shallow';
+import useStore, { IStore } from '../hooks/useStore';
 
 const PickDater = () => {
-  const { date, setDate, availableDates } = useAppContext();
+  const [selectedDate, setSelectedDate, availableDates] = useStore(
+    (state: IStore) => [
+      state.selectedDate,
+      state.setSelectedDate,
+      state.availableDates,
+    ],
+    shallow
+  );
 
   const handleChange = (newValue: Date | null) => {
     if (newValue !== null) {
-      setDate(newValue.toISOString().split('T')[0]);
+      setSelectedDate(newValue.toISOString().split('T')[0]);
     }
   };
 
@@ -22,7 +30,8 @@ const PickDater = () => {
       <DesktopDatePicker
         label="Select Date"
         value={
-          new Date(date).getTime() + new Date(date).getTimezoneOffset() * 60000
+          new Date(selectedDate).getTime() +
+          new Date(selectedDate).getTimezoneOffset() * 60000
         }
         onChange={handleChange}
         renderInput={(params) => (

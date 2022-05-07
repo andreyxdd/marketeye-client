@@ -6,7 +6,7 @@ const processData = (dataList: Array<IDataProps>, dataType: string) => {
     if (
       [
         'by_one_day_avg_mf',
-        'by_five_prec_open_close_change',
+        // 'by_five_prec_open_close_change',
         'by_volume',
       ].includes(dataType)
     ) {
