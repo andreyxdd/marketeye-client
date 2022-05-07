@@ -2,7 +2,6 @@ import React from 'react';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import DataTable from './components/DataTable/DataTable';
-import AppContextProvider from './hooks/AppContextProvider';
 import './App.css';
 import useStore, { IStore } from './hooks/useStore';
 
@@ -14,11 +13,9 @@ const MainComponent = () => {
   }, [onMountFetch]);
 
   return (
-    <AppContextProvider>
-      <Layout>
-        <DataTable />
-      </Layout>
-    </AppContextProvider>
+    <Layout>
+      <DataTable />
+    </Layout>
   );
 };
 
