@@ -7,8 +7,24 @@ import { columnsDefinition, columnsToShow } from './columnsDefenition';
 import processData from './dataProcessing';
 
 const DataTable = () => {
-  const [currentData, dataType] = useStore(
-    (state: IStore) => [state.currentData, state.dataType],
+  const [
+    currentData,
+    dataType,
+    currentDataIsLoaded,
+    fetchAndSetManyTickerData,
+    fetchAndSetOneTickerData,
+    showOneTickerData,
+    selectedDate,
+  ] = useStore(
+    (state: IStore) => [
+      state.currentData,
+      state.dataType,
+      state.currentDataIsLoaded,
+      state.fetchAndSetManyTickerData,
+      state.fetchAndSetOneTickerData,
+      state.showOneTickerData,
+      state.selectedDate,
+    ],
     shallow
   );
 
@@ -27,7 +43,15 @@ const DataTable = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataType]);
 
-  if (currentData !== null) {
+  useEffect(() => {
+    if (showOneTickerData) {
+      fetchAndSetOneTickerData();
+    }
+    fetchAndSetManyTickerData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDate]);
+
+  if (currentDataIsLoaded && currentData !== null) {
     return (
       <>
         <DataGrid

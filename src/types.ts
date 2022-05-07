@@ -47,11 +47,10 @@ export interface IDateProps {
   date_string: string;
 }
 
-export interface ITextFieldProps {
+export interface ITextfieldProps {
   searchString: string;
   helperText: string;
   error: boolean;
-  on: boolean;
 }
 
 export interface IMarketDataProps {
@@ -64,8 +63,8 @@ export interface IMarketDataProps {
 }
 
 export interface IAppContextProps {
-  textField: ITextFieldProps;
-  setTextField: React.Dispatch<React.SetStateAction<ITextFieldProps>>;
+  textField: ITextfieldProps;
+  setTextField: React.Dispatch<React.SetStateAction<ITextfieldProps>>;
   date: string;
   setDate: React.Dispatch<React.SetStateAction<string>>;
   availableDates: Array<string>;

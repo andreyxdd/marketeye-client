@@ -6,57 +6,63 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import shallow from 'zustand/shallow';
 import Navbar from './Navbar';
 import MarketDataGridItem from './MarketDataGridItem';
 import PickDater from './PickDater';
 import Footer from './Footer';
-import useAppContext from '../hooks/useAppContext';
+import useStore, { IStore } from '../hooks/useStore';
 
 interface ILayoutProps {
   children: React.ReactNode;
 }
 
 const Layout = ({ children }: ILayoutProps) => {
-  const { textField, setTextField, dataType, dataIsLoaded } = useAppContext();
+  const [
+    dataType,
+    currentDataIsLoaded,
+    fetchAndSetOneTickerData,
+    showOneTickerData,
+    setTextfield,
+    textField,
+    clearTextfield,
+  ] = useStore(
+    (state: IStore) => [
+      state.dataType,
+      state.currentDataIsLoaded,
+      state.fetchAndSetOneTickerData,
+      state.showOneTickerData,
+      state.setTextfield,
+      state.textfield,
+      state.clearTextfield,
+    ],
+    shallow
+  );
 
-  const handleSearchStringChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchStringChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const currentValue = (e.target as HTMLInputElement).value;
-    setTextField({
+    setTextfield({
       ...textField,
       searchString: currentValue.toUpperCase(),
       helperText: '',
       error: false,
-      on: false,
     });
   };
 
   const handleSearchStart = async (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
-    if (textField.searchString) {
-      setTextField({
-        ...textField,
-        on: true,
-      });
-    } else {
-      setTextField({
-        ...textField,
-        helperText: 'Input is empty',
-        error: true,
-      });
-    }
+    await fetchAndSetOneTickerData();
   };
 
   const handleSearchClear = async (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
-    setTextField({
-      ...textField,
-      searchString: '',
-      on: false,
-    });
+    clearTextfield();
   };
 
   const handleDataTypeTitle = (type: string) => {
-    if (textField.on) {
+    if (showOneTickerData) {
       return `Analytics for the ${textField.searchString} ticker`;
     }
 
@@ -110,7 +116,7 @@ const Layout = ({ children }: ILayoutProps) => {
               size="small"
               variant="contained"
               onClick={handleSearchStart}
-              disabled={!dataIsLoaded}
+              disabled={!currentDataIsLoaded}
             >
               Search
             </Button>
@@ -120,7 +126,7 @@ const Layout = ({ children }: ILayoutProps) => {
               variant="outlined"
               color="error"
               onClick={handleSearchClear}
-              disabled={!dataIsLoaded}
+              disabled={!currentDataIsLoaded}
             >
               Clear
             </Button>
