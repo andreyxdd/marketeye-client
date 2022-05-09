@@ -13,6 +13,7 @@ interface IState {
   manyTickersData: IDataByTypesProps | null;
   currentData: IDataByTypesProps | null;
   currentDataIsLoaded: boolean;
+  manyTickersDataIsLoaded: boolean;
   showOneTickerData: boolean;
   dataType: string;
   textfield: ITextfieldProps;
@@ -24,6 +25,7 @@ const initialState: IState = {
   manyTickersData: null,
   currentData: null,
   currentDataIsLoaded: false,
+  manyTickersDataIsLoaded: false,
   showOneTickerData: false,
   dataType: 'by_one_day_avg_mf',
   textfield: {
@@ -49,7 +51,11 @@ export interface IStore extends IState {
 const useStore = create<IStore>((set: any, get: any) => ({
   ...initialState,
   setSelectedDate: (selectedDate: string) =>
-    set({ selectedDate, currentDataIsLoaded: false }),
+    set({
+      selectedDate,
+      currentDataIsLoaded: false,
+      manyTickersDataIsLoaded: false,
+    }),
   fetchAndSetManyTickerData: async () => {
     const date = get().selectedDate;
     try {
@@ -63,6 +69,7 @@ const useStore = create<IStore>((set: any, get: any) => ({
           set({
             manyTickersData,
             currentDataIsLoaded: true,
+            manyTickersDataIsLoaded: true,
           });
 
           if (!get().showOneTickerData) set({ currentData: manyTickersData });
@@ -141,15 +148,14 @@ const useStore = create<IStore>((set: any, get: any) => ({
     }
   },
   setDataType: (dataType: string) => set({ dataType }),
-  setTextfield: (textfield: ITextfieldProps) => set({ textfield }),
+  setTextfield: (textfield: ITextfieldProps) =>
+    set({ textfield, currentData: get().manyTickersData }),
   clearTextfield: () =>
-    set((prev: IStore) => ({
-      textfield: { ...prev.textfield, searchString: '' },
-      currentData: get().manyTickersData,
+    set({
+      textfield: { searchString: '', helperText: '', error: false },
       showOneTickerData: false,
-      helperText: '',
-      error: false,
-    })),
+      currentData: get().manyTickersDataIsLoaded ? get().manyTickersData : null,
+    }),
 }));
 
 export default useStore;

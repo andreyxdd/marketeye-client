@@ -15,6 +15,7 @@ const DataTable = () => {
     fetchAndSetOneTickerData,
     showOneTickerData,
     selectedDate,
+    manyTickersDataIsLoaded,
   ] = useStore(
     (state: IStore) => [
       state.currentData,
@@ -24,6 +25,7 @@ const DataTable = () => {
       state.fetchAndSetOneTickerData,
       state.showOneTickerData,
       state.selectedDate,
+      state.manyTickersDataIsLoaded,
     ],
     shallow
   );
@@ -51,7 +53,13 @@ const DataTable = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate]);
 
-  if (currentDataIsLoaded && currentData !== null) {
+  if (
+    (!showOneTickerData &&
+      manyTickersDataIsLoaded &&
+      currentDataIsLoaded &&
+      currentData !== null) ||
+    (currentDataIsLoaded && currentData !== null)
+  ) {
     return (
       <>
         <DataGrid

@@ -26,6 +26,7 @@ const Layout = ({ children }: ILayoutProps) => {
     setTextfield,
     textField,
     clearTextfield,
+    manyTickersDataIsLoaded,
   ] = useStore(
     (state: IStore) => [
       state.dataType,
@@ -35,6 +36,7 @@ const Layout = ({ children }: ILayoutProps) => {
       state.setTextfield,
       state.textfield,
       state.clearTextfield,
+      state.manyTickersDataIsLoaded,
     ],
     shallow
   );
@@ -44,7 +46,6 @@ const Layout = ({ children }: ILayoutProps) => {
   ) => {
     const currentValue = (e.target as HTMLInputElement).value;
     setTextfield({
-      ...textField,
       searchString: currentValue.toUpperCase(),
       helperText: '',
       error: false,
@@ -108,6 +109,12 @@ const Layout = ({ children }: ILayoutProps) => {
               error={textField.error}
               style={{ width: 120 }}
               InputLabelProps={{ style: { fontSize: 12 } }}
+              disabled={
+                !currentDataIsLoaded ||
+                (currentDataIsLoaded &&
+                  !showOneTickerData &&
+                  !manyTickersDataIsLoaded)
+              }
             />
           </Grid>
           <Grid item>
@@ -116,7 +123,12 @@ const Layout = ({ children }: ILayoutProps) => {
               size="small"
               variant="contained"
               onClick={handleSearchStart}
-              disabled={!currentDataIsLoaded}
+              disabled={
+                !currentDataIsLoaded ||
+                (currentDataIsLoaded &&
+                  !showOneTickerData &&
+                  !manyTickersDataIsLoaded)
+              }
             >
               Search
             </Button>
@@ -126,7 +138,12 @@ const Layout = ({ children }: ILayoutProps) => {
               variant="outlined"
               color="error"
               onClick={handleSearchClear}
-              disabled={!currentDataIsLoaded}
+              disabled={
+                !currentDataIsLoaded ||
+                (currentDataIsLoaded &&
+                  !showOneTickerData &&
+                  !manyTickersDataIsLoaded)
+              }
             >
               Clear
             </Button>
