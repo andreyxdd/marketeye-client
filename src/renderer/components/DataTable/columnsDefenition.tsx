@@ -12,7 +12,7 @@ export const columnsDefinition: GridColDef[] = [
   {
     field: 'ticker',
     headerName: 'Ticker',
-    width: 64,
+    width: 70,
     renderCell: (params) => (
       <a
         href={`https://finance.yahoo.com/quote/${params.value}`}
@@ -25,6 +25,8 @@ export const columnsDefinition: GridColDef[] = [
     align: 'center',
     headerAlign: 'center',
     description: 'Stock symbol',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'macd',
@@ -38,11 +40,13 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Moving average convergence divergence. It is calculated by subtracting the 26-period EMA from the 12-period EMA',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'one_day_avg_mf',
     headerName: '1-day Money Flow, $',
-    width: 145,
+    width: 150,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -53,11 +57,13 @@ export const columnsDefinition: GridColDef[] = [
       return valueFormatted;
     },
     description: 'Money flow averaged over 1 day using typical price',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'three_day_avg_mf',
     headerName: '3-day Avg Money Flow, $',
-    width: 164,
+    width: 170,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -69,11 +75,13 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Money flow averaged over 3 days based on 1-day average money flows',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'one_day_open_close_change',
     headerName: '1-day Open-Close Change, %',
-    width: 185,
+    width: 190,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -84,11 +92,13 @@ export const columnsDefinition: GridColDef[] = [
       return valueFormatted;
     },
     description: 'Precentage change between open and close prices',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'volume',
     headerName: 'Volume',
-    width: 100,
+    width: 80,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -99,6 +109,8 @@ export const columnsDefinition: GridColDef[] = [
       return valueFormatted;
     },
     description: 'Stock volume',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'three_day_avg_volume',
@@ -114,11 +126,13 @@ export const columnsDefinition: GridColDef[] = [
       return valueFormatted;
     },
     description: 'Stock volume averaged over three days',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'one_day_volume_change',
     headerName: '1-day Volume Change, %',
-    width: 165,
+    width: 170,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -130,11 +144,13 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Precentage change between closing volumes for the given trading day and the day before',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'three_day_avg_volume_change',
     headerName: '3-day Avg Volume Change, %',
-    width: 194,
+    width: 200,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -146,11 +162,13 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Precentage change between closing volumes for the given trading day and the day before averaged over three days',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'one_day_close_change',
     headerName: '1-day Close Change, %',
-    width: 164,
+    width: 170,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -162,11 +180,13 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Precentage change between closing prices for the given trading day and the day before',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'three_day_avg_close_change',
     headerName: '3-day Avg Close Change, %',
-    width: 176,
+    width: 180,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -178,6 +198,8 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Precentage change between closing prices for the given trading day and the day before averaged over three days',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'ema_3over9',
@@ -190,6 +212,8 @@ export const columnsDefinition: GridColDef[] = [
       return (params.value as Array<string>).join('-');
     },
     description: `Comparison between 3-day EMA and 9-day EMA. 'A' is above, 'B' is below. Three letters shows comparison for three last trading periods; one letter only for one trading period.`,
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'ema_12over9',
@@ -202,11 +226,13 @@ export const columnsDefinition: GridColDef[] = [
       return (params.value as Array<string>).join('-');
     },
     description: `Comparison between 12-day EMA and 9-day EMA. 'A' is above, 'B' is below. Three letters shows comparison for three last trading periods; one letter only for one trading period.`,
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'ema_12over26',
     headerName: 'EMA 12/26',
-    width: 90,
+    width: 100,
     type: 'string',
     align: 'center',
     headerAlign: 'center',
@@ -214,11 +240,13 @@ export const columnsDefinition: GridColDef[] = [
       return (params.value as Array<string>).join('-');
     },
     description: `Comparison between 12-day EMA and 26-day EMA. 'A' is above, 'B' is below. Three letters shows comparison for three last trading periods; one letter only for one trading period.`,
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'ema_50over20',
     headerName: 'EMA 50/20',
-    width: 90,
+    width: 100,
     type: 'string',
     align: 'center',
     headerAlign: 'center',
@@ -226,11 +254,13 @@ export const columnsDefinition: GridColDef[] = [
       return (params.value as Array<string>).join('-');
     },
     description: `Comparison between 50-day EMA and 20-day EMA. 'A' is above, 'B' is below. Three letters shows comparison for three last trading periods; one letter only for one trading period.`,
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'closingPriceChangeDay12',
     headerName: 'Days 1-2 Close Change, %',
-    width: 170,
+    width: 180,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -242,11 +272,13 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Precentage change between closing prices for the given trading day and the day before',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'closingPriceChangeDay23',
     headerName: 'Days 2-3 Close Change, %',
-    width: 170,
+    width: 180,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -258,11 +290,13 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Precentage change between closing prices for the trading day before given date and the day before that',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'mfi',
     headerName: 'Money Flow Index',
-    width: 128,
+    width: 140,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
@@ -274,6 +308,8 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Money Flow Index - is a technical oscillator that uses price and volume data for identifying overbought or oversold signals in an asset. It can also be used to spot divergences which warn of a trend change in price. The oscillator moves between 0 and 100.',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'ema3',
@@ -290,6 +326,8 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Exponential Moving Average for the period of three days from the given date (including)',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'ema9',
@@ -306,6 +344,8 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Exponential Moving Average for the period of nine days from the given date (including)',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'ema12',
@@ -322,6 +362,8 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Exponential Moving Average for the period of 12 days from the given date (including)',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'ema20',
@@ -338,6 +380,8 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Exponential Moving Average for the period of 20 days from the given date (including)',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'ema26',
@@ -354,6 +398,8 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Exponential Moving Average for the period of 26 days from the given date (including)',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'ema50',
@@ -370,42 +416,51 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Exponential Moving Average for the period of 50 days from the given date (including)',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'mentions_over_one_day',
-    headerName: 'Metnions Over One Day',
-    width: 165,
+    headerName: 'Mentions Over 1 Day',
+    width: 180,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
     description:
       'Number of times the exact ticker string was mentioned in the news media within the last day',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'mentions_over_two_days',
-    headerName: 'Metnions Over Two Days',
-    width: 170,
+    headerName: 'Mentions Over 2 Days',
+    width: 180,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
     description:
       'Number of times the exact ticker string was mentioned in the news media within the last two days',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'mentions_over_three_days',
-    headerName: 'Metnions Over Three Days',
-    width: 176,
+    headerName: 'Mentions Over 3 Days',
+    width: 180,
     type: 'number',
     align: 'center',
     headerAlign: 'center',
     description:
       'Number of times the exact ticker string was mentioned in the news media within the last three days',
+    disableColumnMenu: true,
+    sortable: false,
   },
 ];
 
 interface IColumnsToShowProps {
   by_one_day_avg_mf: Array<string>;
   by_three_day_avg_mf: Array<string>;
+  by_macd: Array<string>;
   // by_five_prec_open_close_change: Array<string>;
   by_volume: Array<string>;
   by_three_day_avg_volume: Array<string>;
@@ -441,7 +496,8 @@ export const columnsToShow: IColumnsToShowProps = {
     'three_day_avg_mf',
     'mfi',
   ],
-  by_five_prec_open_close_change: [
+  by_macd: ['id', 'ticker', 'macd'],
+  /* by_five_prec_open_close_change: [
     'id',
     'ticker',
     'macd',
@@ -451,7 +507,7 @@ export const columnsToShow: IColumnsToShowProps = {
     'one_day_open_close_change',
     'one_day_avg_mf',
     'mfi',
-  ],
+  ], */
   by_volume: [
     'id',
     'ticker',

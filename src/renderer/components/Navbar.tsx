@@ -67,6 +67,16 @@ const Navbar = () => {
           >
             3-day Money Flow
           </Button>
+          <Button
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            variant={dataType === 'by_macd' ? 'outlined' : 'inherit'}
+            color="inherit"
+            sx={{ mr: 2 }}
+            onClick={(e) => handleClick(e, 'by_macd')}
+          >
+            MACD
+          </Button>
           {/* <Button
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
