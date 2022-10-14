@@ -78,6 +78,26 @@ ipcMain.handle('get-analytics-lists-by-criteria', async (_event, arg) => {
   }
 });
 
+ipcMain.handle('get-analytics-lists-by-criterion', async (_event, arg) => {
+  try {
+    const response = await axios.get(
+      `${process.env.MARKETEYE_API_URL_ANALYTICS}/get_analytics_lists_by_criterion`,
+      {
+        params: {
+          date: arg.date,
+          criterion: arg.criterion,
+          api_key: process.env.MARKETEYE_API_KEY,
+        },
+      }
+    );
+    const { data } = response;
+    return data;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+});
+
 ipcMain.handle('get-dates', async () => {
   try {
     const response = await axios.get(

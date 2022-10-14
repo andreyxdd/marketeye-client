@@ -4,6 +4,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getTickerAnalytics: (req) => ipcRenderer.invoke('get-ticker-analytics', req),
   getAnalyticsListsByCriteria: (req) =>
     ipcRenderer.invoke('get-analytics-lists-by-criteria', req),
+  getAnalyticsListsByCriterion: (req) =>
+    ipcRenderer.invoke('get-analytics-lists-by-criterion', req),
   getDates: () => ipcRenderer.invoke('get-dates'),
   getMarketAnalytics: (req) => ipcRenderer.invoke('get-market-analytics', req),
   notifyDeveloper: (req) => ipcRenderer.invoke('notify-developer', req),

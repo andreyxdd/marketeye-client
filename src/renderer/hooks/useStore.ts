@@ -60,10 +60,43 @@ const useStore = create<IStore>((set: any, get: any) => ({
     const date = get().selectedDate;
     try {
       if (date) {
-        const manyTickersData: IDataByTypesProps | null =
-          await window.electronAPI.getAnalyticsListsByCriteria({
+        const onDayAvgMF =
+          await window.electronAPI.getAnalyticsListsByCriterion({
+            criterion: 'one_day_avg_mf',
             date,
           });
+        console.log('onDayAvgMF');
+        const threeDayAvgMF =
+          await window.electronAPI.getAnalyticsListsByCriterion({
+            criterion: 'three_day_avg_mf',
+            date,
+          });
+        console.log('threeDayAvgMF');
+        const macd = await window.electronAPI.getAnalyticsListsByCriterion({
+          criterion: 'macd',
+          date,
+        });
+        console.log('macd');
+        const volume = await window.electronAPI.getAnalyticsListsByCriterion({
+          criterion: 'volume',
+          date,
+        });
+        console.log('volume');
+        const threeDayAvgVolume =
+          await window.electronAPI.getAnalyticsListsByCriterion({
+            criterion: 'three_day_avg_volume',
+            date,
+          });
+        console.log('threeDayAvgVolume');
+
+        const manyTickersData: IDataByTypesProps = {
+          by_one_day_avg_mf: onDayAvgMF?.one_day_avg_mf || [],
+          by_three_day_avg_mf: threeDayAvgMF?.three_day_avg_mf || [],
+          by_macd: macd?.macd || [],
+          by_volume: volume?.volume || [],
+          by_three_day_avg_volume:
+            threeDayAvgVolume?.three_day_avg_volume || [],
+        };
 
         if (manyTickersData) {
           set({

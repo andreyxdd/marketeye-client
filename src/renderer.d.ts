@@ -8,6 +8,7 @@ import {
 export interface IRequest {
   date: string;
   ticker?: string;
+  criterion?: string;
 }
 
 export interface IEmail {
@@ -29,6 +30,9 @@ export interface IElectronAPIConn {
 export interface IElectronAPI {
   getTickerAnalytics: (req: IRequest) => Promise<IDataProps | null>;
   getAnalyticsListsByCriteria: (
+    req: IRequest
+  ) => Promise<IDataByTypesProps | null>;
+  getAnalyticsListsByCriterion: (
     req: IRequest
   ) => Promise<IDataByTypesProps | null>;
   getDates: () => Promise<Array<IDateProps>>;
