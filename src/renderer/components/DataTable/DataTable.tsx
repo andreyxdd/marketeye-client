@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import SkeletonLoader from 'tiny-skeleton-loader-react';
@@ -16,6 +17,7 @@ const DataTable = () => {
     showOneTickerData,
     selectedDate,
     manyTickersDataIsLoaded,
+    loadPrecentage,
   ] = useStore(
     (state: IStore) => [
       state.currentData,
@@ -26,6 +28,7 @@ const DataTable = () => {
       state.showOneTickerData,
       state.selectedDate,
       state.manyTickersDataIsLoaded,
+      state.loadPrecentage,
     ],
     shallow
   );
@@ -74,7 +77,19 @@ const DataTable = () => {
     );
   }
 
-  return <SkeletonLoader style={{ width: '100%', minHeight: 630 }} />;
+  return (
+    <div style={{ width: '100%', minHeight: 630, position: 'relative' }}>
+      <SkeletonLoader
+        style={{ width: '100%', minHeight: 630, position: 'absolute' }}
+      />
+      <Typography
+        variant="h4"
+        style={{ position: 'absolute', top: '40%', left: '48%' }}
+      >
+        {`${loadPrecentage}%`}
+      </Typography>
+    </div>
+  );
 };
 
 export default DataTable;

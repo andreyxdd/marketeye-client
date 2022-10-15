@@ -17,6 +17,7 @@ interface IState {
   showOneTickerData: boolean;
   dataType: string;
   textfield: ITextfieldProps;
+  loadPrecentage: number;
 }
 
 const initialState: IState = {
@@ -33,6 +34,7 @@ const initialState: IState = {
     helperText: '',
     error: false,
   },
+  loadPrecentage: 0,
 };
 
 /* eslint-disable no-unused-vars */
@@ -65,29 +67,53 @@ const useStore = create<IStore>((set: any, get: any) => ({
             criterion: 'one_day_avg_mf',
             date,
           });
-        console.log('onDayAvgMF');
+
+        for (let i = 0; i < 20; i += 1)
+          set((state: IStore) => ({
+            loadPrecentage: state.loadPrecentage + 1,
+          }));
+
         const threeDayAvgMF =
           await window.electronAPI.getAnalyticsListsByCriterion({
             criterion: 'three_day_avg_mf',
             date,
           });
-        console.log('threeDayAvgMF');
+
+        for (let i = 0; i < 20; i += 1)
+          set((state: IStore) => ({
+            loadPrecentage: state.loadPrecentage + 1,
+          }));
+
         const macd = await window.electronAPI.getAnalyticsListsByCriterion({
           criterion: 'macd',
           date,
         });
-        console.log('macd');
+
+        for (let i = 0; i < 20; i += 1)
+          set((state: IStore) => ({
+            loadPrecentage: state.loadPrecentage + 1,
+          }));
+
         const volume = await window.electronAPI.getAnalyticsListsByCriterion({
           criterion: 'volume',
           date,
         });
-        console.log('volume');
+
+        for (let i = 0; i < 20; i += 1)
+          set((state: IStore) => ({
+            loadPrecentage: state.loadPrecentage + 1,
+          }));
+
         const threeDayAvgVolume =
           await window.electronAPI.getAnalyticsListsByCriterion({
             criterion: 'three_day_avg_volume',
             date,
           });
-        console.log('threeDayAvgVolume');
+
+        for (let i = 0; i < 20; i += 1)
+          set((state: IStore) => ({
+            loadPrecentage: state.loadPrecentage + 1,
+          }));
 
         const manyTickersData: IDataByTypesProps = {
           by_one_day_avg_mf: onDayAvgMF?.one_day_avg_mf || [],

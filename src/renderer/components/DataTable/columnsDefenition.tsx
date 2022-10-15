@@ -8,6 +8,7 @@ export const columnsDefinition: GridColDef[] = [
     align: 'center',
     headerAlign: 'center',
     description: 'Ranking for the given creteria',
+    hideable: false,
   },
   {
     field: 'ticker',
