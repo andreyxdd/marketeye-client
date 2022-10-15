@@ -84,7 +84,12 @@ const DataTable = () => {
       />
       <Typography
         variant="h4"
-        style={{ position: 'absolute', top: '40%', left: '48%' }}
+        style={{
+          position: 'absolute',
+          top: '40%',
+          left: '48%',
+          color: '#696969',
+        }}
       >
         {`${loadPrecentage}%`}
       </Typography>

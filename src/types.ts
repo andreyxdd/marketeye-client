@@ -5,6 +5,9 @@ export interface IDataProps {
   ticker: string;
   date: number;
   macd: number;
+  macd_2_sessions_ago: number;
+  macd_5_sessions_ago: number;
+  macd_20_sessions_ago: number;
   one_day_avg_mf: number;
   three_day_avg_mf: number;
   one_day_open_close_change: number;

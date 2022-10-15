@@ -28,6 +28,7 @@ export const columnsDefinition: GridColDef[] = [
     description: 'Stock symbol',
     disableColumnMenu: true,
     sortable: false,
+    hideable: false,
   },
   {
     field: 'macd',
@@ -41,6 +42,51 @@ export const columnsDefinition: GridColDef[] = [
     },
     description:
       'Moving average convergence divergence. It is calculated by subtracting the 26-period EMA from the 12-period EMA',
+    disableColumnMenu: true,
+    sortable: false,
+  },
+  {
+    field: 'macd_2_sessions_ago',
+    headerName: 'MACD 2 days ago',
+    type: 'number',
+    width: 140,
+    align: 'center',
+    headerAlign: 'center',
+    valueFormatter: (params: GridValueFormatterParams) => {
+      return (params.value as number).toPrecision(4);
+    },
+    description:
+      'Moving average convergence divergence for the 2-days old session. So, it is calculated by subtracting the 27-period EMA from the 13-period EMA',
+    disableColumnMenu: true,
+    sortable: false,
+  },
+  {
+    field: 'macd_5_sessions_ago',
+    headerName: 'MACD 5 days ago',
+    type: 'number',
+    width: 140,
+    align: 'center',
+    headerAlign: 'center',
+    valueFormatter: (params: GridValueFormatterParams) => {
+      return (params.value as number).toPrecision(4);
+    },
+    description:
+      'Moving average convergence divergence for the 5-days old session. So, it is calculated by subtracting the 31-period EMA from the 17-period EMA',
+    disableColumnMenu: true,
+    sortable: false,
+  },
+  {
+    field: 'macd_20_sessions_ago',
+    headerName: 'MACD 20 days ago',
+    type: 'number',
+    width: 140,
+    align: 'center',
+    headerAlign: 'center',
+    valueFormatter: (params: GridValueFormatterParams) => {
+      return (params.value as number).toPrecision(4);
+    },
+    description:
+      'Moving average convergence divergence for the 20-days old session. So, it is calculated by subtracting the 46-period EMA from the 32-period EMA',
     disableColumnMenu: true,
     sortable: false,
   },
@@ -497,7 +543,14 @@ export const columnsToShow: IColumnsToShowProps = {
     'three_day_avg_mf',
     'mfi',
   ],
-  by_macd: ['id', 'ticker', 'macd'],
+  by_macd: [
+    'id',
+    'ticker',
+    'macd',
+    'macd_2_sessions_ago',
+    'macd_5_sessions_ago',
+    'macd_20_sessions_ago',
+  ],
   /* by_five_prec_open_close_change: [
     'id',
     'ticker',
