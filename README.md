@@ -1,4 +1,4 @@
-## Market-Eye Desktop App
+# Market-Eye Desktop Suite
 
 <p>
 The Market-Eye desktop app tabulates technical indicators for the stocks from NYSE/NASDAQ markets through a light interface.
