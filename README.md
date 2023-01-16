@@ -1,3 +1,5 @@
+## Market-Eye Desktop App
+
 <p>
 The Market-Eye desktop app provides an easy interface to list technical indicators for the stocks from NYSE/NASDAQ markets.
 </p>
