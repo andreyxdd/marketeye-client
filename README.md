@@ -1,7 +1,7 @@
 <p>
-Market-Eye desktop app is a private app to analyze the stock market.
+The Market-Eye desktop app provides an easy interface for listing stock market technical indicators.
 </p>
-<p>The project utlizes <a href="https://github.com/andreyxdd/marketeye-api">Market-Eye API</a>, <a href="https://github.com/electron-react-boilerplate/electron-react-boilerplate">Electron React Boilerplate</a>, and <a href="https://mui.com/">MUI</a>.
+<p>The project is built with <a href="https://github.com/andreyxdd/marketeye-api">Market-Eye API</a>, <a href="https://github.com/electron-react-boilerplate/electron-react-boilerplate">Electron React Boilerplate</a>, and <a href="https://mui.com/">MUI</a>.
 </p>
 
 <div align="center">
