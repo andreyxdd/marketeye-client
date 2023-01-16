@@ -1,7 +1,7 @@
 ## Market-Eye Desktop App
 
 <p>
-The Market-Eye desktop app provides an easy interface to list technical indicators for the stocks from NYSE/NASDAQ markets.
+The Market-Eye desktop app tabulates technical indicators for the stocks from NYSE/NASDAQ markets through a light interface.
 </p>
 <p>The project is built with <a href="https://github.com/andreyxdd/marketeye-api">Market-Eye API</a>, <a href="https://github.com/electron-react-boilerplate/electron-react-boilerplate">Electron React Boilerplate</a>, and <a href="https://mui.com/">MUI</a>.
 </p>
