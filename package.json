@@ -102,7 +102,7 @@
     "email": "volkov@ualberta.ca",
     "url": "https://linktr.ee/andreyxdd"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "keywords": [
     "electron",
     "react",
