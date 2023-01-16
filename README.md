@@ -1,7 +1,7 @@
 <p>
-MarketEye desktop app is a private app to analyze the stock market.
+Market-Eye desktop app is a private app to analyze the stock market.
 </p>
-<p>The project utlizes <a href="https://github.com/andreyxdd/marketeye-api">MarketEye API</a>, <a href="https://github.com/electron-react-boilerplate/electron-react-boilerplate">Electron React Boilerplate</a>, and <a href="https://mui.com/">MUI</a>.
+<p>The project utlizes <a href="https://github.com/andreyxdd/marketeye-api">Market-Eye API</a>, <a href="https://github.com/electron-react-boilerplate/electron-react-boilerplate">Electron React Boilerplate</a>, and <a href="https://mui.com/">MUI</a>.
 </p>
 
 <div align="center">
@@ -11,11 +11,11 @@ MarketEye desktop app is a private app to analyze the stock market.
 
 </div>
 
-## MarketEye API
+## Market-Eye API
 
-MarketEye API provides the most recent stock market analytics by calculating individual stock indicators (EMAs, MFI, etc.) as well as market-as-a-whole parameters (VIX, CVI, etc.) using the end-of-day (EOD) historical data. MarketEye API stores the last three months of data and computes new analytics every working (trading) day at 6 PM EST.
+MarketEye API provides the most recent stock market analytics by calculating individual stock indicators (EMAs, MFI, etc.) as well as market-as-a-whole parameters (VIX, CVI, etc.) using the end-of-day (EOD) historical data. Market-Eye API stores the last three months of data and computes new analytics every working (trading) day.
 
-*Note*: MarketEye API is accessible only by a private key (should be initiated in the ```.env``` locally).
+*Note*: Market-Eye API is accessible only through a private key access (should be initiated in the ```.env``` locally).
 
 ## Installing, running, and packaging
 
