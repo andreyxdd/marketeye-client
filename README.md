@@ -3,7 +3,7 @@
 <p>
 The Market-Eye desktop app tabulates technical indicators for the stocks from NYSE/NASDAQ markets through a light interface.
 </p>
-<p>The project is built with <a href="https://github.com/andreyxdd/marketeye-api">Market-Eye API</a>, <a href="https://github.com/electron-react-boilerplate/electron-react-boilerplate">Electron React Boilerplate</a>, and <a href="https://mui.com/">MUI</a>.
+<p>The project is built with <a href="https://github.com/andreyxdd/marketeye-api">Market-Eye API</a>, <a href="https://github.com/electron-react-boilerplate/electron-react-boilerplate">Electron React Boilerplate</a>, <a href="https://mui.com/">MUI</a>, and <a href="https://github.com/pmndrs/zustand">Zustand</a>.
 </p>
 
 <div align="center">
