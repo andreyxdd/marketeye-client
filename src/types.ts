@@ -1,5 +1,11 @@
 /* eslint-disable */
 
+export type ICriteria ='one_day_avg_mf'
+    | 'three_day_avg_mf'
+    | 'macd'
+    | 'volume'
+    | 'three_day_avg_volume';
+
 export interface IDataProps {
   id?: number;
   ticker: string;
@@ -37,12 +43,12 @@ export interface IDataProps {
 }
 
 export interface IDataByTypesProps {
-  by_one_day_avg_mf: Array<IDataProps>;
-  by_three_day_avg_mf: Array<IDataProps>;
-  by_macd: Array<IDataProps>;
+  one_day_avg_mf: Array<IDataProps>;
+  three_day_avg_mf: Array<IDataProps>;
+  macd: Array<IDataProps>;
   // by_five_prec_open_close_change: Array<IDataProps>;
-  by_volume: Array<IDataProps>;
-  by_three_day_avg_volume: Array<IDataProps>;
+  volume: Array<IDataProps>;
+  three_day_avg_volume: Array<IDataProps>;
   [key: string]: Array<IDataProps>;
 }
 

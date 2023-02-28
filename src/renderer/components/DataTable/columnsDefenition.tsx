@@ -505,17 +505,16 @@ export const columnsDefinition: GridColDef[] = [
 ];
 
 interface IColumnsToShowProps {
-  by_one_day_avg_mf: Array<string>;
-  by_three_day_avg_mf: Array<string>;
-  by_macd: Array<string>;
-  // by_five_prec_open_close_change: Array<string>;
-  by_volume: Array<string>;
-  by_three_day_avg_volume: Array<string>;
+  one_day_avg_mf: Array<string>;
+  three_day_avg_mf: Array<string>;
+  macd: Array<string>;
+  volume: Array<string>;
+  three_day_avg_volume: Array<string>;
   [key: string]: Array<string>;
 }
 
 export const columnsToShow: IColumnsToShowProps = {
-  by_one_day_avg_mf: [
+  one_day_avg_mf: [
     'id',
     'ticker',
     'macd',
@@ -528,7 +527,7 @@ export const columnsToShow: IColumnsToShowProps = {
     'one_day_avg_mf',
     'mfi',
   ],
-  by_three_day_avg_mf: [
+  three_day_avg_mf: [
     'id',
     'ticker',
     'macd',
@@ -543,7 +542,7 @@ export const columnsToShow: IColumnsToShowProps = {
     'three_day_avg_mf',
     'mfi',
   ],
-  by_macd: [
+  macd: [
     'id',
     'ticker',
     'macd',
@@ -551,18 +550,7 @@ export const columnsToShow: IColumnsToShowProps = {
     'macd_5_sessions_ago',
     'macd_20_sessions_ago',
   ],
-  /* by_five_prec_open_close_change: [
-    'id',
-    'ticker',
-    'macd',
-    'ema_3over9',
-    'ema_12over9',
-    'ema_12over26',
-    'one_day_open_close_change',
-    'one_day_avg_mf',
-    'mfi',
-  ], */
-  by_volume: [
+  volume: [
     'id',
     'ticker',
     'macd',
@@ -574,7 +562,7 @@ export const columnsToShow: IColumnsToShowProps = {
     'one_day_avg_mf',
     'mfi',
   ],
-  by_three_day_avg_volume: [
+  three_day_avg_volume: [
     'id',
     'ticker',
     'macd',

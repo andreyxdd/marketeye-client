@@ -1,17 +1,10 @@
-import React from 'react';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Layout from './components/Layout';
-import DataTable from './components/DataTable/DataTable';
+import DataTable from './components/DataTable';
 import './App.css';
-import useStore, { IStore } from './hooks/useStore';
 
 const MainComponent = () => {
-  const onMountFetch = useStore((state: IStore) => state.onMountFetch);
-
-  React.useEffect(() => {
-    onMountFetch();
-  }, [onMountFetch]);
-
   return (
     <Layout>
       <DataTable />
@@ -19,12 +12,15 @@ const MainComponent = () => {
   );
 };
 
+const queryClient = new QueryClient();
 export default function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<MainComponent />} />
-      </Routes>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<MainComponent />} />
+        </Routes>
+      </Router>
+    </QueryClientProvider>
   );
 }

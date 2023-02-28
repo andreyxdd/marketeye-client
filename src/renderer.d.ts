@@ -34,7 +34,7 @@ export interface IElectronAPI {
   ) => Promise<IDataByTypesProps | null>;
   getAnalyticsListsByCriterion: (
     req: IRequest
-  ) => Promise<IDataByTypesProps | null>;
+  ) => Promise<Array<IDataProps> | null>;
   getDates: () => Promise<Array<IDateProps>>;
   getMarketAnalytics: (req: IRequest) => Promise<IMarketDataProps | null>;
   notifyDeveloper: (req: IEmail) => Promise<INotificationStatus>;

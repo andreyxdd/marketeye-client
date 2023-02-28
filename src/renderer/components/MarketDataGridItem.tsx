@@ -1,39 +1,11 @@
-import { useEffect, useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 import SkeletonLoader from 'tiny-skeleton-loader-react';
-import { IMarketDataProps } from '../../types';
-import useStore, { IStore } from '../hooks/useStore';
+import useMarketData from '../hooks/useMarketData';
 
 const MarketDataGridItem = () => {
-  const date = useStore((state: IStore) => state.selectedDate);
-  const [marketData, setMarketData] = useState<IMarketDataProps | null>(null);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const { data: marketData, isFetching } = useMarketData();
 
-  useEffect(() => {
-    setIsLoaded(false);
-
-    // eslint-disable-next-line func-names
-    (async function () {
-      if (date) {
-        try {
-          const response: IMarketDataProps | null =
-            await window.electronAPI.getMarketAnalytics({
-              date,
-            });
-
-          if (response) {
-            setMarketData(response);
-            setIsLoaded(true);
-          }
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.log(e);
-        }
-      }
-    })();
-  }, [date]);
-
-  if (isLoaded && marketData !== null) {
+  if (marketData && !isFetching) {
     return (
       <Grid
         item
@@ -175,6 +147,7 @@ const MarketDataGridItem = () => {
     );
   }
 
+  // if fetching or 'null'
   return (
     <Grid
       item

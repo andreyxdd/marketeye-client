@@ -7,37 +7,24 @@ import {
   Typography,
 } from '@mui/material';
 import shallow from 'zustand/shallow';
+import { ICriteria } from 'types';
 import Navbar from './Navbar';
 import MarketDataGridItem from './MarketDataGridItem';
 import PickDater from './PickDater';
 import Footer from './Footer';
-import useStore, { IStore } from '../hooks/useStore';
+import useStore from '../hooks/useStore2';
+import useManyTickers from '../hooks/useManyTickers';
+import useSingleTicker from '../hooks/useSingleTicker';
 
 interface ILayoutProps {
   children: React.ReactNode;
 }
 
 const Layout = ({ children }: ILayoutProps) => {
-  const [
-    dataType,
-    currentDataIsLoaded,
-    fetchAndSetOneTickerData,
-    showOneTickerData,
-    setTextfield,
-    textField,
-    clearTextfield,
-    manyTickersDataIsLoaded,
-  ] = useStore(
-    (state: IStore) => [
-      state.dataType,
-      state.currentDataIsLoaded,
-      state.fetchAndSetOneTickerData,
-      state.showOneTickerData,
-      state.setTextfield,
-      state.textfield,
-      state.clearTextfield,
-      state.manyTickersDataIsLoaded,
-    ],
+  const { isFetching: isManyFetching } = useManyTickers();
+  const { isFetching: isOneFetching } = useSingleTicker();
+  const [criterion, textfield, isSingleTicker] = useStore(
+    (state) => [state.criterion, state.textfield, state.isSingleTicker],
     shallow
   );
 
@@ -45,36 +32,51 @@ const Layout = ({ children }: ILayoutProps) => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const currentValue = (e.target as HTMLInputElement).value;
-    setTextfield({
-      searchString: currentValue.toUpperCase(),
-      helperText: '',
-      error: false,
-    });
+    if (!isSingleTicker && currentValue) {
+      useStore.setState({
+        textfield: {
+          searchString: currentValue.toUpperCase(),
+          helperText: '',
+          error: false,
+        },
+      });
+    }
   };
 
-  const handleSearchStart = async (ev: React.MouseEvent<HTMLButtonElement>) => {
-    ev.preventDefault();
-    await fetchAndSetOneTickerData();
+  const handleSearchStart = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (textfield.searchString) {
+      useStore.setState({ isSingleTicker: true });
+    } else {
+      useStore.setState({
+        textfield: {
+          searchString: textfield.searchString,
+          helperText: 'Incorrect input',
+          error: true,
+        },
+      });
+    }
   };
 
   const handleSearchClear = async (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault();
-    clearTextfield();
+    useStore.setState({
+      isSingleTicker: false,
+      textfield: { searchString: '', helperText: '', error: false },
+    });
   };
 
-  const handleDataTypeTitle = (type: string) => {
-    if (showOneTickerData) {
-      return `Analytics for the ${textField.searchString} ticker`;
+  const displayCriterionTitle = (newCriterion: ICriteria) => {
+    if (isSingleTicker) {
+      return `Analytics for the ${textfield.searchString} ticker`;
     }
 
-    switch (type) {
-      case 'by_three_day_avg_mf':
+    switch (newCriterion) {
+      case 'three_day_avg_mf':
         return 'Top 20 stocks by 3-day average money flow';
-      case 'by_five_prec_open_close_change':
-        return 'Top stocks that overcame 5% change between open and close prices';
-      case 'by_volume':
+      case 'volume':
         return 'Top 20 stocks by 1-day volume';
-      case 'by_three_day_avg_volume':
+      case 'three_day_avg_volume':
         return 'Top 20 stocks by 3-day average volume';
       default:
         return 'Top 20 stocks by 1-day money flow';
@@ -104,17 +106,12 @@ const Layout = ({ children }: ILayoutProps) => {
               label="Search for tickers"
               inputProps={{ maxLength: 5, style: { fontSize: 16 } }}
               onChange={handleSearchStringChange}
-              value={textField.searchString}
-              helperText={textField.helperText}
-              error={textField.error}
+              value={textfield.searchString}
+              helperText={textfield.helperText}
+              error={textfield.error}
               style={{ width: 120 }}
               InputLabelProps={{ style: { fontSize: 12 } }}
-              disabled={
-                !currentDataIsLoaded ||
-                (currentDataIsLoaded &&
-                  !showOneTickerData &&
-                  !manyTickersDataIsLoaded)
-              }
+              disabled={isOneFetching || isManyFetching || isSingleTicker}
             />
           </Grid>
           <Grid item>
@@ -123,12 +120,7 @@ const Layout = ({ children }: ILayoutProps) => {
               size="small"
               variant="contained"
               onClick={handleSearchStart}
-              disabled={
-                !currentDataIsLoaded ||
-                (currentDataIsLoaded &&
-                  !showOneTickerData &&
-                  !manyTickersDataIsLoaded)
-              }
+              disabled={isOneFetching || isManyFetching}
             >
               Search
             </Button>
@@ -138,12 +130,7 @@ const Layout = ({ children }: ILayoutProps) => {
               variant="outlined"
               color="error"
               onClick={handleSearchClear}
-              disabled={
-                !currentDataIsLoaded ||
-                (currentDataIsLoaded &&
-                  !showOneTickerData &&
-                  !manyTickersDataIsLoaded)
-              }
+              disabled={isOneFetching || isManyFetching}
             >
               Clear
             </Button>
@@ -177,7 +164,7 @@ const Layout = ({ children }: ILayoutProps) => {
       <Divider />
       <Container maxWidth="xl" style={{ minHeight: 630 }}>
         <Typography variant="h6" sx={{ mb: 1, mt: 2, fontSize: 16 }}>
-          {handleDataTypeTitle(dataType)}
+          {displayCriterionTitle(criterion)}
         </Typography>
         <div style={{ width: '100%', minHeight: 630, marginBottom: 20 }}>
           {children}

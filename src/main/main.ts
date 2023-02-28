@@ -91,7 +91,7 @@ ipcMain.handle('get-analytics-lists-by-criterion', async (_event, arg) => {
       }
     );
     const { data } = response;
-    return data;
+    return data[arg.criterion];
   } catch (e) {
     console.log(e);
     return null;

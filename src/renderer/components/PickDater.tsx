@@ -2,24 +2,23 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import TextField from '@mui/material/TextField';
-import shallow from 'zustand/shallow';
-import useStore, { IStore } from '../hooks/useStore';
+import SkeletonLoader from 'tiny-skeleton-loader-react';
+import useStore from '../hooks/useStore2';
+import useDates from '../hooks/useDates';
 
 const PickDater = () => {
-  const [selectedDate, setSelectedDate, availableDates] = useStore(
-    (state: IStore) => [
-      state.selectedDate,
-      state.setSelectedDate,
-      state.availableDates,
-    ],
-    shallow
-  );
+  const selectedDate = useStore((state) => state.selectedDate);
+  const { data: availableDates, isLoading } = useDates();
 
   const handleChange = (newValue: Date | null) => {
     if (newValue !== null) {
-      setSelectedDate(newValue.toISOString().split('T')[0]);
+      const date = newValue.toISOString().split('T')[0];
+      useStore.setState({ selectedDate: date });
     }
   };
+
+  if (!availableDates || !selectedDate)
+    return <SkeletonLoader style={{ width: 200, height: 50 }} />;
 
   const disableDates = (d: Date) => {
     return !availableDates.includes(d.toISOString().split('T')[0]);
@@ -39,6 +38,7 @@ const PickDater = () => {
           <TextField {...params} style={{ width: 200 }} />
         )}
         shouldDisableDate={disableDates}
+        loading={isLoading}
       />
     </LocalizationProvider>
   );
