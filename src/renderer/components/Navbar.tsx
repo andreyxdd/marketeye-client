@@ -10,7 +10,7 @@ import {
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { ICriteria } from 'types';
 import ModalForm from './ModalForm';
-import useStore from '../hooks/useStore2';
+import useStore from '../hooks/useStore';
 
 const Navbar = () => {
   const criterion = useStore((state) => state.criterion);

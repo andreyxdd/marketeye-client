@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { IDataProps } from 'types';
 import shallow from 'zustand/shallow';
-import useStore from './useStore2';
+import useStore from './useStore';
 
 function useSingleTicker() {
   const [selectedDate, ticker, isSingleTicker] = useStore(
@@ -28,6 +28,7 @@ function useSingleTicker() {
         return [];
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.log(e);
         return [];
       }

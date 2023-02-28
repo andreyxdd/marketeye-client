@@ -1,5 +1,5 @@
 import Table from './Table';
-import useStore from '../../hooks/useStore2';
+import useStore from '../../hooks/useStore';
 import useSingleTicker from '../../hooks/useSingleTicker';
 import useManyTickers from '../../hooks/useManyTickers';
 

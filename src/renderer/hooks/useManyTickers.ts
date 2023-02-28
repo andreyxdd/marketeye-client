@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import shallow from 'zustand/shallow';
-import useStore from './useStore2';
+import useStore from './useStore';
 
 function useManyTickers() {
   const [selectedDate, criterion] = useStore(

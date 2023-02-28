@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { IMarketDataProps } from 'types';
-import useStore from './useStore2';
+import useStore from './useStore';
 
 function useMarketData() {
   const date = useStore((state) => state.selectedDate);

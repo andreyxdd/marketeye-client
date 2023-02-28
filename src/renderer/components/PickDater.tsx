@@ -3,7 +3,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import TextField from '@mui/material/TextField';
 import SkeletonLoader from 'tiny-skeleton-loader-react';
-import useStore from '../hooks/useStore2';
+import useStore from '../hooks/useStore';
 import useDates from '../hooks/useDates';
 
 const PickDater = () => {

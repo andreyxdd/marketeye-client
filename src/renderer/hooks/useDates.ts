@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { IDateProps } from 'types';
-import useStore from './useStore2';
+import useStore from './useStore';
 
 const useDates = () => {
   const query = useQuery<Array<string>>(

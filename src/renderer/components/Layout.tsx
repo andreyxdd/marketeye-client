@@ -12,7 +12,7 @@ import Navbar from './Navbar';
 import MarketDataGridItem from './MarketDataGridItem';
 import PickDater from './PickDater';
 import Footer from './Footer';
-import useStore from '../hooks/useStore2';
+import useStore from '../hooks/useStore';
 import useManyTickers from '../hooks/useManyTickers';
 import useSingleTicker from '../hooks/useSingleTicker';
 

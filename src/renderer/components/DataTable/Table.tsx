@@ -2,7 +2,7 @@ import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import SkeletonLoader from 'tiny-skeleton-loader-react';
 import { IDataProps } from 'types';
-import useStore from '../../hooks/useStore2';
+import useStore from '../../hooks/useStore';
 import { columnsDefinition, columnsToShow } from './columnsDefenition';
 import processData from './dataProcessing';
 
