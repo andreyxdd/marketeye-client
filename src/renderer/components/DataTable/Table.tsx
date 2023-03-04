@@ -45,9 +45,11 @@ const DataTable = ({ data, isFetching }: IDataTable) => {
   }
 
   return (
-    <SkeletonLoader
-      style={{ width: '100%', minHeight: 630, position: 'absolute' }}
-    />
+    <div style={{ width: '100%', minHeight: 630, position: 'relative' }}>
+      <SkeletonLoader
+        style={{ width: '100%', minHeight: 630, position: 'absolute' }}
+      />
+    </div>
   );
 };
 
