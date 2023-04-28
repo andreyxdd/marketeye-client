@@ -39,6 +39,8 @@ export interface IDataProps {
   mentions_over_one_day: number;
   mentions_over_two_days: number;
   mentions_over_three_days: number;
+  fcf: string;
+  frequencies: string;
   [key: string]: number | string | Array<string> | undefined;
 }
 

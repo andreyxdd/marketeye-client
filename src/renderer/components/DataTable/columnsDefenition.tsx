@@ -1,4 +1,13 @@
-import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
+import Typography from '@mui/material/Typography';
+import {
+  GridColDef,
+  GridRenderCellParams,
+  GridValueFormatterParams,
+} from '@mui/x-data-grid';
+
+const currencyNumberFormatter = Intl.NumberFormat('en', {
+  notation: 'compact',
+});
 
 export const columnsDefinition: GridColDef[] = [
   {
@@ -98,10 +107,7 @@ export const columnsDefinition: GridColDef[] = [
     align: 'center',
     headerAlign: 'center',
     valueFormatter: (params: GridValueFormatterParams) => {
-      const valueFormatted = Number(
-        (params.value as number).toFixed(2)
-      ).toLocaleString();
-      return valueFormatted;
+      return currencyNumberFormatter.format(params.value as number);
     },
     description: 'Money flow averaged over 1 day using typical price',
     disableColumnMenu: true,
@@ -115,10 +121,7 @@ export const columnsDefinition: GridColDef[] = [
     align: 'center',
     headerAlign: 'center',
     valueFormatter: (params: GridValueFormatterParams) => {
-      const valueFormatted = Number(
-        (params.value as number).toFixed(2)
-      ).toLocaleString();
-      return valueFormatted;
+      return currencyNumberFormatter.format(params.value as number);
     },
     description:
       'Money flow averaged over 3 days based on 1-day average money flows',
@@ -502,6 +505,36 @@ export const columnsDefinition: GridColDef[] = [
     disableColumnMenu: true,
     sortable: false,
   },
+  {
+    field: 'fcf',
+    headerName: 'Last Quater Free Cash Flow, $',
+    type: 'string',
+    align: 'center',
+    headerAlign: 'center',
+    description: 'Free Cash Flow for the current quater',
+    disableColumnMenu: true,
+    sortable: false,
+    width: 200,
+  },
+  {
+    field: 'frequencies',
+    headerName: 'Frequencies',
+    type: 'string',
+    align: 'center',
+    headerAlign: 'center',
+    description:
+      'This column shows other periods when the given stock was in top 20',
+    disableColumnMenu: true,
+    sortable: false,
+    width: 400,
+    renderCell: (params: GridRenderCellParams<string>) => {
+      return (
+        <Typography fontSize={12} noWrap>
+          {params.value}
+        </Typography>
+      );
+    },
+  },
 ];
 
 interface IColumnsToShowProps {
@@ -526,6 +559,8 @@ export const columnsToShow: IColumnsToShowProps = {
     'one_day_open_close_change',
     'one_day_avg_mf',
     'mfi',
+    'fcf',
+    'frequencies',
   ],
   three_day_avg_mf: [
     'id',
@@ -541,6 +576,8 @@ export const columnsToShow: IColumnsToShowProps = {
     'closingPriceChangeDay23',
     'three_day_avg_mf',
     'mfi',
+    'fcf',
+    'frequencies',
   ],
   macd: [
     'id',
@@ -549,6 +586,8 @@ export const columnsToShow: IColumnsToShowProps = {
     'macd_2_sessions_ago',
     'macd_5_sessions_ago',
     'macd_20_sessions_ago',
+    'fcf',
+    'frequencies',
   ],
   volume: [
     'id',
@@ -561,6 +600,8 @@ export const columnsToShow: IColumnsToShowProps = {
     'one_day_close_change',
     'one_day_avg_mf',
     'mfi',
+    'fcf',
+    'frequencies',
   ],
   three_day_avg_volume: [
     'id',
@@ -573,5 +614,7 @@ export const columnsToShow: IColumnsToShowProps = {
     'three_day_avg_close_change',
     'three_day_avg_mf',
     'mfi',
+    'fcf',
+    'frequencies',
   ],
 };

@@ -46,6 +46,7 @@ ipcMain.handle('get-ticker-analytics', async (_event, arg) => {
         params: {
           date: arg.date,
           ticker: arg.ticker,
+          criterion: arg.criterion,
           api_key: process.env.MARKETEYE_API_KEY,
         },
       }

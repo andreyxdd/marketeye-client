@@ -4,23 +4,25 @@ import shallow from 'zustand/shallow';
 import useStore from './useStore';
 
 function useSingleTicker() {
-  const [selectedDate, ticker, isSingleTicker] = useStore(
+  const [selectedDate, ticker, isSingleTicker, criterion] = useStore(
     (state) => [
       state.selectedDate,
       state.textfield.searchString,
       state.isSingleTicker,
+      state.criterion,
     ],
     shallow
   );
 
   const query = useQuery(
-    [selectedDate, ticker, isSingleTicker],
+    [selectedDate, ticker, isSingleTicker, criterion],
     async () => {
       try {
         const singleTickerData: IDataProps | null =
           await window.electronAPI.getTickerAnalytics({
             date: selectedDate,
             ticker,
+            criterion,
           });
 
         if (singleTickerData) return [singleTickerData];
