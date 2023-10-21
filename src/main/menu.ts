@@ -83,15 +83,18 @@ export default class MenuBuilder {
               ],
       },
       {
-        label: 'Help',
+        label: 'About',
         submenu: [
           {
-            label: 'See Github Repo',
+            label: 'See README.md',
             click() {
               shell.openExternal(
                 'https://github.com/andreyxdd/marketeye-client#readme'
               );
             },
+          },
+          {
+            label: 'v1.4.4',
           },
         ],
       },
