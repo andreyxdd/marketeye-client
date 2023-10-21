@@ -1,0 +1,28 @@
+name: Build and release
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: build-and-release
+  cancel-in-progress: true
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+      - name: Install dependencies
+        run: npm install
+      - name: Build and release the app
+        env:
+          GH_TOKEN: ${{ secrets.github_token }}
+          MARKETEYE_API_KEY: ${{ secrets.MARKETEYE_API_KEY }}
+          MARKETEYE_API_URL: ${{ secrets.MARKETEYE_API_URL }}
+        run: npm run package:publish

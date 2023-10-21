@@ -1,0 +1,29 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: test
+  cancel-in-progress: true
+
+jobs:
+  test:
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: |
+          npm run package
+          npm run lint
+          npm exec tsc
+          npm test
