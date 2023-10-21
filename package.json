@@ -1,7 +1,7 @@
 {
   "name": "marketeye-desktop-app",
   "description": "A private desktop app to analyze the stock market based on MarketEye API and electron-react-boilerplate",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "scripts": {
     "build": "npm run build:main && npm run build:renderer",
     "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
@@ -90,17 +90,17 @@
     "publish": {
       "provider": "github",
       "owner": "andreyxdd",
-      "repo": "marketeye-desktop-app"
+      "repo": "marketeye-client"
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andreyxdd/marketeye-desktop-app.git.git"
+    "url": "git+https://github.com/andreyxdd/marketeye-client.git.git"
   },
   "author": {
-    "name": "Andrey Volkov",
+    "name": "Andrei Volkov",
     "email": "volkov@ualberta.ca",
-    "url": "https://linktr.ee/andreyxdd"
+    "url": "https://github.com/andreyxdd"
   },
   "license": "MIT",
   "keywords": [
@@ -114,7 +114,7 @@
     "market",
     "marketeye"
   ],
-  "homepage": "https://github.com/andreyxdd/marketeye-desktop-app#readme",
+  "homepage": "https://github.com/andreyxdd/marketeye-client#readme",
   "jest": {
     "testURL": "http://localhost/",
     "testEnvironment": "jsdom",
