@@ -1,0 +1,44 @@
+name: Clear cache
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  clear-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clear cache
+        uses: actions/github-script@v6
+        with:
+          script: |
+            try{
+              const congif = {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                per_page: 100,
+              };
+
+              console.log("Getting first 100 caches from github...")
+              let caches = await github.rest.actions.getActionsCacheList(congif);
+              while(caches.data.actions_caches.length){
+                for (const cache of caches.data.actions_caches) {
+                  console.log("Deleting cache...");
+                  const res = await github.rest.actions.deleteActionsCacheById({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    cache_id: cache.id,
+                  });
+                }
+
+                caches = await github.rest.actions.getActionsCacheList(congif);
+                console.log(`Getting another ${caches.data.actions_caches.length} caches from github...`);
+              }
+
+              console.log("Clear completed");
+            } catch(e) {
+              console.log("The workflow had terminated with an error:", e)
+              return;
+            }

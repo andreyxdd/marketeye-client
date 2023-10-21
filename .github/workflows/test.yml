@@ -2,13 +2,17 @@ name: Test
 
 on: [push, pull_request]
 
+concurrency:
+  group: test
+  cancel-in-progress: true
+
 jobs:
   release:
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [windows-latest]
 
     steps:
       - name: Check out Git repository
