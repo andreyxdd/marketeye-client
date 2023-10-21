@@ -89,7 +89,7 @@ export default class MenuBuilder {
             label: 'Learn More',
             click() {
               shell.openExternal(
-                'https://github.com/andreyxdd/marketeye-desktop-app#readme'
+                'https://github.com/andreyxdd/marketeye-client#readme'
               );
             },
           },

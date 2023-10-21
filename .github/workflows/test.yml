@@ -16,19 +16,18 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
 
-      - name: Install Node.js and NPM
-        uses: actions/setup-node@v2
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: npm
 
-      - name: npm install
-        run: |
-          npm install
+      - name: Install dependencies
+        run: npm install
 
-      - name: npm test
+      - name: Run tests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
