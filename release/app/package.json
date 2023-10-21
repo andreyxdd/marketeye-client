@@ -1,6 +1,6 @@
 {
   "name": "marketeye-client",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "A desktop app to analyze the stock market based on MarketEye API and electron-react-boilerplate",
   "main": "./dist/main/main.js",
   "author": {

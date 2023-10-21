@@ -41,7 +41,7 @@ ipcMain.on('ipc-example', async (event, arg) => {
 ipcMain.handle('get-ticker-analytics', async (_event, arg) => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL_ANALYTICS}/get_ticker_analytics`,
+      `${process.env.MARKETEYE_API_URL}/analytics/get_ticker_analytics`,
       {
         params: {
           date: arg.date,
@@ -63,7 +63,7 @@ ipcMain.handle('get-ticker-analytics', async (_event, arg) => {
 ipcMain.handle('get-analytics-lists-by-criteria', async (_event, arg) => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL_ANALYTICS}/get_analytics_lists_by_criteria`,
+      `${process.env.MARKETEYE_API_URL}/analytics/get_analytics_lists_by_criteria`,
       {
         params: {
           date: arg.date,
@@ -82,7 +82,7 @@ ipcMain.handle('get-analytics-lists-by-criteria', async (_event, arg) => {
 ipcMain.handle('get-analytics-lists-by-criterion', async (_event, arg) => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL_ANALYTICS}/get_analytics_lists_by_criterion`,
+      `${process.env.MARKETEYE_API_URL}/analytics/get_analytics_lists_by_criterion`,
       {
         params: {
           date: arg.date,
@@ -102,7 +102,7 @@ ipcMain.handle('get-analytics-lists-by-criterion', async (_event, arg) => {
 ipcMain.handle('get-dates', async () => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL_ANALYTICS}/get_dates`,
+      `${process.env.MARKETEYE_API_URL}/analytics/get_dates`,
       {
         params: {
           api_key: process.env.MARKETEYE_API_KEY,
@@ -121,7 +121,7 @@ ipcMain.handle('get-dates', async () => {
 ipcMain.handle('get-market-analytics', async (_event, arg) => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL_ANALYTICS}/get_market_analytics`,
+      `${process.env.MARKETEYE_API_URL}/analytics/get_market_analytics`,
       {
         params: {
           date: arg.date,
@@ -140,7 +140,7 @@ ipcMain.handle('get-market-analytics', async (_event, arg) => {
 ipcMain.handle('notify-developer', async (_event, arg) => {
   try {
     await axios.post(
-      `${process.env.MARKETEYE_API_URL_NOTIFICATIONS}/notify_developer`,
+      `${process.env.MARKETEYE_API_URL}/notifications/notify_developer`,
       { email_body: arg.body, email_subject: arg.subject },
       {
         headers: { 'Content-Type': 'application/json; charset=UTF-8' },

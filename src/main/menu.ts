@@ -86,7 +86,7 @@ export default class MenuBuilder {
         label: 'Help',
         submenu: [
           {
-            label: 'Learn More',
+            label: 'See Github Repo',
             click() {
               shell.openExternal(
                 'https://github.com/andreyxdd/marketeye-client#readme'
