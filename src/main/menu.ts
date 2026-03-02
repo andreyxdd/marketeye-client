@@ -94,7 +94,7 @@ export default class MenuBuilder {
             },
           },
           {
-            label: 'v1.4.5',
+            label: 'v1.4.6',
           },
         ],
       },
