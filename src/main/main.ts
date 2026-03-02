@@ -41,13 +41,13 @@ ipcMain.on('ipc-example', async (event, arg) => {
 ipcMain.handle('get-ticker-analytics', async (_event, arg) => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL}/analytics/get_ticker_analytics`,
+      `https://marketeye-api.herokuapp.com/api/analytics/get_ticker_analytics`,
       {
         params: {
           date: arg.date,
           ticker: arg.ticker,
           criterion: arg.criterion,
-          api_key: process.env.MARKETEYE_API_KEY,
+          api_key: "UgpW5hp32J3KSyGbxnKRmppprQ2xR4qrMArDNwNq",
         },
       }
     );
@@ -63,11 +63,11 @@ ipcMain.handle('get-ticker-analytics', async (_event, arg) => {
 ipcMain.handle('get-analytics-lists-by-criteria', async (_event, arg) => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL}/analytics/get_analytics_lists_by_criteria`,
+      `https://marketeye-api.herokuapp.com/api/analytics/get_analytics_lists_by_criteria`,
       {
         params: {
           date: arg.date,
-          api_key: process.env.MARKETEYE_API_KEY,
+          api_key: "UgpW5hp32J3KSyGbxnKRmppprQ2xR4qrMArDNwNq",
         },
       }
     );
@@ -82,12 +82,12 @@ ipcMain.handle('get-analytics-lists-by-criteria', async (_event, arg) => {
 ipcMain.handle('get-analytics-lists-by-criterion', async (_event, arg) => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL}/analytics/get_analytics_lists_by_criterion`,
+      `https://marketeye-api.herokuapp.com/api/analytics/get_analytics_lists_by_criterion`,
       {
         params: {
           date: arg.date,
           criterion: arg.criterion,
-          api_key: process.env.MARKETEYE_API_KEY,
+          api_key: "UgpW5hp32J3KSyGbxnKRmppprQ2xR4qrMArDNwNq",
         },
       }
     );
@@ -102,10 +102,10 @@ ipcMain.handle('get-analytics-lists-by-criterion', async (_event, arg) => {
 ipcMain.handle('get-dates', async () => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL}/analytics/get_dates`,
+      `https://marketeye-api.herokuapp.com/api/analytics/get_dates`,
       {
         params: {
-          api_key: process.env.MARKETEYE_API_KEY,
+          api_key: "UgpW5hp32J3KSyGbxnKRmppprQ2xR4qrMArDNwNq",
         },
       }
     );
@@ -121,11 +121,11 @@ ipcMain.handle('get-dates', async () => {
 ipcMain.handle('get-market-analytics', async (_event, arg) => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL}/analytics/get_market_analytics`,
+      `https://marketeye-api.herokuapp.com/api/analytics/get_market_analytics`,
       {
         params: {
           date: arg.date,
-          api_key: process.env.MARKETEYE_API_KEY,
+          api_key: "UgpW5hp32J3KSyGbxnKRmppprQ2xR4qrMArDNwNq",
         },
       }
     );
@@ -140,12 +140,12 @@ ipcMain.handle('get-market-analytics', async (_event, arg) => {
 ipcMain.handle('notify-developer', async (_event, arg) => {
   try {
     await axios.post(
-      `${process.env.MARKETEYE_API_URL}/notifications/notify_developer`,
+      `https://marketeye-api.herokuapp.com/api/notifications/notify_developer`,
       { email_body: arg.body, email_subject: arg.subject },
       {
         headers: { 'Content-Type': 'application/json; charset=UTF-8' },
         params: {
-          api_key: process.env.MARKETEYE_API_KEY,
+          api_key: "UgpW5hp32J3KSyGbxnKRmppprQ2xR4qrMArDNwNq",
         },
       }
     );
