@@ -11,7 +11,6 @@ import { ICriteria } from 'types';
 import Navbar from './Navbar';
 import MarketDataGridItem from './MarketDataGridItem';
 import PickDater from './PickDater';
-import Footer from './Footer';
 import useStore from '../hooks/useStore';
 import useManyTickers from '../hooks/useManyTickers';
 import useSingleTicker from '../hooks/useSingleTicker';
@@ -169,7 +168,6 @@ const Layout = ({ children }: ILayoutProps) => {
         <div style={{ width: '100%', minHeight: 630, marginBottom: 20 }}>
           {children}
         </div>
-        <Footer />
       </Container>
     </div>
   );
