@@ -9,7 +9,7 @@ const Footer = () => {
         bottom: 0,
       }}
     >
-      <Typography variant="caption" component="p">
+      {/* <Typography variant="caption" component="p">
         Copyright @ {new Date().getFullYear()}
       </Typography>
       <Typography variant="caption" component="p">
@@ -20,7 +20,7 @@ const Footer = () => {
         >
           Andrey Volkov
         </a>
-      </Typography>
+      </Typography> */}
     </footer>
   );
 };
