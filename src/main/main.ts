@@ -18,6 +18,7 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import { IDataProps, IDateProps } from '../types';
+import { MARKET, showMarketWidePanel } from '../config/market';
 
 export default class AppUpdater {
   constructor() {
@@ -47,6 +48,7 @@ ipcMain.handle('get-ticker-analytics', async (_event, arg) => {
           date: arg.date,
           ticker: arg.ticker,
           criterion: arg.criterion,
+          market: MARKET,
           api_key: process.env.MARKETEYE_API_KEY,
         },
       }
@@ -67,6 +69,7 @@ ipcMain.handle('get-analytics-lists-by-criteria', async (_event, arg) => {
       {
         params: {
           date: arg.date,
+          market: MARKET,
           api_key: process.env.MARKETEYE_API_KEY,
         },
       }
@@ -87,6 +90,7 @@ ipcMain.handle('get-analytics-lists-by-criterion', async (_event, arg) => {
         params: {
           date: arg.date,
           criterion: arg.criterion,
+          market: MARKET,
           api_key: process.env.MARKETEYE_API_KEY,
         },
       }
@@ -105,6 +109,7 @@ ipcMain.handle('get-dates', async () => {
       `${process.env.MARKETEYE_API_URL}/analytics/get_dates`,
       {
         params: {
+          market: MARKET,
           api_key: process.env.MARKETEYE_API_KEY,
         },
       }
@@ -119,6 +124,9 @@ ipcMain.handle('get-dates', async () => {
 });
 
 ipcMain.handle('get-market-analytics', async (_event, arg) => {
+  if (!showMarketWidePanel) {
+    return null;
+  }
   try {
     const response = await axios.get(
       `${process.env.MARKETEYE_API_URL}/analytics/get_market_analytics`,

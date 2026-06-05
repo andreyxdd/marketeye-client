@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { IMarketDataProps } from 'types';
+import { MARKET, showMarketWidePanel } from '../../config/market';
 import useStore from './useStore';
 
 function useMarketData() {
   const date = useStore((state) => state.selectedDate);
   const query = useQuery(
-    ['market', date],
+    ['market-wide', MARKET, date],
     async () => {
       try {
         const response: IMarketDataProps | null =
@@ -18,7 +19,7 @@ function useMarketData() {
         return null;
       }
     },
-    { enabled: !!date, staleTime: Infinity }
+    { enabled: showMarketWidePanel && !!date, staleTime: Infinity }
   );
   return query;
 }

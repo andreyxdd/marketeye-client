@@ -47,6 +47,7 @@ const configuration: webpack.Configuration = {
   plugins: [
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
+      MARKETEYE_MARKET: 'US',
       ...dotenv.config().parsed,
     }),
   ],

@@ -14,6 +14,7 @@ import PickDater from './PickDater';
 import useStore from '../hooks/useStore';
 import useManyTickers from '../hooks/useManyTickers';
 import useSingleTicker from '../hooks/useSingleTicker';
+import { showMarketWidePanel } from '../../config/market';
 
 interface ILayoutProps {
   children: React.ReactNode;
@@ -135,20 +136,22 @@ const Layout = ({ children }: ILayoutProps) => {
             </Button>
           </Grid>
         </Grid>
-        <Grid container item xs={5}>
-          <Grid
-            item
-            container
-            xs={12}
-            justifyContent="center"
-            sx={{ mb: 1, pl: 15 }}
-          >
-            <Typography variant="h6" sx={{ fontSize: 18 }}>
-              Market-as-a-whole Analytics
-            </Typography>
+        {showMarketWidePanel && (
+          <Grid container item xs={5}>
+            <Grid
+              item
+              container
+              xs={12}
+              justifyContent="center"
+              sx={{ mb: 1, pl: 15 }}
+            >
+              <Typography variant="h6" sx={{ fontSize: 18 }}>
+                Market-as-a-whole Analytics
+              </Typography>
+            </Grid>
+            <MarketDataGridItem />
           </Grid>
-          <MarketDataGridItem />
-        </Grid>
+        )}
         <Grid
           item
           xs={3.5}

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { IDataProps } from 'types';
 import shallow from 'zustand/shallow';
+import { MARKET } from '../../config/market';
 import useStore from './useStore';
 
 function useSingleTicker() {
@@ -15,7 +16,7 @@ function useSingleTicker() {
   );
 
   const query = useQuery(
-    [selectedDate, ticker, isSingleTicker, criterion],
+    [MARKET, selectedDate, ticker, isSingleTicker, criterion],
     async () => {
       try {
         const singleTickerData: IDataProps | null =

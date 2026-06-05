@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { IDateProps } from 'types';
+import { MARKET } from '../../config/market';
 import useStore from './useStore';
 
 const useDates = () => {
   const query = useQuery<Array<string>>(
-    ['dates'],
+    ['dates', MARKET],
     async () => {
       try {
         const responseAvailableDates: Array<IDateProps> =

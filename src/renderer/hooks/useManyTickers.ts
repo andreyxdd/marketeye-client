@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import shallow from 'zustand/shallow';
+import { MARKET } from '../../config/market';
 import useStore from './useStore';
 
 function useManyTickers() {
@@ -9,7 +10,7 @@ function useManyTickers() {
   );
 
   const query = useQuery(
-    [criterion, selectedDate],
+    [MARKET, criterion, selectedDate],
     async () => {
       try {
         const response = await window.electronAPI.getAnalyticsListsByCriterion({

@@ -4,12 +4,13 @@ import {
   GridRenderCellParams,
   GridValueFormatterParams,
 } from '@mui/x-data-grid';
+import { filterColumnFields, isHiddenColumnForMarket } from '../../../config/market';
 
 const currencyNumberFormatter = Intl.NumberFormat('en', {
   notation: 'compact',
 });
 
-export const columnsDefinition: GridColDef[] = [
+const columnsDefinitionAll: GridColDef[] = [
   {
     field: 'id',
     headerName: '#',
@@ -537,6 +538,10 @@ export const columnsDefinition: GridColDef[] = [
   },
 ];
 
+export const columnsDefinition: GridColDef[] = columnsDefinitionAll.filter(
+  (column) => !isHiddenColumnForMarket(column.field)
+);
+
 interface IColumnsToShowProps {
   one_day_avg_mf: Array<string>;
   three_day_avg_mf: Array<string>;
@@ -546,7 +551,7 @@ interface IColumnsToShowProps {
   [key: string]: Array<string>;
 }
 
-export const columnsToShow: IColumnsToShowProps = {
+const columnsToShowBase: IColumnsToShowProps = {
   one_day_avg_mf: [
     'id',
     'ticker',
@@ -618,3 +623,10 @@ export const columnsToShow: IColumnsToShowProps = {
     'frequencies',
   ],
 };
+
+export const columnsToShow: IColumnsToShowProps = Object.fromEntries(
+  Object.entries(columnsToShowBase).map(([criterion, fields]) => [
+    criterion,
+    filterColumnFields(fields),
+  ])
+) as IColumnsToShowProps;
