@@ -14,7 +14,7 @@ import PickDater from './PickDater';
 import useStore from '../hooks/useStore';
 import useManyTickers from '../hooks/useManyTickers';
 import useSingleTicker from '../hooks/useSingleTicker';
-import { showMarketWidePanel } from '../../config/market';
+import { isTO, showMarketWidePanel } from '../../config/market';
 
 interface ILayoutProps {
   children: React.ReactNode;
@@ -97,7 +97,7 @@ const Layout = ({ children }: ILayoutProps) => {
           container
           justifyContent="flex-start"
           alignItems="center"
-          xs={3.5}
+          xs={showMarketWidePanel ? 3.5 : 6}
           spacing={1}
         >
           <Grid item>
@@ -119,6 +119,7 @@ const Layout = ({ children }: ILayoutProps) => {
               style={{ width: 65, height: 35, marginRight: 4 }}
               size="small"
               variant="contained"
+              color={isTO ? 'secondary' : 'primary'}
               onClick={handleSearchStart}
               disabled={isOneFetching || isManyFetching}
             >
@@ -154,7 +155,7 @@ const Layout = ({ children }: ILayoutProps) => {
         )}
         <Grid
           item
-          xs={3.5}
+          xs={showMarketWidePanel ? 3.5 : 6}
           container
           direction="row"
           justifyContent="flex-end"

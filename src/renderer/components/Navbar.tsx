@@ -9,6 +9,8 @@ import {
 } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { ICriteria } from 'types';
+import { displayName } from '../../config/brand';
+import { isTO } from '../../config/market';
 import ModalForm from './ModalForm';
 import useStore from '../hooks/useStore';
 
@@ -19,16 +21,44 @@ const Navbar = () => {
   const handleOpen = () => setOpen(true);
 
   const handleClick = (
-    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
+    e: React.MouseEvent<HTMLElement>,
     newCriterion: ICriteria
   ) => {
     e.preventDefault();
     useStore.setState({ criterion: newCriterion });
   };
 
+  const renderCriterionButton = (label: string, value: ICriteria) => {
+    const active = criterion === value;
+    if (isTO) {
+      return (
+        <Button
+          variant={active ? 'outlined' : 'text'}
+          color={active ? 'secondary' : 'inherit'}
+          sx={{ mr: 2 }}
+          onClick={(e) => handleClick(e, value)}
+        >
+          {label}
+        </Button>
+      );
+    }
+    return (
+      <Button
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore — inherit variant is legacy MUI usage in this app
+        variant={active ? 'outlined' : 'inherit'}
+        color="inherit"
+        sx={{ mr: 2 }}
+        onClick={(e) => handleClick(e, value)}
+      >
+        {label}
+      </Button>
+    );
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="static" color="primary">
         <Toolbar>
           <IconButton
             size="large"
@@ -37,66 +67,26 @@ const Navbar = () => {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <RemoveRedEyeIcon />
+            <RemoveRedEyeIcon
+              sx={isTO ? { color: 'secondary.main' } : undefined}
+            />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            MarketEye
+            {displayName}
           </Typography>
+          {renderCriterionButton('1-day Money Flow', 'one_day_avg_mf')}
+          {renderCriterionButton('3-day Money Flow', 'three_day_avg_mf')}
+          {renderCriterionButton('MACD', 'macd')}
+          {renderCriterionButton('1-day Volume', 'volume')}
+          {renderCriterionButton('3-day Volume', 'three_day_avg_volume')}
           <Button
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            variant={criterion === 'one_day_avg_mf' ? 'outlined' : 'inherit'}
-            color="inherit"
-            sx={{ mr: 2 }}
-            onClick={(e) => handleClick(e, 'one_day_avg_mf')}
-          >
-            1-day Money Flow
-          </Button>
-          <Button
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            variant={criterion === 'three_day_avg_mf' ? 'outlined' : 'inherit'}
-            color="inherit"
-            sx={{ mr: 2 }}
-            onClick={(e) => handleClick(e, 'three_day_avg_mf')}
-          >
-            3-day Money Flow
-          </Button>
-          <Button
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            variant={criterion === 'macd' ? 'outlined' : 'inherit'}
-            color="inherit"
-            sx={{ mr: 2 }}
-            onClick={(e) => handleClick(e, 'macd')}
-          >
-            MACD
-          </Button>
-          <Button
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            variant={criterion === 'volume' ? 'outlined' : 'inherit'}
-            color="inherit"
-            sx={{ mr: 2 }}
-            onClick={(e) => handleClick(e, 'volume')}
-          >
-            1-day Volume
-          </Button>
-          <Button
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            variant={
-              criterion === 'three_day_avg_volume' ? 'outlined' : 'inherit'
+            variant="contained"
+            color={isTO ? 'secondary' : 'inherit'}
+            sx={
+              isTO
+                ? { mr: 2 }
+                : { mr: 2, bgcolor: 'common.white', color: 'primary.main' }
             }
-            color="inherit"
-            sx={{ mr: 2 }}
-            onClick={(e) => handleClick(e, 'three_day_avg_volume')}
-          >
-            3-day Volume
-          </Button>
-          <Button
-            style={{ backgroundColor: 'white' }}
-            sx={{ mr: 2 }}
             onClick={handleOpen}
           >
             Report a Problem
