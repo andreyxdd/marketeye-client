@@ -165,11 +165,27 @@ const configuration: webpack.Configuration = {
     },
     onBeforeSetupMiddleware() {
       console.log('Starting Main Process...');
-      spawn('npm', ['run', 'start:main'], {
-        shell: true,
-        env: process.env,
-        stdio: 'inherit',
-      })
+      const electronBin = path.join(
+        webpackPaths.rootPath,
+        'node_modules',
+        '.bin',
+        'electron'
+      );
+      spawn(
+        electronBin,
+        [
+          '-r',
+          'ts-node/register/transpile-only',
+          path.join(webpackPaths.srcMainPath, 'main.ts'),
+        ],
+        {
+          env: {
+            ...process.env,
+            NODE_ENV: 'development',
+          },
+          stdio: 'inherit',
+        }
+      )
         .on('close', (code: number) => process.exit(code!))
         .on('error', (spawnError) => console.error(spawnError));
     },
