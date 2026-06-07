@@ -14,6 +14,7 @@ import MarketDataGridItem from './MarketDataGridItem';
 import PickDater from './PickDater';
 import useStore from '../hooks/useStore';
 import useManyTickers from '../hooks/useManyTickers';
+import usePrefetchAnalytics from '../hooks/usePrefetchAnalytics';
 import useSingleTicker from '../hooks/useSingleTicker';
 import { isMicro } from '../../config/appMode';
 import { priceBandTitleSegment } from '../../config/priceBands';
@@ -24,6 +25,7 @@ interface ILayoutProps {
 }
 
 const Layout = ({ children }: ILayoutProps) => {
+  usePrefetchAnalytics();
   const { isFetching: isManyFetching, data: manyTickersData } =
     useManyTickers();
   const { isFetching: isOneFetching } = useSingleTicker();

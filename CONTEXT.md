@@ -10,5 +10,6 @@
 | **Client mode** | `standard` (MarketEye) or `micro` (Micro MarketEye); build-time via `MARKETEYE_MODE`. |
 | **Micro Client flavor** | Micro MarketEye US or Micro MarketEye TSX — price-band screening desktop build. |
 | **Price band tab** | UI tab selecting one of four close-price ranges ($5 / $10 / $20 / $50). |
+| **Prefetch bundle** | One `get_analytics_lists_by_criteria` response (all five sort keys) for a date and optional price band, seeded into React Query so tab/criterion switches read cache instead of refetching. |
 
 API glossary: see [marketeye-api/CONTEXT.md](../marketeye-api/CONTEXT.md).
