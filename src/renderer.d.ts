@@ -9,6 +9,7 @@ export interface IRequest {
   date: string;
   ticker?: string;
   criterion?: string;
+  price_band?: string;
 }
 
 export interface IEmail {

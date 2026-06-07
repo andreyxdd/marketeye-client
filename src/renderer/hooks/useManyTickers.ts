@@ -1,21 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
 import shallow from 'zustand/shallow';
+import { isMicro } from '../../config/appMode';
 import { MARKET } from '../../config/market';
 import useStore from './useStore';
 
 function useManyTickers() {
-  const [selectedDate, criterion] = useStore(
-    (state) => [state.selectedDate, state.criterion],
+  const [selectedDate, criterion, priceBand] = useStore(
+    (state) => [state.selectedDate, state.criterion, state.priceBand],
     shallow
   );
 
   const query = useQuery(
-    [MARKET, criterion, selectedDate],
+    isMicro
+      ? [MARKET, criterion, selectedDate, priceBand]
+      : [MARKET, criterion, selectedDate],
     async () => {
       try {
         const response = await window.electronAPI.getAnalyticsListsByCriterion({
           criterion,
           date: selectedDate,
+          ...(isMicro ? { price_band: priceBand } : {}),
         });
 
         if (response) return response;

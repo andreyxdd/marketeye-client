@@ -9,11 +9,14 @@ import {
 import shallow from 'zustand/shallow';
 import { ICriteria } from 'types';
 import Navbar from './Navbar';
+import PriceBandTabs from './PriceBandTabs';
 import MarketDataGridItem from './MarketDataGridItem';
 import PickDater from './PickDater';
 import useStore from '../hooks/useStore';
 import useManyTickers from '../hooks/useManyTickers';
 import useSingleTicker from '../hooks/useSingleTicker';
+import { isMicro } from '../../config/appMode';
+import { priceBandTitleSegment } from '../../config/priceBands';
 import { isTO, showMarketWidePanel } from '../../config/market';
 
 interface ILayoutProps {
@@ -21,10 +24,15 @@ interface ILayoutProps {
 }
 
 const Layout = ({ children }: ILayoutProps) => {
-  const { isFetching: isManyFetching } = useManyTickers();
+  const { isFetching: isManyFetching, data: manyTickersData } = useManyTickers();
   const { isFetching: isOneFetching } = useSingleTicker();
-  const [criterion, textfield, isSingleTicker] = useStore(
-    (state) => [state.criterion, state.textfield, state.isSingleTicker],
+  const [criterion, textfield, isSingleTicker, priceBand] = useStore(
+    (state) => [
+      state.criterion,
+      state.textfield,
+      state.isSingleTicker,
+      state.priceBand,
+    ],
     shallow
   );
 
@@ -71,21 +79,28 @@ const Layout = ({ children }: ILayoutProps) => {
       return `Analytics for the ${textfield.searchString} ticker`;
     }
 
+    const count = manyTickersData?.length ?? 20;
+    const topLabel = `Top ${Math.min(count, 20)} stocks`;
+    const bandPrefix = isMicro ? `${priceBandTitleSegment(priceBand)} — ` : '';
+
     switch (newCriterion) {
       case 'three_day_avg_mf':
-        return 'Top 20 stocks by 3-day average money flow';
+        return `${bandPrefix}${topLabel} by 3-day average money flow`;
       case 'volume':
-        return 'Top 20 stocks by 1-day volume';
+        return `${bandPrefix}${topLabel} by 1-day volume`;
       case 'three_day_avg_volume':
-        return 'Top 20 stocks by 3-day average volume';
+        return `${bandPrefix}${topLabel} by 3-day average volume`;
+      case 'macd':
+        return `${bandPrefix}${topLabel} by MACD`;
       default:
-        return 'Top 20 stocks by 1-day money flow';
+        return `${bandPrefix}${topLabel} by 1-day money flow`;
     }
   };
 
   return (
     <div>
       <Navbar />
+      {isMicro && <PriceBandTabs />}
       <Grid
         sx={{ pl: 4, pr: 4, pt: 4, pb: 2 }}
         container

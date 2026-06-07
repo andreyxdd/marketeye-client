@@ -4,7 +4,8 @@ import {
   GridRenderCellParams,
   GridValueFormatterParams,
 } from '@mui/x-data-grid';
-import { filterColumnFields, isHiddenColumnForMarket } from '../../../config/market';
+import { filterColumnFields, isHiddenColumnForMarket, isTO } from '../../../config/market';
+import { isMicro } from '../../../config/appMode';
 
 const currencyNumberFormatter = Intl.NumberFormat('en', {
   notation: 'compact',
@@ -39,6 +40,20 @@ const columnsDefinitionAll: GridColDef[] = [
     disableColumnMenu: true,
     sortable: false,
     hideable: false,
+  },
+  {
+    field: 'close',
+    headerName: isTO ? 'Close (CAD)' : 'Close',
+    type: 'number',
+    width: 90,
+    align: 'center',
+    headerAlign: 'center',
+    valueFormatter: (params: GridValueFormatterParams) => {
+      return (params.value as number).toFixed(2);
+    },
+    description: 'End-of-day closing price for the selected session',
+    disableColumnMenu: true,
+    sortable: false,
   },
   {
     field: 'macd',
@@ -624,9 +639,24 @@ const columnsToShowBase: IColumnsToShowProps = {
   ],
 };
 
+function withMicroClose(fields: string[]): string[] {
+  if (!isMicro || fields.includes('close')) {
+    return fields;
+  }
+  const tickerIndex = fields.indexOf('ticker');
+  if (tickerIndex === -1) {
+    return ['close', ...fields];
+  }
+  return [
+    ...fields.slice(0, tickerIndex + 1),
+    'close',
+    ...fields.slice(tickerIndex + 1),
+  ];
+}
+
 export const columnsToShow: IColumnsToShowProps = Object.fromEntries(
   Object.entries(columnsToShowBase).map(([criterion, fields]) => [
     criterion,
-    filterColumnFields(fields),
+    filterColumnFields(withMicroClose(fields)),
   ])
 ) as IColumnsToShowProps;
