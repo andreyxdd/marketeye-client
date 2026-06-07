@@ -8,7 +8,7 @@
 | **Client flavor** | A packaged desktop app locked to one Market at build time (e.g. MarketEye US vs MarketEye TSX). |
 | **Client flavor display name** | User-facing product label for a Client flavor (`MarketEye` for US, `MarketEye TSX` for TO). |
 | **Client mode** | `standard` (MarketEye) or `micro` (Micro MarketEye); build-time via `MARKETEYE_MODE`. |
-| **Micro Client flavor** | Micro MarketEye US or Micro MarketEye TSX — price-band screening desktop build. |
+| **Micro Client flavor** | Micro MarketEye US or Micro MarketEye TSX — price-band screening desktop build. Uses distinct theme palettes from standard Client flavors. |
 | **Price band tab** | UI tab selecting one of four close-price ranges ($5 / $10 / $20 / $50). |
 | **Prefetch bundle** | One `get_analytics_lists_by_criteria` response (all five sort keys) for a date and optional price band, seeded into React Query so tab/criterion switches read cache instead of refetching. |
 
