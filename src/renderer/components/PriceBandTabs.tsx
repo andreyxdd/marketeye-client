@@ -1,6 +1,10 @@
 import { Tabs, Tab, Box } from '@mui/material';
 import shallow from 'zustand/shallow';
-import { PriceBand, PRICE_BANDS, priceBandLabel } from '../../config/priceBands';
+import {
+  PriceBand,
+  PRICE_BANDS,
+  priceBandLabel,
+} from '../../config/priceBands';
 import useStore from '../hooks/useStore';
 
 function PriceBandTabs() {

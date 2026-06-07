@@ -24,7 +24,8 @@ interface ILayoutProps {
 }
 
 const Layout = ({ children }: ILayoutProps) => {
-  const { isFetching: isManyFetching, data: manyTickersData } = useManyTickers();
+  const { isFetching: isManyFetching, data: manyTickersData } =
+    useManyTickers();
   const { isFetching: isOneFetching } = useSingleTicker();
   const [criterion, textfield, isSingleTicker, priceBand] = useStore(
     (state) => [

@@ -1,6 +1,6 @@
 import { ICriteria, ITextfieldProps } from 'types';
-import { PriceBand } from '../../config/priceBands';
 import create from 'zustand';
+import { PriceBand } from '../../config/priceBands';
 
 interface IStore {
   selectedDate: string;
