@@ -1,19 +1,18 @@
 import { createTheme, Theme } from '@mui/material/styles';
 import { APP_MODE, AppMode } from './appMode';
 import { MARKET, MarketCode } from './market';
-
-const US_PRIMARY = '#1976d2';
-
-const TO_PRIMARY = '#1B2A4A';
-const TO_PRIMARY_DARK = '#0F1A2E';
-const TO_SECONDARY = '#C9A227';
-
-const MICRO_US_PRIMARY = '#00897B';
-const MICRO_US_PRIMARY_DARK = '#00695C';
-
-const MICRO_TO_PRIMARY = '#37474F';
-const MICRO_TO_PRIMARY_DARK = '#263238';
-const MICRO_TO_SECONDARY = '#D4A574';
+import {
+  MICRO_TO_PRIMARY,
+  MICRO_TO_PRIMARY_DARK,
+  MICRO_TO_SECONDARY,
+  MICRO_US_PRIMARY,
+  MICRO_US_PRIMARY_DARK,
+  TO_PRIMARY,
+  TO_PRIMARY_DARK,
+  TO_SECONDARY,
+  US_PRIMARY,
+  WHITE,
+} from './palette';
 
 export function getThemeForMarket(market: MarketCode): Theme {
   if (market === 'TO') {
@@ -22,7 +21,7 @@ export function getThemeForMarket(market: MarketCode): Theme {
         primary: {
           main: TO_PRIMARY,
           dark: TO_PRIMARY_DARK,
-          contrastText: '#FFFFFF',
+          contrastText: WHITE,
         },
         secondary: {
           main: TO_SECONDARY,
@@ -49,7 +48,7 @@ export function getThemeForBuild(market: MarketCode, mode: AppMode): Theme {
           primary: {
             main: MICRO_TO_PRIMARY,
             dark: MICRO_TO_PRIMARY_DARK,
-            contrastText: '#FFFFFF',
+            contrastText: WHITE,
           },
           secondary: {
             main: MICRO_TO_SECONDARY,

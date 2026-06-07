@@ -18,6 +18,8 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import { IDataProps, IDateProps } from '../types';
+import { APP_MODE } from '../config/appMode';
+import { getFlavorIconDir } from '../config/buildFlavor';
 import { MARKET, showMarketWidePanel } from '../config/market';
 
 export default class AppUpdater {
@@ -210,11 +212,13 @@ const createWindow = async () => {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
+  const flavorIconName = path.join(getFlavorIconDir(APP_MODE, MARKET), 'icon.png');
+
   mainWindow = new BrowserWindow({
     show: false,
     width: 1280,
     height: 960,
-    icon: getAssetPath('icon.png'),
+    icon: getAssetPath(flavorIconName),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
