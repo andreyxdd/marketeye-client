@@ -4,7 +4,11 @@ import {
   GridRenderCellParams,
   GridValueFormatterParams,
 } from '@mui/x-data-grid';
-import { filterColumnFields, isHiddenColumnForMarket, isTO } from '../../../config/market';
+import {
+  filterColumnFields,
+  isHiddenColumnForMarket,
+  isTO,
+} from '../../../config/market';
 import { isMicro } from '../../../config/appMode';
 
 const currencyNumberFormatter = Intl.NumberFormat('en', {
