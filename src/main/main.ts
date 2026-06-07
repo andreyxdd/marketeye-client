@@ -64,14 +64,18 @@ ipcMain.handle('get-ticker-analytics', async (_event, arg) => {
 
 ipcMain.handle('get-analytics-lists-by-criteria', async (_event, arg) => {
   try {
+    const params: Record<string, string> = {
+      date: arg.date,
+      market: MARKET,
+      api_key: process.env.MARKETEYE_API_KEY,
+    };
+    if (arg.price_band) {
+      params.price_band = arg.price_band;
+    }
     const response = await axios.get(
       `${process.env.MARKETEYE_API_URL}/analytics/get_analytics_lists_by_criteria`,
       {
-        params: {
-          date: arg.date,
-          market: MARKET,
-          api_key: process.env.MARKETEYE_API_KEY,
-        },
+        params,
       }
     );
     const { data } = response;
