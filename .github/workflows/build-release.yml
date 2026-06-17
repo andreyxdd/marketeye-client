@@ -60,9 +60,10 @@ jobs:
       - name: Verify API config baked into bundle
         shell: pwsh
         run: |
-          if (-not (Test-Path dist/main.js)) { throw "dist/main.js was not produced" }
-          if (-not (Select-String -Path dist/main.js -Pattern 'marketeye-api' -Quiet)) {
-            throw "API URL was not baked into dist/main.js"
+          $mainJs = "release/app/dist/main/main.js"
+          if (-not (Test-Path $mainJs)) { throw "$mainJs was not produced" }
+          if (-not (Select-String -Path $mainJs -Pattern 'marketeye-api' -Quiet)) {
+            throw "API URL was not baked into $mainJs"
           }
 
       - name: Upload installer artifact
