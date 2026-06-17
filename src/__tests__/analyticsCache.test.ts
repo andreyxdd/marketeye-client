@@ -4,6 +4,8 @@ import {
   getManyTickersQueryKey,
   seedBandCache,
   isBandCachePopulated,
+  isCriterionCachedForBand,
+  seedCriterionCache,
   BulkAnalyticsResponse,
 } from '../renderer/lib/analyticsCache';
 
@@ -65,5 +67,35 @@ describe('analyticsCache', () => {
 
     seedBandCache(queryClient, date, '5to10', bulkResponse);
     expect(isBandCachePopulated(queryClient, date, '5to10')).toBe(true);
+  });
+
+  it('isCriterionCachedForBand returns false until that criterion is seeded', () => {
+    const queryClient = new QueryClient();
+    expect(
+      isCriterionCachedForBand(queryClient, 'volume', date, 'lte5')
+    ).toBe(false);
+
+    seedCriterionCache(queryClient, 'volume', date, 'lte5', [
+      { ticker: 'GOOG' } as import('types').IDataProps,
+    ]);
+    expect(
+      isCriterionCachedForBand(queryClient, 'volume', date, 'lte5')
+    ).toBe(true);
+    expect(
+      isCriterionCachedForBand(queryClient, 'macd', date, 'lte5')
+    ).toBe(false);
+  });
+
+  it('seedCriterionCache writes a single criterion entry for a price band', () => {
+    const queryClient = new QueryClient();
+    const rows = [{ ticker: 'NVDA' } as import('types').IDataProps];
+
+    seedCriterionCache(queryClient, 'three_day_avg_mf', date, '5to10', rows);
+
+    expect(
+      queryClient.getQueryData(
+        getManyTickersQueryKey('three_day_avg_mf', date, '5to10')
+      )
+    ).toEqual(rows);
   });
 });

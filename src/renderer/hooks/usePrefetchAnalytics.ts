@@ -3,14 +3,19 @@ import { useQueryClient } from '@tanstack/react-query';
 import shallow from 'zustand/shallow';
 import { isMicro } from '../../config/appMode';
 import { PRICE_BANDS, PriceBand } from '../../config/priceBands';
-import { isBandCachePopulated, seedBandCache } from '../lib/analyticsCache';
+import {
+  isBandCachePopulated,
+  isCriterionCachedForBand,
+  seedBandCache,
+  seedCriterionCache,
+} from '../lib/analyticsCache';
 import { runWithMaxConcurrency } from '../lib/prefetchQueue';
 import useStore from './useStore';
 
 function usePrefetchAnalytics(): void {
   const queryClient = useQueryClient();
-  const [selectedDate, priceBand] = useStore(
-    (state) => [state.selectedDate, state.priceBand],
+  const [selectedDate, priceBand, criterion] = useStore(
+    (state) => [state.selectedDate, state.priceBand, state.criterion],
     shallow
   );
   const generationRef = useRef(0);
@@ -41,6 +46,35 @@ function usePrefetchAnalytics(): void {
       }
     };
 
+    const prefetchCriterionBand = async (band: PriceBand) => {
+      if (isStale()) return;
+      if (
+        isCriterionCachedForBand(queryClient, criterion, selectedDate, band)
+      ) {
+        return;
+      }
+
+      try {
+        const response =
+          await window.electronAPI.getAnalyticsListsByCriterion({
+            criterion,
+            date: selectedDate,
+            price_band: band,
+          });
+        if (isStale() || !response) return;
+        seedCriterionCache(
+          queryClient,
+          criterion,
+          selectedDate,
+          band,
+          response
+        );
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('Criterion prefetch failed for band', band, e);
+      }
+    };
+
     const run = async () => {
       if (isMicro) {
         await prefetchBand(priceBand);
@@ -49,6 +83,15 @@ function usePrefetchAnalytics(): void {
         const otherBands = PRICE_BANDS.filter((b) => b !== priceBand);
         await runWithMaxConcurrency(
           otherBands.map((band) => () => prefetchBand(band)),
+          2
+        );
+        if (isStale()) return;
+
+        await prefetchCriterionBand(priceBand);
+        if (isStale()) return;
+
+        await runWithMaxConcurrency(
+          otherBands.map((band) => () => prefetchCriterionBand(band)),
           2
         );
       } else {
@@ -61,7 +104,7 @@ function usePrefetchAnalytics(): void {
     return () => {
       cancelled = true;
     };
-  }, [queryClient, selectedDate, priceBand]);
+  }, [queryClient, selectedDate, priceBand, criterion]);
 }
 
 export default usePrefetchAnalytics;

@@ -63,6 +63,32 @@ export function isBandCachePopulated(
   );
 }
 
+export function isCriterionCachedForBand(
+  queryClient: QueryClient,
+  criterion: ICriteria,
+  date: string,
+  priceBand: PriceBand
+): boolean {
+  return (
+    queryClient.getQueryData(
+      getManyTickersQueryKey(criterion, date, priceBand)
+    ) !== undefined
+  );
+}
+
+export function seedCriterionCache(
+  queryClient: QueryClient,
+  criterion: ICriteria,
+  date: string,
+  priceBand: PriceBand,
+  rows: Array<IDataProps>
+): void {
+  queryClient.setQueryData(
+    getManyTickersQueryKey(criterion, date, priceBand),
+    rows
+  );
+}
+
 export function invalidateBandCache(
   queryClient: QueryClient,
   date: string,
