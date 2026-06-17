@@ -212,7 +212,10 @@ const createWindow = async () => {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
-  const flavorIconName = path.join(getFlavorIconDir(APP_MODE, MARKET), 'icon.png');
+  const flavorIconName = path.join(
+    getFlavorIconDir(APP_MODE, MARKET),
+    'icon.png'
+  );
 
   mainWindow = new BrowserWindow({
     show: false,

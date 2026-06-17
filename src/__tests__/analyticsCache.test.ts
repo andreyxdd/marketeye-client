@@ -71,19 +71,19 @@ describe('analyticsCache', () => {
 
   it('isCriterionCachedForBand returns false until that criterion is seeded', () => {
     const queryClient = new QueryClient();
-    expect(
-      isCriterionCachedForBand(queryClient, 'volume', date, 'lte5')
-    ).toBe(false);
+    expect(isCriterionCachedForBand(queryClient, 'volume', date, 'lte5')).toBe(
+      false
+    );
 
     seedCriterionCache(queryClient, 'volume', date, 'lte5', [
       { ticker: 'GOOG' } as import('types').IDataProps,
     ]);
-    expect(
-      isCriterionCachedForBand(queryClient, 'volume', date, 'lte5')
-    ).toBe(true);
-    expect(
-      isCriterionCachedForBand(queryClient, 'macd', date, 'lte5')
-    ).toBe(false);
+    expect(isCriterionCachedForBand(queryClient, 'volume', date, 'lte5')).toBe(
+      true
+    );
+    expect(isCriterionCachedForBand(queryClient, 'macd', date, 'lte5')).toBe(
+      false
+    );
   });
 
   it('seedCriterionCache writes a single criterion entry for a price band', () => {

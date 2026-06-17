@@ -160,9 +160,7 @@ describe('usePrefetchAnalytics', () => {
 
     await waitFor(() => {
       expect(
-        queryClient.getQueryData(
-          getManyTickersQueryKey('macd', date, 'lte5')
-        )
+        queryClient.getQueryData(getManyTickersQueryKey('macd', date, 'lte5'))
       ).toEqual([{ ticker: 'macd-lte5' }]);
     });
   });

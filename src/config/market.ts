@@ -27,12 +27,11 @@ export const HIDDEN_COLUMN_FIELDS_FOR_TO = [
   'mentions_over_three_days',
 ] as const;
 
-export type HiddenColumnField = (typeof HIDDEN_COLUMN_FIELDS_FOR_TO)[number];
+export type HiddenColumnField = typeof HIDDEN_COLUMN_FIELDS_FOR_TO[number];
 
 export function isHiddenColumnForMarket(field: string): boolean {
   return (
-    isTO &&
-    (HIDDEN_COLUMN_FIELDS_FOR_TO as readonly string[]).includes(field)
+    isTO && (HIDDEN_COLUMN_FIELDS_FOR_TO as readonly string[]).includes(field)
   );
 }
 

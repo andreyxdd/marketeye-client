@@ -55,12 +55,11 @@ function usePrefetchAnalytics(): void {
       }
 
       try {
-        const response =
-          await window.electronAPI.getAnalyticsListsByCriterion({
-            criterion,
-            date: selectedDate,
-            price_band: band,
-          });
+        const response = await window.electronAPI.getAnalyticsListsByCriterion({
+          criterion,
+          date: selectedDate,
+          price_band: band,
+        });
         if (isStale() || !response) return;
         seedCriterionCache(
           queryClient,
