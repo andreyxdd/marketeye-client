@@ -48,6 +48,32 @@ function copyFlavorIcons(mode: AppMode, market: MarketCode): void {
   );
 }
 
+function patchElectronBuilderConfig(
+  productName: string,
+  market: MarketCode
+): void {
+  const pkgPath = path.join(ROOT, 'package.json');
+  const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8')) as {
+    build: {
+      productName: string;
+      artifactName: string;
+    };
+  };
+
+  pkg.build.productName = productName;
+  pkg.build.artifactName = `${productName}-\${version}-${market}-\${os}.\${ext}`;
+  fs.writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
+
+  // eslint-disable-next-line no-console
+  console.log(`prepared electron-builder productName=${productName}`);
+}
+
 const mode = normalizeMode(process.env.MARKETEYE_MODE);
 const market = normalizeMarket(process.env.MARKETEYE_MARKET);
+const productName = process.env.MARKETEYE_PRODUCT_NAME?.trim();
+if (!productName) {
+  throw new Error('MARKETEYE_PRODUCT_NAME is required for packaging');
+}
+
 copyFlavorIcons(mode, market);
+patchElectronBuilderConfig(productName, market);
