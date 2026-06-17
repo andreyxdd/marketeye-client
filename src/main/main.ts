@@ -22,6 +22,9 @@ import { APP_MODE } from '../config/appMode';
 import { getFlavorIconDir } from '../config/buildFlavor';
 import { MARKET, showMarketWidePanel } from '../config/market';
 
+const MARKETEYE_API_URL = process.env.MARKETEYE_API_URL ?? '';
+const MARKETEYE_API_KEY = process.env.MARKETEYE_API_KEY ?? '';
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -44,14 +47,14 @@ ipcMain.on('ipc-example', async (event, arg) => {
 ipcMain.handle('get-ticker-analytics', async (_event, arg) => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL}/analytics/get_ticker_analytics`,
+      `${MARKETEYE_API_URL}/analytics/get_ticker_analytics`,
       {
         params: {
           date: arg.date,
           ticker: arg.ticker,
           criterion: arg.criterion,
           market: MARKET,
-          api_key: process.env.MARKETEYE_API_KEY,
+          api_key: MARKETEYE_API_KEY,
         },
       }
     );
@@ -69,13 +72,13 @@ ipcMain.handle('get-analytics-lists-by-criteria', async (_event, arg) => {
     const params: Record<string, string> = {
       date: arg.date,
       market: MARKET,
-      api_key: process.env.MARKETEYE_API_KEY,
+      api_key: MARKETEYE_API_KEY,
     };
     if (arg.price_band) {
       params.price_band = arg.price_band;
     }
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL}/analytics/get_analytics_lists_by_criteria`,
+      `${MARKETEYE_API_URL}/analytics/get_analytics_lists_by_criteria`,
       {
         params,
       }
@@ -94,13 +97,13 @@ ipcMain.handle('get-analytics-lists-by-criterion', async (_event, arg) => {
       date: arg.date,
       criterion: arg.criterion,
       market: MARKET,
-      api_key: process.env.MARKETEYE_API_KEY,
+      api_key: MARKETEYE_API_KEY,
     };
     if (arg.price_band) {
       params.price_band = arg.price_band;
     }
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL}/analytics/get_analytics_lists_by_criterion`,
+      `${MARKETEYE_API_URL}/analytics/get_analytics_lists_by_criterion`,
       { params }
     );
     const { data } = response;
@@ -114,11 +117,11 @@ ipcMain.handle('get-analytics-lists-by-criterion', async (_event, arg) => {
 ipcMain.handle('get-dates', async () => {
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL}/analytics/get_dates`,
+      `${MARKETEYE_API_URL}/analytics/get_dates`,
       {
         params: {
           market: MARKET,
-          api_key: process.env.MARKETEYE_API_KEY,
+          api_key: MARKETEYE_API_KEY,
         },
       }
     );
@@ -137,11 +140,11 @@ ipcMain.handle('get-market-analytics', async (_event, arg) => {
   }
   try {
     const response = await axios.get(
-      `${process.env.MARKETEYE_API_URL}/analytics/get_market_analytics`,
+      `${MARKETEYE_API_URL}/analytics/get_market_analytics`,
       {
         params: {
           date: arg.date,
-          api_key: process.env.MARKETEYE_API_KEY,
+          api_key: MARKETEYE_API_KEY,
         },
       }
     );
@@ -156,12 +159,12 @@ ipcMain.handle('get-market-analytics', async (_event, arg) => {
 ipcMain.handle('notify-developer', async (_event, arg) => {
   try {
     await axios.post(
-      `${process.env.MARKETEYE_API_URL}/notifications/notify_developer`,
+      `${MARKETEYE_API_URL}/notifications/notify_developer`,
       { email_body: arg.body, email_subject: arg.subject },
       {
         headers: { 'Content-Type': 'application/json; charset=UTF-8' },
         params: {
-          api_key: process.env.MARKETEYE_API_KEY,
+          api_key: MARKETEYE_API_KEY,
         },
       }
     );
