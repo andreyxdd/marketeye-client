@@ -31,6 +31,9 @@ function copyFlavorIcons(mode: AppMode, market: MarketCode): void {
     const target = path.join(ASSETS, filename);
 
     if (!fs.existsSync(source)) {
+      if (filename === 'icon.icns') {
+        continue;
+      }
       throw new Error(
         `missing flavor asset ${source}. Run npm run generate:icons first.`
       );

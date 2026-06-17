@@ -10,7 +10,8 @@ import {
 
 const ROOT = path.join(__dirname, '../..');
 const ASSETS = path.join(ROOT, 'assets');
-const BASE_ICON = path.join(ASSETS, 'icons/512x512.png');
+const BASE_ICON_PNG = path.join(ASSETS, 'icons/512x512.png');
+const BASE_ICON_SVG = path.join(ASSETS, 'icon.svg');
 const FLAVORS_DIR = path.join(ASSETS, 'flavors');
 
 type FlavorSpec = {
@@ -70,11 +71,50 @@ async function compositeAccent(accent: string): Promise<Buffer> {
     .png()
     .toBuffer();
 
-  return sharp(BASE_ICON)
+  const baseIcon = await loadBaseIconBuffer();
+  return sharp(baseIcon)
     .resize(size, size)
     .composite([{ input: circleMask, left, top, blend: 'over' }])
     .png()
     .toBuffer();
+}
+
+async function loadBaseIconBuffer(): Promise<Buffer> {
+  if (fs.existsSync(BASE_ICON_PNG)) {
+    return fs.promises.readFile(BASE_ICON_PNG);
+  }
+
+  if (!fs.existsSync(BASE_ICON_SVG)) {
+    throw new Error(
+      `missing base icon: expected ${BASE_ICON_PNG} or ${BASE_ICON_SVG}`
+    );
+  }
+
+  return sharp(BASE_ICON_SVG).resize(512, 512).png().toBuffer();
+}
+
+async function ensureBaseAssets(): Promise<void> {
+  const pngBuffer = await loadBaseIconBuffer();
+
+  fs.mkdirSync(path.join(ASSETS, 'icons'), { recursive: true });
+  if (!fs.existsSync(BASE_ICON_PNG)) {
+    await fs.promises.writeFile(BASE_ICON_PNG, pngBuffer);
+  }
+
+  const rootPng = path.join(ASSETS, 'icon.png');
+  if (!fs.existsSync(rootPng)) {
+    await fs.promises.writeFile(rootPng, pngBuffer);
+  }
+
+  const rootIco = path.join(ASSETS, 'icon.ico');
+  if (!fs.existsSync(rootIco)) {
+    const icoSources = await Promise.all(
+      ICON_SIZES.map(async (iconSize) =>
+        sharp(pngBuffer).resize(iconSize, iconSize).png().toBuffer()
+      )
+    );
+    await fs.promises.writeFile(rootIco, await pngToIco(icoSources));
+  }
 }
 
 async function writeFlavorIcons({ dir, accent }: FlavorSpec): Promise<void> {
@@ -88,6 +128,9 @@ async function writeFlavorIcons({ dir, accent }: FlavorSpec): Promise<void> {
     for (const filename of ['icon.png', 'icon.ico', 'icon.icns']) {
       const source = path.join(ASSETS, filename);
       if (!fs.existsSync(source)) {
+        if (filename === 'icon.icns') {
+          continue;
+        }
         throw new Error(`missing standard asset ${source}`);
       }
       await fs.promises.copyFile(source, path.join(outDir, filename));
@@ -120,9 +163,7 @@ async function writeFlavorIcons({ dir, accent }: FlavorSpec): Promise<void> {
 }
 
 async function main(): Promise<void> {
-  if (!fs.existsSync(BASE_ICON)) {
-    throw new Error(`missing base icon: ${BASE_ICON}`);
-  }
+  await ensureBaseAssets();
 
   fs.mkdirSync(FLAVORS_DIR, { recursive: true });
 

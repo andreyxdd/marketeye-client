@@ -1,6 +1,9 @@
 name: Build and release
 
 on:
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 concurrency:
@@ -8,21 +11,73 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-release:
+  build:
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - script: package:win:us
+            artifact: MarketEye-US
+          - script: package:win:to
+            artifact: MarketEye-TSX
+          - script: package:win:micro:us
+            artifact: MicroFTM
+          - script: package:win:micro:to
+            artifact: MicroFTM-TSX
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
+
       - name: Install Node.js and npm
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
           cache: npm
+
       - name: Install dependencies
-        run: npm install
-      - name: Build and release the app
+        run: npm ci
+
+      - name: Generate flavor icons
+        run: npm run generate:icons
+
+      - name: Package Windows app
         env:
-          GH_TOKEN: ${{ secrets.github_token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MARKETEYE_API_KEY: ${{ secrets.MARKETEYE_API_KEY }}
           MARKETEYE_API_URL: ${{ secrets.MARKETEYE_API_URL }}
-        run: npm run package:publish
+        run: npm run ${{ matrix.script }}
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: release/build/*.exe
+          if-no-files-found: error
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          if [ -z "$tag" ] || [ "$tag" = "${GITHUB_REF}" ]; then
+            tag="${{ github.ref_name }}"
+          fi
+          mkdir -p release-assets
+          find artifacts -name '*.exe' -exec cp {} release-assets/ \;
+          gh release create "$tag" release-assets/* \
+            --title "$tag" \
+            --generate-notes \
+            --repo "${{ github.repository }}"

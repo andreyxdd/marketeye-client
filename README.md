@@ -49,6 +49,31 @@ To package apps for the local platform:
 npm run package
 ```
 
+Flavor-specific Windows installers:
+
+```bash
+npm run package:win:us
+npm run package:win:to
+npm run package:win:micro:us
+npm run package:win:micro:to
+```
+
+### Releasing
+
+1. Bump the version in `package.json`.
+2. Commit the version bump.
+3. Create and push a tag: `git tag v1.4.6 && git push origin v1.4.6`
+4. GitHub Actions builds four Windows installers on tag push (`v*`).
+5. Download the installers from the GitHub Release for that tag.
+6. Upload the installers to Google Drive manually for distribution.
+
+Release artifact names follow `artifactName` in `package.json`:
+
+- `MarketEye US-{version}-US-win.exe`
+- `MarketEye TSX-{version}-TO-win.exe`
+- `MicroFTM-{version}-US-win.exe`
+- `MicroFTM TSX-{version}-TO-win.exe`
+
 ### Docs
 
 See [ERB docs and guides for more details](https://electron-react-boilerplate.js.org/docs/installation)

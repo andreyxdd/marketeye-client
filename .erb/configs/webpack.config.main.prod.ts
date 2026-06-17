@@ -65,6 +65,8 @@ const configuration: webpack.Configuration = {
       NODE_ENV: 'production',
       DEBUG_PROD: false,
       START_MINIMIZED: false,
+      MARKETEYE_API_KEY: '',
+      MARKETEYE_API_URL: '',
     }),
   ],
 
