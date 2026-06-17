@@ -41,12 +41,29 @@ jobs:
       - name: Generate flavor icons
         run: npm run generate:icons
 
+      - name: Verify API build secrets
+        shell: pwsh
+        env:
+          MARKETEYE_API_KEY: ${{ secrets.MARKETEYE_API_KEY }}
+          MARKETEYE_API_URL: ${{ secrets.MARKETEYE_API_URL }}
+        run: |
+          if (-not $env:MARKETEYE_API_URL) { throw "MARKETEYE_API_URL is missing" }
+          if (-not $env:MARKETEYE_API_KEY) { throw "MARKETEYE_API_KEY is missing" }
+
       - name: Package Windows app
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MARKETEYE_API_KEY: ${{ secrets.MARKETEYE_API_KEY }}
           MARKETEYE_API_URL: ${{ secrets.MARKETEYE_API_URL }}
         run: npm run ${{ matrix.script }}
+
+      - name: Verify API config baked into bundle
+        shell: pwsh
+        run: |
+          if (-not (Test-Path dist/main.js)) { throw "dist/main.js was not produced" }
+          if (-not (Select-String -Path dist/main.js -Pattern 'marketeye-api' -Quiet)) {
+            throw "API URL was not baked into dist/main.js"
+          }
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
