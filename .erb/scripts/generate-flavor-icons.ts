@@ -25,7 +25,8 @@ const FLAVORS: FlavorSpec[] = [
   { dir: 'micro-to', accent: MICRO_TO_PRIMARY },
 ];
 
-const ICON_SIZES = [16, 24, 32, 48, 64, 96, 128, 256, 512];
+// NSIS rejects oversized ICO entries (512px via png-to-ico breaks makensis).
+const ICO_SIZES = [16, 32, 48, 64, 128, 256];
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } {
   const normalized = hex.replace('#', '');
@@ -109,7 +110,7 @@ async function ensureBaseAssets(): Promise<void> {
   const rootIco = path.join(ASSETS, 'icon.ico');
   if (!fs.existsSync(rootIco)) {
     const icoSources = await Promise.all(
-      ICON_SIZES.map(async (iconSize) =>
+      ICO_SIZES.map(async (iconSize) =>
         sharp(pngBuffer).resize(iconSize, iconSize).png().toBuffer()
       )
     );
@@ -144,7 +145,7 @@ async function writeFlavorIcons({ dir, accent }: FlavorSpec): Promise<void> {
   await fs.promises.writeFile(pngPath, pngBuffer);
 
   const icoSources = await Promise.all(
-    ICON_SIZES.map(async (iconSize) => {
+    ICO_SIZES.map(async (iconSize) => {
       return sharp(pngBuffer).resize(iconSize, iconSize).png().toBuffer();
     })
   );
