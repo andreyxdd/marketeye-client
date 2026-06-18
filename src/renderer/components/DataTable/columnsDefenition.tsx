@@ -29,15 +29,18 @@ const columnsDefinitionAll: GridColDef[] = [
     field: 'ticker',
     headerName: 'Ticker',
     width: 70,
-    renderCell: (params) => (
-      <a
-        href={`https://finance.yahoo.com/quote/${params.value}`}
-        target="_blank"
-        rel="noreferrer"
-      >
-        {params.value}
-      </a>
-    ),
+    renderCell: (params) =>
+      isTO ? (
+        <>{params.value}</>
+      ) : (
+        <a
+          href={`https://finance.yahoo.com/quote/${params.value}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {params.value}
+        </a>
+      ),
     align: 'center',
     headerAlign: 'center',
     description: 'Stock symbol',
