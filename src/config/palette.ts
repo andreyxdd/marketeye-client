@@ -1,3 +1,5 @@
+import { AppMode } from './appMode';
+import { getFlavorManifestEntry } from './flavorManifest';
 import { MarketCode } from './market';
 
 export const US_PRIMARY = '#1976d2';
@@ -16,12 +18,6 @@ export const MICRO_TO_SECONDARY = '#D4A574';
 export const WHITE = '#FFFFFF';
 
 /** Accent color used when compositing flavor icons onto the base glyph. */
-export function getFlavorIconColor(
-  mode: 'standard' | 'micro',
-  market: MarketCode
-): string {
-  if (mode === 'micro') {
-    return market === 'TO' ? MICRO_TO_PRIMARY : MICRO_US_PRIMARY;
-  }
-  return market === 'TO' ? TO_PRIMARY : US_PRIMARY;
+export function getFlavorIconColor(mode: AppMode, market: MarketCode): string {
+  return getFlavorManifestEntry(mode, market).color;
 }

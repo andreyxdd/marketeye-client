@@ -74,6 +74,32 @@ Release artifact names follow `artifactName` in `package.json`:
 - `MicroFTM-{version}-US-win.exe`
 - `MicroFTM TSX-{version}-TO-win.exe`
 
+### Windows co-install verification
+
+Each flavor must keep a unique Windows identity so all four installers can live on one machine:
+
+| Flavor | `appId` | Executable |
+|--------|---------|------------|
+| MarketEye US | `com.marketeye.standard.us` | `MarketEye US.exe` |
+| MarketEye TSX | `com.marketeye.standard.to` | `MarketEye TSX.exe` |
+| MicroFTM | `com.marketeye.micro.us` | `MicroFTM.exe` |
+| MicroFTM TSX | `com.marketeye.micro.to` | `MicroFTM TSX.exe` |
+
+Before release, confirm packaging patches identity correctly:
+
+```bash
+npm run generate:icons
+MARKETEYE_MARKET=US MARKETEYE_PRODUCT_NAME="MarketEye US" npm run prepare:packaging-assets
+node -e "console.log(require('./package.json').build.appId)"
+git checkout -- package.json release/app/package.json assets/icon.png assets/icon.ico
+
+MARKETEYE_MARKET=TO MARKETEYE_PRODUCT_NAME="MarketEye TSX" npm run prepare:packaging-assets
+node -e "console.log(require('./package.json').build.appId)"
+git checkout -- package.json release/app/package.json assets/icon.png assets/icon.ico
+```
+
+Expect `com.marketeye.standard.us` then `com.marketeye.standard.to`. After installing two or more flavors, verify separate entries in **Apps & features** and distinct Start Menu shortcuts / `.exe` names.
+
 ### Docs
 
 See [ERB docs and guides for more details](https://electron-react-boilerplate.js.org/docs/installation)
