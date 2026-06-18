@@ -48,6 +48,46 @@ function copyFlavorIcons(mode: AppMode, market: MarketCode): void {
   );
 }
 
+function syncReleaseAppVersion(): void {
+  const rootPkgPath = path.join(ROOT, 'package.json');
+  const releasePkgPath = path.join(ROOT, 'release/app/package.json');
+  const releaseLockPath = path.join(ROOT, 'release/app/package-lock.json');
+
+  const rootVersion = (
+    JSON.parse(fs.readFileSync(rootPkgPath, 'utf8')) as { version: string }
+  ).version;
+
+  const releasePkg = JSON.parse(
+    fs.readFileSync(releasePkgPath, 'utf8')
+  ) as { version: string };
+  if (releasePkg.version === rootVersion) {
+    return;
+  }
+
+  releasePkg.version = rootVersion;
+  fs.writeFileSync(releasePkgPath, `${JSON.stringify(releasePkg, null, 2)}\n`);
+
+  if (fs.existsSync(releaseLockPath)) {
+    const releaseLock = JSON.parse(
+      fs.readFileSync(releaseLockPath, 'utf8')
+    ) as {
+      version: string;
+      packages: Record<string, { version?: string }>;
+    };
+    releaseLock.version = rootVersion;
+    if (releaseLock.packages['']) {
+      releaseLock.packages[''].version = rootVersion;
+    }
+    fs.writeFileSync(
+      releaseLockPath,
+      `${JSON.stringify(releaseLock, null, 2)}\n`
+    );
+  }
+
+  // eslint-disable-next-line no-console
+  console.log(`synced release/app version to ${rootVersion}`);
+}
+
 function patchElectronBuilderConfig(
   productName: string,
   market: MarketCode
@@ -75,5 +115,6 @@ if (!productName) {
   throw new Error('MARKETEYE_PRODUCT_NAME is required for packaging');
 }
 
+syncReleaseAppVersion();
 copyFlavorIcons(mode, market);
 patchElectronBuilderConfig(productName, market);
