@@ -21,14 +21,50 @@ import { IDataProps, IDateProps } from '../types';
 import { APP_MODE } from '../config/appMode';
 import { getFlavorIconDir } from '../config/buildFlavor';
 import { MARKET, showMarketWidePanel } from '../config/market';
+import { throwApiError } from './apiError';
 
 const MARKETEYE_API_URL = process.env.MARKETEYE_API_URL ?? '';
 const MARKETEYE_API_KEY = process.env.MARKETEYE_API_KEY ?? '';
+const MARKETEYE_UPDATES_FEED_URL = process.env.MARKETEYE_UPDATES_FEED_URL ?? '';
 
 export default class AppUpdater {
   constructor() {
+    if (!app.isPackaged) {
+      return;
+    }
+
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
+
+    if (MARKETEYE_UPDATES_FEED_URL) {
+      log.info(`Using update feed: ${MARKETEYE_UPDATES_FEED_URL}`);
+      autoUpdater.setFeedURL({
+        provider: 'generic',
+        url: MARKETEYE_UPDATES_FEED_URL,
+      });
+    } else {
+      log.warn('MARKETEYE_UPDATES_FEED_URL is empty; skipping feed configuration');
+    }
+
+    autoUpdater.on('checking-for-update', () => {
+      log.info('Checking for update');
+    });
+    autoUpdater.on('update-available', (info) => {
+      log.info('Update available', info);
+    });
+    autoUpdater.on('update-not-available', (info) => {
+      log.info('Update not available', info);
+    });
+    autoUpdater.on('error', (err) => {
+      log.error('Auto-updater error', err);
+    });
+    autoUpdater.on('download-progress', (progress) => {
+      log.info('Download progress', progress);
+    });
+    autoUpdater.on('update-downloaded', (info) => {
+      log.info('Update downloaded', info);
+    });
+
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
@@ -62,8 +98,7 @@ ipcMain.handle('get-ticker-analytics', async (_event, arg) => {
     const tickerData: IDataProps = response.data;
     return tickerData;
   } catch (e) {
-    console.log(e);
-    return null;
+    throwApiError(e);
   }
 });
 
@@ -86,8 +121,7 @@ ipcMain.handle('get-analytics-lists-by-criteria', async (_event, arg) => {
     const { data } = response;
     return data;
   } catch (e) {
-    console.log(e);
-    return null;
+    throwApiError(e);
   }
 });
 
@@ -109,8 +143,7 @@ ipcMain.handle('get-analytics-lists-by-criterion', async (_event, arg) => {
     const { data } = response;
     return data[arg.criterion];
   } catch (e) {
-    console.log(e);
-    return null;
+    throwApiError(e);
   }
 });
 
@@ -129,8 +162,7 @@ ipcMain.handle('get-dates', async () => {
     const dates: IDateProps = response.data;
     return dates;
   } catch (e) {
-    console.log(e);
-    return [];
+    throwApiError(e);
   }
 });
 
@@ -151,8 +183,7 @@ ipcMain.handle('get-market-analytics', async (_event, arg) => {
     const { data } = response;
     return data;
   } catch (e) {
-    console.log(e);
-    return null;
+    throwApiError(e);
   }
 });
 
@@ -258,9 +289,10 @@ const createWindow = async () => {
     shell.openExternal(url);
   });
 
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
-  new AppUpdater();
+  if (app.isPackaged) {
+    // eslint-disable-next-line no-new
+    new AppUpdater();
+  }
 };
 
 /**

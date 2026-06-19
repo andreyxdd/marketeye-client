@@ -1,4 +1,5 @@
 import { FLAVOR_MANIFEST } from '../config/flavorManifest';
+import { getUpdatesFeedUrl } from '../config/buildFlavor';
 
 describe('FLAVOR_MANIFEST', () => {
   it('defines four installable client flavors', () => {
@@ -20,5 +21,30 @@ describe('FLAVOR_MANIFEST', () => {
       (entry) => entry.releaseAppName
     );
     expect(new Set(releaseNames).size).toBe(releaseNames.length);
+  });
+
+  it('defines per-flavor gh-pages update feed URLs', () => {
+    Object.values(FLAVOR_MANIFEST).forEach((entry) => {
+      expect(entry.updatesFeedUrl).toBe(
+        `https://andreyxdd.github.io/marketeye-client/updates/${entry.releaseAppName}/`
+      );
+    });
+  });
+});
+
+describe('getUpdatesFeedUrl', () => {
+  it('returns manifest feed URL for each flavor', () => {
+    expect(getUpdatesFeedUrl('standard', 'US')).toBe(
+      FLAVOR_MANIFEST['standard-us'].updatesFeedUrl
+    );
+    expect(getUpdatesFeedUrl('standard', 'TO')).toBe(
+      FLAVOR_MANIFEST['standard-to'].updatesFeedUrl
+    );
+    expect(getUpdatesFeedUrl('micro', 'US')).toBe(
+      FLAVOR_MANIFEST['micro-us'].updatesFeedUrl
+    );
+    expect(getUpdatesFeedUrl('micro', 'TO')).toBe(
+      FLAVOR_MANIFEST['micro-to'].updatesFeedUrl
+    );
   });
 });

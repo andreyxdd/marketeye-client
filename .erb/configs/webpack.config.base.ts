@@ -49,6 +49,7 @@ const configuration: webpack.Configuration = {
       NODE_ENV: 'production',
       MARKETEYE_MARKET: 'US',
       MARKETEYE_MODE: 'standard',
+      MARKETEYE_UPDATES_FEED_URL: '',
       ...dotenv.config().parsed,
     }),
   ],

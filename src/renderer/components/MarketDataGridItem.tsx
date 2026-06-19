@@ -1,9 +1,34 @@
-import { Grid, Typography } from '@mui/material';
+import { Alert, Button, Grid, Typography } from '@mui/material';
 import SkeletonLoader from 'tiny-skeleton-loader-react';
 import useMarketData from '../hooks/useMarketData';
 
+function errorMessage(error: unknown): string {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+  return 'Failed to load market analytics.';
+}
+
 const MarketDataGridItem = () => {
-  const { data: marketData, isFetching } = useMarketData();
+  const { data: marketData, isFetching, isError, error, refetch } =
+    useMarketData();
+
+  if (isError) {
+    return (
+      <Grid item container justifyContent="center" sx={{ mb: 1, pl: 15 }}>
+        <Alert
+          severity="error"
+          action={
+            <Button color="inherit" size="small" onClick={() => refetch()}>
+              Retry
+            </Button>
+          }
+        >
+          {errorMessage(error)}
+        </Alert>
+      </Grid>
+    );
+  }
 
   if (marketData && !isFetching) {
     return (
@@ -147,7 +172,7 @@ const MarketDataGridItem = () => {
     );
   }
 
-  // if fetching or 'null'
+  // if fetching
   return (
     <Grid
       item

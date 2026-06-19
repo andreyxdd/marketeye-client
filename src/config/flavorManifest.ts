@@ -17,9 +17,17 @@ export type FlavorManifestEntry = {
   appId: string;
   releaseAppName: string;
   executableName: string;
+  updatesFeedUrl: string;
   shape: FlavorShape;
   color: string;
 };
+
+const UPDATES_FEED_BASE =
+  'https://andreyxdd.github.io/marketeye-client/updates';
+
+function updatesFeedUrlFor(releaseAppName: string): string {
+  return `${UPDATES_FEED_BASE}/${releaseAppName}/`;
+}
 
 export const FLAVOR_MANIFEST: Record<BuildFlavor, FlavorManifestEntry> = {
   'standard-us': {
@@ -30,6 +38,7 @@ export const FLAVOR_MANIFEST: Record<BuildFlavor, FlavorManifestEntry> = {
     appId: 'com.marketeye.standard.us',
     releaseAppName: 'marketeye-us',
     executableName: 'MarketEye US',
+    updatesFeedUrl: updatesFeedUrlFor('marketeye-us'),
     shape: 'circle',
     color: '#1976d2',
   },
@@ -41,6 +50,7 @@ export const FLAVOR_MANIFEST: Record<BuildFlavor, FlavorManifestEntry> = {
     appId: 'com.marketeye.standard.to',
     releaseAppName: 'marketeye-tsx',
     executableName: 'MarketEye TSX',
+    updatesFeedUrl: updatesFeedUrlFor('marketeye-tsx'),
     shape: 'rounded-square',
     color: '#1B2A4A',
   },
@@ -52,6 +62,7 @@ export const FLAVOR_MANIFEST: Record<BuildFlavor, FlavorManifestEntry> = {
     appId: 'com.marketeye.micro.us',
     releaseAppName: 'microftm-us',
     executableName: 'MicroFTM',
+    updatesFeedUrl: updatesFeedUrlFor('microftm-us'),
     shape: 'diamond',
     color: '#00897B',
   },
@@ -63,6 +74,7 @@ export const FLAVOR_MANIFEST: Record<BuildFlavor, FlavorManifestEntry> = {
     appId: 'com.marketeye.micro.to',
     releaseAppName: 'microftm-tsx',
     executableName: 'MicroFTM TSX',
+    updatesFeedUrl: updatesFeedUrlFor('microftm-tsx'),
     shape: 'hexagon',
     color: '#37474F',
   },

@@ -13,7 +13,9 @@
 | **Micro Client flavor** | `micro-us` or `micro-to` — price-band screening desktop build. Uses distinct theme palettes and desktop icons from standard Client flavors. |
 | **Price band tab** | UI tab selecting one of four close-price ranges ($5 / $10 / $20 / $50). |
 | **Prefetch bundle** | One `get_analytics_lists_by_criteria` response (all five sort keys) for a date and optional price band, seeded into React Query so tab/criterion switches read cache instead of refetching. |
-| **Bulk band prefetch** | MicroFTM background fetch of the full prefetch bundle for every price band after a date or band change (active band first, then others with concurrency 2). |
-| **Criterion gap-fill prefetch** | MicroFTM background fetch of a single criterion via `get_analytics_lists_by_criterion` across all price bands when the user changes sort criterion, filling any band that still lacks that criterion (active band first, then others with concurrency 2). |
+| **Bulk band prefetch** | MicroFTM background fetch of the full prefetch bundle for every price band after a date or band change (active band first, then others with concurrency 1). |
+| **Criterion gap-fill prefetch** | MicroFTM background fetch of a single criterion via `get_analytics_lists_by_criterion` across all price bands when the user changes sort criterion, filling any band that still lacks that criterion (active band first, then others with concurrency 1). |
+| **Analytics IPC error** | Main-process axios failures serialize to `{ code, status?, message }` and propagate through IPC; renderer hooks surface them to React Query `isError` instead of returning empty data. |
+| **Update feed URL** | Per-flavor gh-pages generic feed baked at package time (`MARKETEYE_UPDATES_FEED_URL`), e.g. `https://andreyxdd.github.io/marketeye-client/updates/marketeye-us/`. |
 
 API glossary: see [marketeye-api/CONTEXT.md](../marketeye-api/CONTEXT.md).

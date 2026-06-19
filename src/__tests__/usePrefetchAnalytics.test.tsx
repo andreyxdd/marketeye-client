@@ -5,6 +5,7 @@ import { IDataProps } from 'types';
 import { PRICE_BANDS } from '../config/priceBands';
 import {
   getManyTickersQueryKey,
+  isBandCachePopulated,
   seedCriterionCache,
 } from '../renderer/lib/analyticsCache';
 import usePrefetchAnalytics from '../renderer/hooks/usePrefetchAnalytics';
@@ -52,6 +53,15 @@ const bulkWithoutMacd = {
   by_three_day_avg_volume: bulkResponse.by_three_day_avg_volume,
 };
 
+async function waitForActiveBandPrefetch(activeDate: string) {
+  await waitFor(() => {
+    expect(getAnalyticsListsByCriteria).toHaveBeenCalledWith({
+      date: activeDate,
+      price_band: 'lte5',
+    });
+  });
+}
+
 describe('usePrefetchAnalytics', () => {
   const date = '2024-01-15';
 
@@ -74,21 +84,17 @@ describe('usePrefetchAnalytics', () => {
     } as unknown as Window['electronAPI'];
   });
 
-  it('bulk-prefetches all criteria for each band on date/band change', async () => {
+  it('prefetches the active band first, then lazily prefetches other bands', async () => {
     renderPrefetch();
 
-    await waitFor(() => {
-      expect(getAnalyticsListsByCriteria).toHaveBeenCalled();
-    });
+    await waitForActiveBandPrefetch(date);
 
-    expect(getAnalyticsListsByCriteria).toHaveBeenCalledWith({
-      date,
-      price_band: 'lte5',
-    });
-    PRICE_BANDS.filter((b) => b !== 'lte5').forEach((band) => {
-      expect(getAnalyticsListsByCriteria).toHaveBeenCalledWith({
-        date,
-        price_band: band,
+    await waitFor(() => {
+      PRICE_BANDS.filter((b) => b !== 'lte5').forEach((band) => {
+        expect(getAnalyticsListsByCriteria).toHaveBeenCalledWith({
+          date,
+          price_band: band,
+        });
       });
     });
   });
@@ -97,9 +103,7 @@ describe('usePrefetchAnalytics', () => {
     getAnalyticsListsByCriteria.mockResolvedValue(bulkWithoutVolume);
     renderPrefetch();
 
-    await waitFor(() => {
-      expect(getAnalyticsListsByCriteria).toHaveBeenCalled();
-    });
+    await waitForActiveBandPrefetch(date);
     getAnalyticsListsByCriteria.mockClear();
     getAnalyticsListsByCriterion.mockClear();
 
@@ -108,15 +112,15 @@ describe('usePrefetchAnalytics', () => {
     });
 
     await waitFor(() => {
-      expect(getAnalyticsListsByCriterion).toHaveBeenCalledTimes(4);
-    });
-
-    PRICE_BANDS.forEach((band) => {
       expect(getAnalyticsListsByCriterion).toHaveBeenCalledWith({
         criterion: 'volume',
         date,
-        price_band: band,
+        price_band: 'lte5',
       });
+    });
+
+    await waitFor(() => {
+      expect(getAnalyticsListsByCriterion).toHaveBeenCalledTimes(4);
     });
   });
 
@@ -130,9 +134,7 @@ describe('usePrefetchAnalytics', () => {
 
     renderPrefetch(queryClient);
 
-    await waitFor(() => {
-      expect(getAnalyticsListsByCriteria).toHaveBeenCalled();
-    });
+    await waitForActiveBandPrefetch(date);
     getAnalyticsListsByCriterion.mockClear();
 
     act(() => {
@@ -149,9 +151,7 @@ describe('usePrefetchAnalytics', () => {
     getAnalyticsListsByCriteria.mockResolvedValue(bulkWithoutMacd);
     renderPrefetch(queryClient);
 
-    await waitFor(() => {
-      expect(getAnalyticsListsByCriteria).toHaveBeenCalled();
-    });
+    await waitForActiveBandPrefetch(date);
     getAnalyticsListsByCriterion.mockClear();
 
     act(() => {
@@ -163,5 +163,26 @@ describe('usePrefetchAnalytics', () => {
         queryClient.getQueryData(getManyTickersQueryKey('macd', date, 'lte5'))
       ).toEqual([{ ticker: 'macd-lte5' }]);
     });
+  });
+
+  it('does not seed cache when prefetch fails', async () => {
+    const queryClient = new QueryClient();
+    getAnalyticsListsByCriteria.mockRejectedValueOnce(
+      new Error('prefetch failed')
+    );
+    getAnalyticsListsByCriterion.mockRejectedValue(
+      new Error('criterion prefetch failed')
+    );
+
+    renderPrefetch(queryClient);
+
+    await waitFor(() => {
+      expect(getAnalyticsListsByCriteria).toHaveBeenCalled();
+    });
+
+    expect(isBandCachePopulated(queryClient, date, 'lte5')).toBe(false);
+    expect(
+      queryClient.getQueryData(getManyTickersQueryKey('one_day_avg_mf', date, 'lte5'))
+    ).toBeUndefined();
   });
 });

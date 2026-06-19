@@ -19,12 +19,16 @@ jobs:
         include:
           - script: package:win:us
             artifact: MarketEye-US
+            releaseAppName: marketeye-us
           - script: package:win:to
             artifact: MarketEye-TSX
+            releaseAppName: marketeye-tsx
           - script: package:win:micro:us
             artifact: MicroFTM
+            releaseAppName: microftm-us
           - script: package:win:micro:to
             artifact: MicroFTM-TSX
+            releaseAppName: microftm-tsx
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -66,11 +70,33 @@ jobs:
             throw "API URL was not baked into $mainJs"
           }
 
+      - name: Collect update artifacts
+        shell: pwsh
+        env:
+          RELEASE_APP_NAME: ${{ matrix.releaseAppName }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          if (-not $tag) { throw "GITHUB_REF_NAME is missing" }
+          npx ts-node ./.erb/scripts/collect-update-artifacts.ts `
+            --release-app-name $env:RELEASE_APP_NAME `
+            --tag $tag `
+            --repo "${{ github.repository }}"
+
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
-          path: release/build/*.exe
+          path: |
+            release/build/*.exe
+            release/build/*.blockmap
+          if-no-files-found: error
+
+      - name: Upload update feed artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}-updates
+          path: updates/${{ matrix.releaseAppName }}/latest.yml
           if-no-files-found: error
 
   release:
@@ -95,7 +121,53 @@ jobs:
           fi
           mkdir -p release-assets
           find artifacts -name '*.exe' -exec cp {} release-assets/ \;
+          find artifacts -name '*.blockmap' -exec cp {} release-assets/ \;
           gh release create "$tag" release-assets/* \
             --title "$tag" \
             --generate-notes \
             --repo "${{ github.repository }}"
+
+  deploy-updates:
+    needs: release
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Download update feed artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Stage gh-pages update feeds
+        run: |
+          mkdir -p public/updates
+          find artifacts -path '*/latest.yml' -exec cp {} public/updates/ \; 2>/dev/null || true
+          for dir in artifacts/*-updates; do
+            [ -d "$dir" ] || continue
+            name="$(basename "$dir")"
+            releaseAppName="${name%-updates}"
+            case "$releaseAppName" in
+              MarketEye-US) feedDir=marketeye-us ;;
+              MarketEye-TSX) feedDir=marketeye-tsx ;;
+              MicroFTM) feedDir=microftm-us ;;
+              MicroFTM-TSX) feedDir=microftm-tsx ;;
+              *) continue ;;
+            esac
+            mkdir -p "public/updates/${feedDir}"
+            cp "$dir/latest.yml" "public/updates/${feedDir}/latest.yml"
+          done
+          find public/updates -name latest.yml | sort
+
+      - name: Deploy update feeds to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          keep_files: true
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
+          commit_message: 'deploy update feeds for ${{ github.ref_name }}'

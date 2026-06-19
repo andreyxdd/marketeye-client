@@ -16,23 +16,13 @@ function useManyTickers() {
 
   const query = useQuery(
     queryKey,
-    async () => {
-      try {
-        const response = await window.electronAPI.getAnalyticsListsByCriterion({
-          criterion,
-          date: selectedDate,
-          ...(isMicro ? { price_band: priceBand } : {}),
-        });
-
-        if (response) return response;
-        throw new Error('Fetched data is null');
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      }
-      return [];
-    },
-    { enabled: !!selectedDate, staleTime: Infinity }
+    () =>
+      window.electronAPI.getAnalyticsListsByCriterion({
+        criterion,
+        date: selectedDate,
+        ...(isMicro ? { price_band: priceBand } : {}),
+      }),
+    { enabled: !!selectedDate, staleTime: Infinity, retry: 1 }
   );
 
   return query;

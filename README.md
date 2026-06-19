@@ -64,8 +64,9 @@ npm run package:win:micro:to
 2. Commit the version bump.
 3. Create and push a tag: `git tag v1.4.6 && git push origin v1.4.6`
 4. GitHub Actions builds four Windows installers on tag push (`v*`).
-5. Download the installers from the GitHub Release for that tag.
-6. Upload the installers to Google Drive manually for distribution.
+5. CI uploads each `.exe`, `.blockmap`, and a flavor-specific `latest.yml` to the GitHub Release.
+6. CI deploys four update feeds to GitHub Pages at `updates/{releaseAppName}/latest.yml`.
+7. Packaged apps check their baked-in feed on startup via `electron-updater` (generic provider).
 
 Release artifact names follow `artifactName` in `package.json`:
 
@@ -73,6 +74,34 @@ Release artifact names follow `artifactName` in `package.json`:
 - `MarketEye TSX-{version}-TO-win.exe`
 - `MicroFTM-{version}-US-win.exe`
 - `MicroFTM TSX-{version}-TO-win.exe`
+
+Per-flavor update feeds (stable gh-pages URLs):
+
+| Flavor | Feed |
+|--------|------|
+| MarketEye US | `https://andreyxdd.github.io/marketeye-client/updates/marketeye-us/` |
+| MarketEye TSX | `https://andreyxdd.github.io/marketeye-client/updates/marketeye-tsx/` |
+| MicroFTM | `https://andreyxdd.github.io/marketeye-client/updates/microftm-us/` |
+| MicroFTM TSX | `https://andreyxdd.github.io/marketeye-client/updates/microftm-tsx/` |
+
+**One-time setup:** enable GitHub Pages for this repo (Settings → Pages → deploy from `gh-pages` branch).
+
+**Windows note:** installers are unsigned today; SmartScreen may warn until code signing is added.
+
+Flavor publish scripts (full pipeline with `prepare:packaging-assets`):
+
+```bash
+npm run package:publish:win:us
+npm run package:publish:win:to
+npm run package:publish:win:micro:us
+npm run package:publish:win:micro:to
+```
+
+### Analytics error handling
+
+- Main-process IPC handlers throw serializable API errors instead of returning `null`/`[]`.
+- React Query hooks propagate failures; the data table and US market panel show an MUI `Alert` with **Retry**.
+- Background prefetch logs failures and does not seed cache on error; active price band prefetches first, other bands are lazy with concurrency 1.
 
 ### Windows co-install verification
 

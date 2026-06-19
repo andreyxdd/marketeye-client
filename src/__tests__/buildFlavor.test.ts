@@ -3,6 +3,7 @@ import {
   getFlavorIconDir,
   getFlavorManifestEntry,
   getIconAssetPath,
+  getUpdatesFeedUrl,
 } from '../config/buildFlavor';
 
 describe('getBuildFlavor', () => {
@@ -20,6 +21,12 @@ describe('getBuildFlavor', () => {
 
   it('returns micro-to for micro TO', () => {
     expect(getBuildFlavor('micro', 'TO')).toBe('micro-to');
+  });
+});
+
+describe('getUpdatesFeedUrl', () => {
+  it('matches manifest entry for standard US', () => {
+    expect(getUpdatesFeedUrl('standard', 'US')).toContain('marketeye-us');
   });
 });
 

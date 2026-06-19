@@ -67,6 +67,7 @@ const configuration: webpack.Configuration = {
       START_MINIMIZED: false,
       MARKETEYE_API_KEY: '',
       MARKETEYE_API_URL: '',
+      MARKETEYE_UPDATES_FEED_URL: '',
     }),
   ],
 

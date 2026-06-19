@@ -1,7 +1,7 @@
 {
   "name": "marketeye-client",
   "description": "A desktop app to analyze the stock market based on MarketEye API and electron-react-boilerplate",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "scripts": {
     "build": "npm run build:main && npm run build:renderer",
     "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
@@ -16,7 +16,11 @@
     "package:win:to": "cross-env MARKETEYE_MARKET=TO MARKETEYE_PRODUCT_NAME=\"MarketEye TSX\" npm run package:base",
     "package:win:micro:us": "cross-env MARKETEYE_MODE=micro MARKETEYE_MARKET=US MARKETEYE_PRODUCT_NAME=\"MicroFTM\" npm run package:base",
     "package:win:micro:to": "cross-env MARKETEYE_MODE=micro MARKETEYE_MARKET=TO MARKETEYE_PRODUCT_NAME=\"MicroFTM TSX\" npm run package:base",
-    "package:publish": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish always",
+    "package:publish:win:us": "cross-env MARKETEYE_MARKET=US MARKETEYE_PRODUCT_NAME=\"MarketEye US\" npm run package:base",
+    "package:publish:win:to": "cross-env MARKETEYE_MARKET=TO MARKETEYE_PRODUCT_NAME=\"MarketEye TSX\" npm run package:base",
+    "package:publish:win:micro:us": "cross-env MARKETEYE_MODE=micro MARKETEYE_MARKET=US MARKETEYE_PRODUCT_NAME=\"MicroFTM\" npm run package:base",
+    "package:publish:win:micro:to": "cross-env MARKETEYE_MODE=micro MARKETEYE_MARKET=TO MARKETEYE_PRODUCT_NAME=\"MicroFTM TSX\" npm run package:base",
+    "package:publish": "npm run package:publish:win:us",
     "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts && opencollective-postinstall",
     "start": "cross-env MARKETEYE_MARKET=US sh -c \"ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer\"",
     "start:us": "cross-env MARKETEYE_MARKET=US sh -c \"ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer\"",
@@ -85,6 +89,11 @@
       "target": [
         "nsis"
       ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "runAfterFinish": true
     },
     "linux": {
       "target": [

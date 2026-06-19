@@ -12,6 +12,8 @@ import {
 import { runWithMaxConcurrency } from '../lib/prefetchQueue';
 import useStore from './useStore';
 
+const PREFETCH_CONCURRENCY = 1;
+
 function usePrefetchAnalytics(): void {
   const queryClient = useQueryClient();
   const [selectedDate, priceBand, criterion] = useStore(
@@ -33,17 +35,12 @@ function usePrefetchAnalytics(): void {
       if (isStale()) return;
       if (isBandCachePopulated(queryClient, selectedDate, band)) return;
 
-      try {
-        const response = await window.electronAPI.getAnalyticsListsByCriteria({
-          date: selectedDate,
-          ...(band ? { price_band: band } : {}),
-        });
-        if (isStale() || !response) return;
-        seedBandCache(queryClient, selectedDate, band, response);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('Prefetch failed for band', band ?? '(standard)', e);
-      }
+      const response = await window.electronAPI.getAnalyticsListsByCriteria({
+        date: selectedDate,
+        ...(band ? { price_band: band } : {}),
+      });
+      if (isStale()) return;
+      seedBandCache(queryClient, selectedDate, band, response);
     };
 
     const prefetchCriterionBand = async (band: PriceBand) => {
@@ -54,47 +51,70 @@ function usePrefetchAnalytics(): void {
         return;
       }
 
+      const response = await window.electronAPI.getAnalyticsListsByCriterion({
+        criterion,
+        date: selectedDate,
+        price_band: band,
+      });
+      if (isStale()) return;
+      seedCriterionCache(
+        queryClient,
+        criterion,
+        selectedDate,
+        band,
+        response
+      );
+    };
+
+    const prefetchBandSafe = async (band?: PriceBand) => {
       try {
-        const response = await window.electronAPI.getAnalyticsListsByCriterion({
-          criterion,
-          date: selectedDate,
-          price_band: band,
-        });
-        if (isStale() || !response) return;
-        seedCriterionCache(
-          queryClient,
-          criterion,
-          selectedDate,
-          band,
-          response
-        );
+        await prefetchBand(band);
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('Prefetch failed for band', band ?? '(standard)', e);
+      }
+    };
+
+    const prefetchCriterionBandSafe = async (band: PriceBand) => {
+      try {
+        await prefetchCriterionBand(band);
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error('Criterion prefetch failed for band', band, e);
       }
     };
 
+    const prefetchOtherBandsLazy = (bands: PriceBand[]) => {
+      if (bands.length === 0) return;
+      void runWithMaxConcurrency(
+        bands.map((band) => () => prefetchBandSafe(band)),
+        PREFETCH_CONCURRENCY
+      );
+    };
+
+    const prefetchOtherCriterionBandsLazy = (bands: PriceBand[]) => {
+      if (bands.length === 0) return;
+      void runWithMaxConcurrency(
+        bands.map((band) => () => prefetchCriterionBandSafe(band)),
+        PREFETCH_CONCURRENCY
+      );
+    };
+
     const run = async () => {
       if (isMicro) {
-        await prefetchBand(priceBand);
+        await prefetchBandSafe(priceBand);
         if (isStale()) return;
 
         const otherBands = PRICE_BANDS.filter((b) => b !== priceBand);
-        await runWithMaxConcurrency(
-          otherBands.map((band) => () => prefetchBand(band)),
-          2
-        );
+        prefetchOtherBandsLazy(otherBands);
         if (isStale()) return;
 
-        await prefetchCriterionBand(priceBand);
+        await prefetchCriterionBandSafe(priceBand);
         if (isStale()) return;
 
-        await runWithMaxConcurrency(
-          otherBands.map((band) => () => prefetchCriterionBand(band)),
-          2
-        );
+        prefetchOtherCriterionBandsLazy(otherBands);
       } else {
-        await prefetchBand();
+        await prefetchBandSafe();
       }
     };
 

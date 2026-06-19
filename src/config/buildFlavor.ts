@@ -20,3 +20,10 @@ export function getIconAssetPath(
 ): string {
   return `assets/${getFlavorIconDir(mode, market)}/${filename}`;
 }
+
+export function getUpdatesFeedUrl(
+  mode: AppMode,
+  market: MarketCode
+): string {
+  return getFlavorManifestEntry(mode, market).updatesFeedUrl;
+}

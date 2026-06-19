@@ -4,13 +4,29 @@ import useSingleTicker from '../../hooks/useSingleTicker';
 import useManyTickers from '../../hooks/useManyTickers';
 
 function SingleTickerDataTable() {
-  const { data, isFetching } = useSingleTicker();
-  return <Table data={data} isFetching={isFetching} />;
+  const { data, isFetching, isError, error, refetch } = useSingleTicker();
+  return (
+    <Table
+      data={data}
+      isFetching={isFetching}
+      isError={isError}
+      error={error}
+      refetch={refetch}
+    />
+  );
 }
 
 function ManyTickersDataTable() {
-  const { data, isFetching } = useManyTickers();
-  return <Table data={data} isFetching={isFetching} />;
+  const { data, isFetching, isError, error, refetch } = useManyTickers();
+  return (
+    <Table
+      data={data}
+      isFetching={isFetching}
+      isError={isError}
+      error={error}
+      refetch={refetch}
+    />
+  );
 }
 
 function DataTable() {

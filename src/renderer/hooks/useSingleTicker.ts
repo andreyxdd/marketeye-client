@@ -18,23 +18,14 @@ function useSingleTicker() {
   const query = useQuery(
     [MARKET, selectedDate, ticker, isSingleTicker, criterion],
     async () => {
-      try {
-        const singleTickerData: IDataProps | null =
-          await window.electronAPI.getTickerAnalytics({
-            date: selectedDate,
-            ticker,
-            criterion,
-          });
+      const singleTickerData: IDataProps =
+        await window.electronAPI.getTickerAnalytics({
+          date: selectedDate,
+          ticker,
+          criterion,
+        });
 
-        if (singleTickerData) return [singleTickerData];
-
-        return [];
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log(e);
-        return [];
-      }
+      return [singleTickerData];
     },
     {
       enabled: !!selectedDate && isSingleTicker && !!ticker,

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { AppMode } from '../../src/config/appMode';
-import { getFlavorIconDir, getFlavorManifestEntry } from '../../src/config/buildFlavor';
+import { getFlavorIconDir, getFlavorManifestEntry, getUpdatesFeedUrl } from '../../src/config/buildFlavor';
 import { MarketCode } from '../../src/config/market';
 import { FlavorManifestEntry } from '../../src/config/flavorManifest';
 
@@ -138,6 +138,27 @@ function patchElectronBuilderConfig(entry: FlavorManifestEntry): void {
   );
 }
 
+function patchPackagingEnv(updatesFeedUrl: string): void {
+  const envPath = path.join(ROOT, '.env');
+  const lines = fs.existsSync(envPath)
+    ? fs.readFileSync(envPath, 'utf8').split(/\r?\n/)
+    : [];
+  const key = 'MARKETEYE_UPDATES_FEED_URL';
+  const nextLine = `${key}=${updatesFeedUrl}`;
+  const index = lines.findIndex((line) => line.startsWith(`${key}=`));
+  if (index >= 0) {
+    lines[index] = nextLine;
+  } else {
+    lines.push(nextLine);
+  }
+  const content = lines.filter((line, i, arr) => line !== '' || i < arr.length - 1);
+  fs.writeFileSync(envPath, `${content.join('\n')}\n`);
+
+  process.env.MARKETEYE_UPDATES_FEED_URL = updatesFeedUrl;
+  // eslint-disable-next-line no-console
+  console.log(`prepared ${key}=${updatesFeedUrl}`);
+}
+
 const mode = normalizeMode(process.env.MARKETEYE_MODE);
 const market = normalizeMarket(process.env.MARKETEYE_MARKET);
 const manifestEntry = getFlavorManifestEntry(mode, market);
@@ -155,3 +176,4 @@ syncReleaseAppVersion();
 copyFlavorIcons(mode, market);
 patchReleaseAppName(manifestEntry.releaseAppName);
 patchElectronBuilderConfig(manifestEntry);
+patchPackagingEnv(getUpdatesFeedUrl(mode, market));
