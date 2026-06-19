@@ -62,6 +62,34 @@ function rewriteLatestYml(content: string, releaseUrl: string): string {
     .join('\n');
 }
 
+function normalizeInstallerName(name: string): string {
+  return name.replace(/[\s-]+/g, '').toLowerCase();
+}
+
+function resolveInstallerPath(installerName: string): { installerPath: string; fileName: string } {
+  const directPath = path.join(BUILD_DIR, installerName);
+  if (fs.existsSync(directPath)) {
+    return { installerPath: directPath, fileName: installerName };
+  }
+
+  const exes = fs
+    .readdirSync(BUILD_DIR)
+    .filter((name) => name.toLowerCase().endsWith('.exe'));
+  if (exes.length === 0) {
+    throw new Error(`no .exe found in ${BUILD_DIR} (expected ${installerName})`);
+  }
+
+  const normalizedTarget = normalizeInstallerName(installerName);
+  const matched =
+    exes.find((name) => normalizeInstallerName(name) === normalizedTarget) ??
+    exes[0];
+
+  return {
+    installerPath: path.join(BUILD_DIR, matched),
+    fileName: matched,
+  };
+}
+
 function collectUpdateArtifacts({
   releaseAppName,
   tag,
@@ -79,10 +107,7 @@ function collectUpdateArtifacts({
     throw new Error('could not parse installer path from latest.yml');
   }
 
-  const installerPath = path.join(BUILD_DIR, installerName);
-  if (!fs.existsSync(installerPath)) {
-    throw new Error(`missing installer ${installerPath}`);
-  }
+  const { installerPath, fileName } = resolveInstallerPath(installerName);
 
   const blockmapPath = `${installerPath}.blockmap`;
   if (!fs.existsSync(blockmapPath)) {
@@ -90,7 +115,7 @@ function collectUpdateArtifacts({
   }
 
   const releaseUrl = `https://github.com/${repo}/releases/download/${tag}/${encodeURIComponent(
-    installerName
+    fileName
   )}`;
   const rewrittenYml = rewriteLatestYml(latestYml, releaseUrl);
 
@@ -108,4 +133,4 @@ if (require.main === module) {
   collectUpdateArtifacts(parseArgs());
 }
 
-export { collectUpdateArtifacts, rewriteLatestYml };
+export { collectUpdateArtifacts, normalizeInstallerName, rewriteLatestYml };

@@ -1,4 +1,7 @@
-import { rewriteLatestYml } from '../../.erb/scripts/collect-update-artifacts';
+import {
+  normalizeInstallerName,
+  rewriteLatestYml,
+} from '../../.erb/scripts/collect-update-artifacts';
 
 describe('rewriteLatestYml', () => {
   it('rewrites path and files url to the GitHub release download URL', () => {
@@ -22,5 +25,16 @@ files:
 path: ${releaseUrl}
 sha512: abc
 releaseDate: '2024-01-01'`);
+  });
+});
+
+describe('normalizeInstallerName', () => {
+  it('treats spaced and hyphenated product names as equivalent', () => {
+    expect(normalizeInstallerName('MarketEye-TSX-1.5.1-TO-win.exe')).toBe(
+      normalizeInstallerName('MarketEye TSX-1.5.1-TO-win.exe')
+    );
+    expect(normalizeInstallerName('MarketEye-US-1.5.1-US-win.exe')).toBe(
+      normalizeInstallerName('MarketEye US-1.5.1-US-win.exe')
+    );
   });
 });
