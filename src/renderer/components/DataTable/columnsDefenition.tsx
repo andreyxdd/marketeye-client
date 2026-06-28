@@ -56,7 +56,7 @@ const columnsDefinitionAll: GridColDef[] = [
     align: 'center',
     headerAlign: 'center',
     valueFormatter: (params: GridValueFormatterParams) => {
-      return (params.value as number).toFixed(2);
+      return params.value == null ? '' : (params.value as number).toFixed(2);
     },
     description: 'End-of-day closing price for the selected session',
     disableColumnMenu: true,
@@ -282,7 +282,9 @@ const columnsDefinitionAll: GridColDef[] = [
     align: 'center',
     headerAlign: 'center',
     valueFormatter: (params: GridValueFormatterParams) => {
-      return (params.value as Array<string>).join('-');
+      return Array.isArray(params.value)
+        ? (params.value as Array<string>).join('-')
+        : '';
     },
     description: `Comparison between 3-day EMA and 9-day EMA. 'A' is above, 'B' is below. Three letters shows comparison for three last trading periods; one letter only for one trading period.`,
     disableColumnMenu: true,
@@ -296,7 +298,9 @@ const columnsDefinitionAll: GridColDef[] = [
     align: 'center',
     headerAlign: 'center',
     valueFormatter: (params: GridValueFormatterParams) => {
-      return (params.value as Array<string>).join('-');
+      return Array.isArray(params.value)
+        ? (params.value as Array<string>).join('-')
+        : '';
     },
     description: `Comparison between 12-day EMA and 9-day EMA. 'A' is above, 'B' is below. Three letters shows comparison for three last trading periods; one letter only for one trading period.`,
     disableColumnMenu: true,
@@ -310,7 +314,9 @@ const columnsDefinitionAll: GridColDef[] = [
     align: 'center',
     headerAlign: 'center',
     valueFormatter: (params: GridValueFormatterParams) => {
-      return (params.value as Array<string>).join('-');
+      return Array.isArray(params.value)
+        ? (params.value as Array<string>).join('-')
+        : '';
     },
     description: `Comparison between 12-day EMA and 26-day EMA. 'A' is above, 'B' is below. Three letters shows comparison for three last trading periods; one letter only for one trading period.`,
     disableColumnMenu: true,
@@ -324,7 +330,9 @@ const columnsDefinitionAll: GridColDef[] = [
     align: 'center',
     headerAlign: 'center',
     valueFormatter: (params: GridValueFormatterParams) => {
-      return (params.value as Array<string>).join('-');
+      return Array.isArray(params.value)
+        ? (params.value as Array<string>).join('-')
+        : '';
     },
     description: `Comparison between 50-day EMA and 20-day EMA. 'A' is above, 'B' is below. Three letters shows comparison for three last trading periods; one letter only for one trading period.`,
     disableColumnMenu: true,
