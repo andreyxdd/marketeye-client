@@ -43,8 +43,12 @@ export default class AppUpdater {
         url: MARKETEYE_UPDATES_FEED_URL,
       });
     } else {
-      log.warn('MARKETEYE_UPDATES_FEED_URL is empty; skipping feed configuration');
+      log.warn('MARKETEYE_UPDATES_FEED_URL is empty; skipping auto-update');
+      return;
     }
+
+    autoUpdater.autoDownload = true;
+    autoUpdater.autoInstallOnAppQuit = true;
 
     autoUpdater.on('checking-for-update', () => {
       log.info('Checking for update');
@@ -62,10 +66,10 @@ export default class AppUpdater {
       log.info('Download progress', progress);
     });
     autoUpdater.on('update-downloaded', (info) => {
-      log.info('Update downloaded', info);
+      log.info('Update downloaded; will install on app quit', info);
     });
 
-    autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.checkForUpdates();
   }
 }
 

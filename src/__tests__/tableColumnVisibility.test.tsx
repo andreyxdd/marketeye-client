@@ -2,6 +2,8 @@ import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { IDataProps } from 'types';
+import useStore from '../renderer/hooks/useStore';
+import { columnsForCriterion } from '../renderer/components/DataTable/Table';
 import { columnsDefinition } from '../renderer/components/DataTable/columnsDefenition';
 
 const baseRow: IDataProps = {
@@ -41,6 +43,21 @@ const baseRow: IDataProps = {
 };
 
 describe('tableColumnVisibility', () => {
+  it('columnsForCriterion hides fields outside the active criterion preset', () => {
+    useStore.setState({ criterion: 'macd' });
+    const cols = columnsForCriterion('macd');
+    expect(cols.find((c) => c.field === 'volume')?.hide).toBe(true);
+    expect(cols.find((c) => c.field === 'macd')?.hide).toBe(false);
+  });
+
+  it('columnsForCriterion resets from columnsDefinition when criterion changes', () => {
+    const volumeCols = columnsForCriterion('volume');
+    expect(volumeCols.find((c) => c.field === 'volume')?.hide).toBe(false);
+    expect(volumeCols.find((c) => c.field === 'macd_20_sessions_ago')?.hide).toBe(
+      true
+    );
+  });
+
   it('renders rows when all columns visible and close is missing', () => {
     const columns: GridColDef[] = columnsDefinition.map((c) => ({
       ...c,

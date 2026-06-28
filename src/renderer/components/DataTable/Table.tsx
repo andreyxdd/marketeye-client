@@ -1,11 +1,18 @@
 import { Alert, Button } from '@mui/material';
 import React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridColumnVisibilityChangeParams } from '@mui/x-data-grid';
 import SkeletonLoader from 'tiny-skeleton-loader-react';
-import { IDataProps } from 'types';
+import { ICriteria, IDataProps } from 'types';
 import useStore from '../../hooks/useStore';
 import { columnsDefinition, columnsToShow } from './columnsDefenition';
 import processData from './dataProcessing';
+
+export function columnsForCriterion(criterion: ICriteria): GridColDef[] {
+  return columnsDefinition.map((column) => ({
+    ...column,
+    hide: !columnsToShow[criterion].includes(column.field),
+  }));
+}
 
 type IDataTable = {
   data: Array<IDataProps> | undefined;
@@ -31,20 +38,27 @@ const DataTable = ({
 }: IDataTable) => {
   const criterion = useStore((state) => state.criterion);
 
-  const [columns, setColumns] = React.useState(columnsDefinition);
+  const [columns, setColumns] = React.useState(() =>
+    columnsForCriterion(criterion)
+  );
   const [pageSize, setPageSize] = React.useState<number>(10);
 
   React.useEffect(() => {
-    const newColumns = columns.map((column) => {
-      if (!columnsToShow[criterion].includes(column.field)) {
-        return { ...column, hide: true };
-      }
-      return { ...column, hide: false };
-    });
-
-    setColumns(newColumns);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setColumns(columnsForCriterion(criterion));
   }, [criterion]);
+
+  const handleColumnVisibilityChange = React.useCallback(
+    (params: GridColumnVisibilityChangeParams) => {
+      setColumns((prev) =>
+        prev.map((column) =>
+          column.field === params.field
+            ? { ...column, hide: !params.isVisible }
+            : column
+        )
+      );
+    },
+    []
+  );
 
   if (isError) {
     return (
@@ -70,6 +84,7 @@ const DataTable = ({
           autoHeight
           rowsPerPageOptions={[5, 10, 20]}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          onColumnVisibilityChange={handleColumnVisibilityChange}
           pageSize={pageSize}
         />
       </>
