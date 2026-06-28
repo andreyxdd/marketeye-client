@@ -1,8 +1,8 @@
-version: 1.5.1
+version: 1.5.2
 files:
-  - url: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.1/MicroFTM-1.5.1-US-win.exe
-    sha512: lIzr8Y0J29REMiiMqhqeBnzbTeWE1W4kfeIAzanH+LFlVjlx1uYx38PYdAnFUjEbjMerLw4QB9YT2FYzLOqS/g==
-    size: 61362666
-path: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.1/MicroFTM-1.5.1-US-win.exe
-sha512: lIzr8Y0J29REMiiMqhqeBnzbTeWE1W4kfeIAzanH+LFlVjlx1uYx38PYdAnFUjEbjMerLw4QB9YT2FYzLOqS/g==
-releaseDate: '2026-06-19T05:05:30.971Z'
+  - url: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.2/MicroFTM-1.5.2-US-win.exe
+    sha512: q87m/D9vTXOg3/MnDRGuJMwCnaCcsvofPxbsVYeq2k2fkwLa7cb+The4cignlOtffrwpo5SkF5CVLTT+TseZeA==
+    size: 61362758
+path: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.2/MicroFTM-1.5.2-US-win.exe
+sha512: q87m/D9vTXOg3/MnDRGuJMwCnaCcsvofPxbsVYeq2k2fkwLa7cb+The4cignlOtffrwpo5SkF5CVLTT+TseZeA==
+releaseDate: '2026-06-28T02:44:59.872Z'
