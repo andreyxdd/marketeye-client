@@ -8,6 +8,8 @@ import {
   filterColumnFields,
   isHiddenColumnForMarket,
   isTO,
+  MARKET,
+  yahooQuoteUrl,
 } from '../../../config/market';
 import { isMicro } from '../../../config/appMode';
 
@@ -29,18 +31,15 @@ const columnsDefinitionAll: GridColDef[] = [
     field: 'ticker',
     headerName: 'Ticker',
     width: 70,
-    renderCell: (params) =>
-      isTO ? (
-        <>{params.value}</>
-      ) : (
-        <a
-          href={`https://finance.yahoo.com/quote/${params.value}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {params.value}
-        </a>
-      ),
+    renderCell: (params) => (
+      <a
+        href={yahooQuoteUrl(params.value, MARKET)}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {params.value}
+      </a>
+    ),
     align: 'center',
     headerAlign: 'center',
     description: 'Stock symbol',

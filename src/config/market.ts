@@ -39,3 +39,10 @@ export function filterColumnFields(fields: string[]): string[] {
   if (isUS) return fields;
   return fields.filter((field) => !isHiddenColumnForMarket(field));
 }
+
+export function yahooQuoteUrl(ticker: string, market: MarketCode): string {
+  if (market === 'TO') {
+    return `https://ca.finance.yahoo.com/quote/${ticker}.TO/`;
+  }
+  return `https://finance.yahoo.com/quote/${ticker}`;
+}
