@@ -1,17 +1,21 @@
 import { Alert, Button } from '@mui/material';
 import React from 'react';
-import { DataGrid, GridColDef, GridColumnVisibilityChangeParams } from '@mui/x-data-grid';
+import { DataGrid, GridColumnVisibilityChangeParams } from '@mui/x-data-grid';
 import SkeletonLoader from 'tiny-skeleton-loader-react';
 import { ICriteria, IDataProps } from 'types';
 import useStore from '../../hooks/useStore';
 import { columnsDefinition, columnsToShow } from './columnsDefenition';
 import processData from './dataProcessing';
 
-export function columnsForCriterion(criterion: ICriteria): GridColDef[] {
-  return columnsDefinition.map((column) => ({
-    ...column,
-    hide: !columnsToShow[criterion].includes(column.field),
-  }));
+export type GridColumnVisibilityModel = Record<string, boolean>;
+
+export function visibilityFromCriterion(
+  criterion: ICriteria
+): GridColumnVisibilityModel {
+  const shown = new Set(columnsToShow[criterion]);
+  return Object.fromEntries(
+    columnsDefinition.map((column) => [column.field, shown.has(column.field)])
+  );
 }
 
 type IDataTable = {
@@ -38,24 +42,32 @@ const DataTable = ({
 }: IDataTable) => {
   const criterion = useStore((state) => state.criterion);
 
-  const [columns, setColumns] = React.useState(() =>
-    columnsForCriterion(criterion)
-  );
+  const [columnVisibilityModel, setColumnVisibilityModel] =
+    React.useState<GridColumnVisibilityModel>(() =>
+      visibilityFromCriterion(criterion)
+    );
   const [pageSize, setPageSize] = React.useState<number>(10);
 
   React.useEffect(() => {
-    setColumns(columnsForCriterion(criterion));
+    setColumnVisibilityModel(visibilityFromCriterion(criterion));
   }, [criterion]);
 
-  const handleColumnVisibilityChange = React.useCallback(
+  // ponytail: MUI v5 has no columnVisibilityModel prop — map model → hide until upgrade
+  const columns = React.useMemo(
+    () =>
+      columnsDefinition.map((column) => ({
+        ...column,
+        hide: !columnVisibilityModel[column.field],
+      })),
+    [columnVisibilityModel]
+  );
+
+  const handleColumnVisibilityModelChange = React.useCallback(
     (params: GridColumnVisibilityChangeParams) => {
-      setColumns((prev) =>
-        prev.map((column) =>
-          column.field === params.field
-            ? { ...column, hide: !params.isVisible }
-            : column
-        )
-      );
+      setColumnVisibilityModel((prev) => ({
+        ...prev,
+        [params.field]: params.isVisible,
+      }));
     },
     []
   );
@@ -84,7 +96,7 @@ const DataTable = ({
           autoHeight
           rowsPerPageOptions={[5, 10, 20]}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          onColumnVisibilityChange={handleColumnVisibilityChange}
+          onColumnVisibilityChange={handleColumnVisibilityModelChange}
           pageSize={pageSize}
         />
       </>

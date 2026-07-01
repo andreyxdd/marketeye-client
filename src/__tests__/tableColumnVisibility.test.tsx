@@ -3,7 +3,10 @@ import { render } from '@testing-library/react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { IDataProps } from 'types';
 import useStore from '../renderer/hooks/useStore';
-import { columnsForCriterion } from '../renderer/components/DataTable/Table';
+import {
+  GridColumnVisibilityModel,
+  visibilityFromCriterion,
+} from '../renderer/components/DataTable/Table';
 import { columnsDefinition } from '../renderer/components/DataTable/columnsDefenition';
 
 const baseRow: IDataProps = {
@@ -42,20 +45,36 @@ const baseRow: IDataProps = {
   frequencies: '2024-01',
 };
 
+function allColumnsVisibleModel(): GridColumnVisibilityModel {
+  return Object.fromEntries(
+    columnsDefinition.map((column) => [column.field, true])
+  );
+}
+
 describe('tableColumnVisibility', () => {
-  it('columnsForCriterion hides fields outside the active criterion preset', () => {
+  it('visibilityFromCriterion hides fields outside the active criterion preset', () => {
     useStore.setState({ criterion: 'macd' });
-    const cols = columnsForCriterion('macd');
-    expect(cols.find((c) => c.field === 'volume')?.hide).toBe(true);
-    expect(cols.find((c) => c.field === 'macd')?.hide).toBe(false);
+    const model = visibilityFromCriterion('macd');
+    expect(model.volume).toBe(false);
+    expect(model.macd).toBe(true);
   });
 
-  it('columnsForCriterion resets from columnsDefinition when criterion changes', () => {
-    const volumeCols = columnsForCriterion('volume');
-    expect(volumeCols.find((c) => c.field === 'volume')?.hide).toBe(false);
-    expect(volumeCols.find((c) => c.field === 'macd_20_sessions_ago')?.hide).toBe(
-      true
-    );
+  it('visibilityFromCriterion resets from columnsDefinition when criterion changes', () => {
+    const volumeModel = visibilityFromCriterion('volume');
+    expect(volumeModel.volume).toBe(true);
+    expect(volumeModel.macd_20_sessions_ago).toBe(false);
+  });
+
+  it('hiding one column after show-all keeps other macd session columns visible', () => {
+    const afterShowAll = allColumnsVisibleModel();
+    const afterToggle: GridColumnVisibilityModel = {
+      ...afterShowAll,
+      one_day_avg_mf: false,
+    };
+    expect(afterToggle.macd_2_sessions_ago).toBe(true);
+    expect(afterToggle.macd_5_sessions_ago).toBe(true);
+    expect(afterToggle.macd_20_sessions_ago).toBe(true);
+    expect(afterToggle.one_day_avg_mf).toBe(false);
   });
 
   it('renders rows when all columns visible and close is missing', () => {
