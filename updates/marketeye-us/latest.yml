@@ -1,8 +1,8 @@
-version: 1.5.4
+version: 1.5.5
 files:
-  - url: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.4/MarketEye%20US-1.5.4-US-win.exe
-    sha512: 8SRWo5Hz3k2IoasRd0N56GoJDJuxn4D1JynDJA8QFsDOK6eInNhrNi4GfnGP2sHqKsEy/Q6bWLtZbvBVJ3K0mw==
-    size: 61398628
-path: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.4/MarketEye%20US-1.5.4-US-win.exe
-sha512: 8SRWo5Hz3k2IoasRd0N56GoJDJuxn4D1JynDJA8QFsDOK6eInNhrNi4GfnGP2sHqKsEy/Q6bWLtZbvBVJ3K0mw==
-releaseDate: '2026-07-01T00:37:15.746Z'
+  - url: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.5/MarketEye%20US-1.5.5-US-win.exe
+    sha512: 4E054/J4I+0M9DJNVWblVDnLLBBIRo/FHxkTXj7eUsabpyxxW0SgyNpYQSmcR1XUSkYA5ld+L22gZ/wKhYw4wg==
+    size: 61398578
+path: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.5/MarketEye%20US-1.5.5-US-win.exe
+sha512: 4E054/J4I+0M9DJNVWblVDnLLBBIRo/FHxkTXj7eUsabpyxxW0SgyNpYQSmcR1XUSkYA5ld+L22gZ/wKhYw4wg==
+releaseDate: '2026-07-01T04:50:58.335Z'
