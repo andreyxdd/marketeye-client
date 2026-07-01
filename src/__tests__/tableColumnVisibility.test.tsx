@@ -1,11 +1,21 @@
 import '@testing-library/jest-dom';
-import { render } from '@testing-library/react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { act, render, waitFor } from '@testing-library/react';
+import React from 'react';
+import {
+  DataGrid,
+  GridColDef,
+  GridApiRef,
+  GridFooter,
+  useGridApiContext,
+  useGridApiRef,
+} from '@mui/x-data-grid';
 import { IDataProps } from 'types';
 import useStore from '../renderer/hooks/useStore';
 import {
   GridColumnVisibilityModel,
   visibilityFromCriterion,
+  visibilityModelFromApiRef,
+  visibilityModelFromGridColumns,
 } from '../renderer/components/DataTable/Table';
 import { columnsDefinition } from '../renderer/components/DataTable/columnsDefenition';
 
@@ -45,10 +55,16 @@ const baseRow: IDataProps = {
   frequencies: '2024-01',
 };
 
-function allColumnsVisibleModel(): GridColumnVisibilityModel {
-  return Object.fromEntries(
-    columnsDefinition.map((column) => [column.field, true])
-  );
+function gridColumnsAfterShowAll() {
+  return columnsDefinition.map((column) => ({ field: column.field, hide: false }));
+}
+
+function mergeSingleFieldVisibility(
+  model: GridColumnVisibilityModel,
+  field: string,
+  isVisible: boolean
+): GridColumnVisibilityModel {
+  return { ...model, [field]: isVisible };
 }
 
 describe('tableColumnVisibility', () => {
@@ -65,16 +81,27 @@ describe('tableColumnVisibility', () => {
     expect(volumeModel.macd_20_sessions_ago).toBe(false);
   });
 
-  it('hiding one column after show-all keeps other macd session columns visible', () => {
-    const afterShowAll = allColumnsVisibleModel();
-    const afterToggle: GridColumnVisibilityModel = {
-      ...afterShowAll,
-      one_day_avg_mf: false,
-    };
-    expect(afterToggle.macd_2_sessions_ago).toBe(true);
-    expect(afterToggle.macd_5_sessions_ago).toBe(true);
-    expect(afterToggle.macd_20_sessions_ago).toBe(true);
-    expect(afterToggle.one_day_avg_mf).toBe(false);
+  it('visibilityModelFromGridColumns syncs full grid state after show-all', () => {
+    const preset = visibilityFromCriterion('one_day_avg_mf');
+    const synced = visibilityModelFromGridColumns(gridColumnsAfterShowAll());
+    const staleMerge = mergeSingleFieldVisibility(preset, 'one_day_avg_mf', false);
+
+    expect(synced.macd_2_sessions_ago).toBe(true);
+    expect(synced.macd_5_sessions_ago).toBe(true);
+    expect(synced.macd_20_sessions_ago).toBe(true);
+    expect(staleMerge.macd_2_sessions_ago).toBe(false);
+  });
+
+  it('visibilityModelFromGridColumns keeps macd columns visible after show-all then hide one', () => {
+    const afterToggle = gridColumnsAfterShowAll().map((column) =>
+      column.field === 'one_day_avg_mf' ? { ...column, hide: true } : column
+    );
+    const model = visibilityModelFromGridColumns(afterToggle);
+
+    expect(model.macd_2_sessions_ago).toBe(true);
+    expect(model.macd_5_sessions_ago).toBe(true);
+    expect(model.macd_20_sessions_ago).toBe(true);
+    expect(model.one_day_avg_mf).toBe(false);
   });
 
   it('renders rows when all columns visible and close is missing', () => {
@@ -96,5 +123,92 @@ describe('tableColumnVisibility', () => {
     expect(container.querySelectorAll('.MuiDataGrid-row').length).toBeGreaterThan(
       0
     );
+  });
+});
+
+function ColumnVisibilityApiBridge({ apiRef }: { apiRef: GridApiRef }) {
+  const gridApiRef = useGridApiContext();
+
+  React.useLayoutEffect(() => {
+    if (gridApiRef.current) {
+      apiRef.current = gridApiRef.current;
+    }
+  });
+
+  return null;
+}
+
+describe('tableColumnVisibility integration', () => {
+  let gridApiRef: GridApiRef | null = null;
+
+  function VisibilitySyncHarness() {
+    const apiRef = useGridApiRef();
+    gridApiRef = apiRef;
+    const [model, setModel] = React.useState<GridColumnVisibilityModel>(() =>
+      visibilityFromCriterion('one_day_avg_mf')
+    );
+    const columns = React.useMemo(
+      () =>
+        columnsDefinition.map((column) => ({
+          ...column,
+          hide: !model[column.field],
+        })),
+      [model]
+    );
+    const footerComponents = React.useMemo(
+      () => ({
+        Footer: () => (
+          <>
+            <GridFooter />
+            <ColumnVisibilityApiBridge apiRef={apiRef} />
+          </>
+        ),
+      }),
+      [apiRef]
+    );
+
+    return (
+      <div style={{ width: 1200, height: 400 }}>
+        <DataGrid
+          rows={[{ ...baseRow, id: 1 }]}
+          columns={columns}
+          components={footerComponents}
+          autoHeight
+          pageSize={10}
+          rowsPerPageOptions={[10]}
+          onColumnVisibilityChange={() => {
+            queueMicrotask(() => {
+              if (!apiRef.current) return;
+              setModel(visibilityModelFromApiRef(apiRef));
+            });
+          }}
+        />
+      </div>
+    );
+  }
+
+  it('syncs full model from apiRef after show-all bulk update and single toggle', async () => {
+    gridApiRef = null;
+    render(<VisibilitySyncHarness />);
+
+    await waitFor(() => expect(gridApiRef?.current).toBeTruthy());
+
+    await act(async () => {
+      gridApiRef!.current!.updateColumns(
+        columnsDefinition.map((column) => ({ ...column, hide: false }))
+      );
+    });
+
+    await act(async () => {
+      gridApiRef!.current!.setColumnVisibility('one_day_avg_mf', false);
+    });
+
+    await waitFor(() => {
+      const model = visibilityModelFromApiRef(gridApiRef!);
+      expect(model.macd_2_sessions_ago).toBe(true);
+      expect(model.macd_5_sessions_ago).toBe(true);
+      expect(model.macd_20_sessions_ago).toBe(true);
+      expect(model.one_day_avg_mf).toBe(false);
+    });
   });
 });

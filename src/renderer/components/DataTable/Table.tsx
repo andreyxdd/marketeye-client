@@ -1,6 +1,13 @@
 import { Alert, Button } from '@mui/material';
 import React from 'react';
-import { DataGrid, GridColumnVisibilityChangeParams } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridApiRef,
+  GridColumnVisibilityChangeParams,
+  GridFooter,
+  useGridApiContext,
+  useGridApiRef,
+} from '@mui/x-data-grid';
 import SkeletonLoader from 'tiny-skeleton-loader-react';
 import { ICriteria, IDataProps } from 'types';
 import useStore from '../../hooks/useStore';
@@ -16,6 +23,37 @@ export function visibilityFromCriterion(
   return Object.fromEntries(
     columnsDefinition.map((column) => [column.field, shown.has(column.field)])
   );
+}
+
+export function visibilityModelFromGridColumns(
+  columns: ReadonlyArray<{ field: string; hide?: boolean }>
+): GridColumnVisibilityModel {
+  return Object.fromEntries(
+    columns.map(({ field, hide }) => [field, !hide])
+  );
+}
+
+export function visibilityModelFromApiRef(
+  apiRef: GridApiRef
+): GridColumnVisibilityModel {
+  return visibilityModelFromGridColumns(
+    columnsDefinition.map(({ field }) => {
+      const column = apiRef.current.getColumn(field);
+      return { field, hide: column.hide };
+    })
+  );
+}
+
+function ColumnVisibilityApiBridge({ apiRef }: { apiRef: GridApiRef }) {
+  const gridApiRef = useGridApiContext();
+
+  React.useLayoutEffect(() => {
+    if (gridApiRef.current) {
+      apiRef.current = gridApiRef.current;
+    }
+  });
+
+  return null;
 }
 
 type IDataTable = {
@@ -41,6 +79,7 @@ const DataTable = ({
   refetch,
 }: IDataTable) => {
   const criterion = useStore((state) => state.criterion);
+  const apiRef = useGridApiRef();
 
   const [columnVisibilityModel, setColumnVisibilityModel] =
     React.useState<GridColumnVisibilityModel>(() =>
@@ -62,14 +101,26 @@ const DataTable = ({
     [columnVisibilityModel]
   );
 
-  const handleColumnVisibilityModelChange = React.useCallback(
-    (params: GridColumnVisibilityChangeParams) => {
-      setColumnVisibilityModel((prev) => ({
-        ...prev,
-        [params.field]: params.isVisible,
-      }));
+  const handleColumnVisibilityChange = React.useCallback(
+    (_params: GridColumnVisibilityChangeParams) => {
+      queueMicrotask(() => {
+        if (!apiRef.current) return;
+        setColumnVisibilityModel(visibilityModelFromApiRef(apiRef));
+      });
     },
-    []
+    [apiRef]
+  );
+
+  const footerComponents = React.useMemo(
+    () => ({
+      Footer: () => (
+        <>
+          <GridFooter />
+          <ColumnVisibilityApiBridge apiRef={apiRef} />
+        </>
+      ),
+    }),
+    [apiRef]
   );
 
   if (isError) {
@@ -93,10 +144,11 @@ const DataTable = ({
         <DataGrid
           rows={processData(data, criterion)}
           columns={columns}
+          components={footerComponents}
           autoHeight
           rowsPerPageOptions={[5, 10, 20]}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          onColumnVisibilityChange={handleColumnVisibilityModelChange}
+          onColumnVisibilityChange={handleColumnVisibilityChange}
           pageSize={pageSize}
         />
       </>
