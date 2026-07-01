@@ -1,4 +1,8 @@
-import { Menu, shell, BrowserWindow } from 'electron';
+import { app, Menu, shell, BrowserWindow } from 'electron';
+
+export function formatAboutVersion(version: string): string {
+  return `v${version}`;
+}
 
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
@@ -94,7 +98,7 @@ export default class MenuBuilder {
             },
           },
           {
-            label: 'v1.4.6',
+            label: formatAboutVersion(app.getVersion()),
           },
         ],
       },
