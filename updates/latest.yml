@@ -1,8 +1,8 @@
-version: 1.5.3
+version: 1.5.4
 files:
-  - url: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.3/MicroFTM%20TSX-1.5.3-TO-win.exe
-    sha512: m4XZ9HiIwLobihKZnLkbT6NcLH69iIdUcLyZWkUBPSflqg5QIvjVPZ6yl1n9ZQlC3rJUj0tuS16nMN3/LG+NoQ==
-    size: 61378491
-path: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.3/MicroFTM%20TSX-1.5.3-TO-win.exe
-sha512: m4XZ9HiIwLobihKZnLkbT6NcLH69iIdUcLyZWkUBPSflqg5QIvjVPZ6yl1n9ZQlC3rJUj0tuS16nMN3/LG+NoQ==
-releaseDate: '2026-06-29T04:58:01.427Z'
+  - url: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.4/MicroFTM%20TSX-1.5.4-TO-win.exe
+    sha512: 6qjf34AZ6xP1qhnmyWQinAwkBL5Rjy3YMyvGv0nUZKkpieMiSIITehBGYSyg1xe8TZFgUYT1OoDvKJvfVJsflA==
+    size: 61378712
+path: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.4/MicroFTM%20TSX-1.5.4-TO-win.exe
+sha512: 6qjf34AZ6xP1qhnmyWQinAwkBL5Rjy3YMyvGv0nUZKkpieMiSIITehBGYSyg1xe8TZFgUYT1OoDvKJvfVJsflA==
+releaseDate: '2026-07-01T00:37:11.976Z'

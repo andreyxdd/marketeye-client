@@ -1,8 +1,8 @@
-version: 1.5.3
+version: 1.5.4
 files:
-  - url: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.3/MarketEye%20TSX-1.5.3-TO-win.exe
-    sha512: aKdXldY0TbjZ5bjE1bKO4CAaC/jBzmi9s7MFrMGtUvWyqbygPJLx3OFWAUKA6TFSg3BuKRp6Ruv+uX71DIRhAg==
-    size: 61372714
-path: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.3/MarketEye%20TSX-1.5.3-TO-win.exe
-sha512: aKdXldY0TbjZ5bjE1bKO4CAaC/jBzmi9s7MFrMGtUvWyqbygPJLx3OFWAUKA6TFSg3BuKRp6Ruv+uX71DIRhAg==
-releaseDate: '2026-06-29T04:58:00.245Z'
+  - url: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.4/MarketEye%20TSX-1.5.4-TO-win.exe
+    sha512: HVrCrBHsmVOw8EgxXo6GG2GPZFZq1vJsc616bbo7vRpEHKikFzdeFudg13nHS89BUyKeed44ffGFxDpW02dxMw==
+    size: 61372889
+path: https://github.com/andreyxdd/marketeye-client/releases/download/v1.5.4/MarketEye%20TSX-1.5.4-TO-win.exe
+sha512: HVrCrBHsmVOw8EgxXo6GG2GPZFZq1vJsc616bbo7vRpEHKikFzdeFudg13nHS89BUyKeed44ffGFxDpW02dxMw==
+releaseDate: '2026-07-01T00:37:15.320Z'
