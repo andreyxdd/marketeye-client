@@ -182,7 +182,9 @@ describe('usePrefetchAnalytics', () => {
 
     expect(isBandCachePopulated(queryClient, date, 'lte5')).toBe(false);
     expect(
-      queryClient.getQueryData(getManyTickersQueryKey('one_day_avg_mf', date, 'lte5'))
+      queryClient.getQueryData(
+        getManyTickersQueryKey('one_day_avg_mf', date, 'lte5')
+      )
     ).toBeUndefined();
   });
 });

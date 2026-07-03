@@ -28,9 +28,7 @@ export function visibilityFromCriterion(
 export function visibilityModelFromGridColumns(
   columns: ReadonlyArray<{ field: string; hide?: boolean }>
 ): GridColumnVisibilityModel {
-  return Object.fromEntries(
-    columns.map(({ field, hide }) => [field, !hide])
-  );
+  return Object.fromEntries(columns.map(({ field, hide }) => [field, !hide]));
 }
 
 export function visibilityModelFromApiRef(

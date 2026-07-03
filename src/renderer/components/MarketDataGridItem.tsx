@@ -10,8 +10,13 @@ function errorMessage(error: unknown): string {
 }
 
 const MarketDataGridItem = () => {
-  const { data: marketData, isFetching, isError, error, refetch } =
-    useMarketData();
+  const {
+    data: marketData,
+    isFetching,
+    isError,
+    error,
+    refetch,
+  } = useMarketData();
 
   if (isError) {
     return (

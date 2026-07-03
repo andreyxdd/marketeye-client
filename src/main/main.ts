@@ -102,7 +102,7 @@ ipcMain.handle('get-ticker-analytics', async (_event, arg) => {
     const tickerData: IDataProps = response.data;
     return tickerData;
   } catch (e) {
-    throwApiError(e);
+    return throwApiError(e);
   }
 });
 
@@ -125,7 +125,7 @@ ipcMain.handle('get-analytics-lists-by-criteria', async (_event, arg) => {
     const { data } = response;
     return data;
   } catch (e) {
-    throwApiError(e);
+    return throwApiError(e);
   }
 });
 
@@ -147,7 +147,7 @@ ipcMain.handle('get-analytics-lists-by-criterion', async (_event, arg) => {
     const { data } = response;
     return data[arg.criterion];
   } catch (e) {
-    throwApiError(e);
+    return throwApiError(e);
   }
 });
 
@@ -166,7 +166,7 @@ ipcMain.handle('get-dates', async () => {
     const dates: IDateProps = response.data;
     return dates;
   } catch (e) {
-    throwApiError(e);
+    return throwApiError(e);
   }
 });
 
@@ -187,7 +187,7 @@ ipcMain.handle('get-market-analytics', async (_event, arg) => {
     const { data } = response;
     return data;
   } catch (e) {
-    throwApiError(e);
+    return throwApiError(e);
   }
 });
 

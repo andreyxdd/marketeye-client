@@ -56,7 +56,10 @@ const baseRow: IDataProps = {
 };
 
 function gridColumnsAfterShowAll() {
-  return columnsDefinition.map((column) => ({ field: column.field, hide: false }));
+  return columnsDefinition.map((column) => ({
+    field: column.field,
+    hide: false,
+  }));
 }
 
 function mergeSingleFieldVisibility(
@@ -84,7 +87,11 @@ describe('tableColumnVisibility', () => {
   it('visibilityModelFromGridColumns syncs full grid state after show-all', () => {
     const preset = visibilityFromCriterion('one_day_avg_mf');
     const synced = visibilityModelFromGridColumns(gridColumnsAfterShowAll());
-    const staleMerge = mergeSingleFieldVisibility(preset, 'one_day_avg_mf', false);
+    const staleMerge = mergeSingleFieldVisibility(
+      preset,
+      'one_day_avg_mf',
+      false
+    );
 
     expect(synced.macd_2_sessions_ago).toBe(true);
     expect(synced.macd_5_sessions_ago).toBe(true);
@@ -120,9 +127,9 @@ describe('tableColumnVisibility', () => {
         />
       </div>
     );
-    expect(container.querySelectorAll('.MuiDataGrid-row').length).toBeGreaterThan(
-      0
-    );
+    expect(
+      container.querySelectorAll('.MuiDataGrid-row').length
+    ).toBeGreaterThan(0);
   });
 });
 

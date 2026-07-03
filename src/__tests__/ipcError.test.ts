@@ -50,16 +50,12 @@ describe('throwApiError', () => {
       },
     } as AxiosError;
 
-    expect(() => throwApiError(error)).toThrow('Internal error');
-
-    try {
-      throwApiError(error);
-    } catch (thrown) {
-      expect(thrown).toMatchObject({
+    expect(() => throwApiError(error)).toThrow(
+      expect.objectContaining({
         code: 'HTTP_500',
         status: 500,
         message: 'Internal error',
-      });
-    }
+      })
+    );
   });
 });

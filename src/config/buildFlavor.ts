@@ -21,9 +21,6 @@ export function getIconAssetPath(
   return `assets/${getFlavorIconDir(mode, market)}/${filename}`;
 }
 
-export function getUpdatesFeedUrl(
-  mode: AppMode,
-  market: MarketCode
-): string {
+export function getUpdatesFeedUrl(mode: AppMode, market: MarketCode): string {
   return getFlavorManifestEntry(mode, market).updatesFeedUrl;
 }

@@ -57,13 +57,7 @@ function usePrefetchAnalytics(): void {
         price_band: band,
       });
       if (isStale()) return;
-      seedCriterionCache(
-        queryClient,
-        criterion,
-        selectedDate,
-        band,
-        response
-      );
+      seedCriterionCache(queryClient, criterion, selectedDate, band, response);
     };
 
     const prefetchBandSafe = async (band?: PriceBand) => {
@@ -86,18 +80,18 @@ function usePrefetchAnalytics(): void {
 
     const prefetchOtherBandsLazy = (bands: PriceBand[]) => {
       if (bands.length === 0) return;
-      void runWithMaxConcurrency(
+      runWithMaxConcurrency(
         bands.map((band) => () => prefetchBandSafe(band)),
         PREFETCH_CONCURRENCY
-      );
+      ).catch(() => undefined);
     };
 
     const prefetchOtherCriterionBandsLazy = (bands: PriceBand[]) => {
       if (bands.length === 0) return;
-      void runWithMaxConcurrency(
+      runWithMaxConcurrency(
         bands.map((band) => () => prefetchCriterionBandSafe(band)),
         PREFETCH_CONCURRENCY
-      );
+      ).catch(() => undefined);
     };
 
     const run = async () => {

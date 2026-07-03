@@ -48,30 +48,27 @@ describe('Table analytics error UI', () => {
   });
 });
 
-describe.each(flavorMatrix)(
-  'many tickers error UI (%s)',
-  (flavor) => {
-    it('shows retry alert when list query fails', () => {
-      const refetch = jest.fn();
-      useStore.setState({ isSingleTicker: false });
-      mockedUseManyTickers.mockReturnValue({
-        data: undefined,
-        isFetching: false,
-        isError: true,
-        error: new Error(`${flavor} analytics failed`),
-        refetch,
-      } as unknown as ReturnType<typeof useManyTickers>);
+describe.each(flavorMatrix)('many tickers error UI (%s)', (flavor) => {
+  it('shows retry alert when list query fails', () => {
+    const refetch = jest.fn();
+    useStore.setState({ isSingleTicker: false });
+    mockedUseManyTickers.mockReturnValue({
+      data: undefined,
+      isFetching: false,
+      isError: true,
+      error: new Error(`${flavor} analytics failed`),
+      refetch,
+    } as unknown as ReturnType<typeof useManyTickers>);
 
-      render(<DataTable />);
+    render(<DataTable />);
 
-      expect(screen.getByRole('alert')).toHaveTextContent(
-        `${flavor} analytics failed`
-      );
-      fireEvent.click(screen.getByRole('button', { name: /retry/i }));
-      expect(refetch).toHaveBeenCalledTimes(1);
-    });
-  }
-);
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      `${flavor} analytics failed`
+    );
+    fireEvent.click(screen.getByRole('button', { name: /retry/i }));
+    expect(refetch).toHaveBeenCalledTimes(1);
+  });
+});
 
 describe('market panel error UI (US flavors)', () => {
   it('shows retry alert when market query fails', () => {
