@@ -29,6 +29,9 @@ jobs:
           - script: package:win:micro:to
             artifact: MicroFTM-TSX
             releaseAppName: microftm-tsx
+          - script: package:win:bounce:us
+            artifact: StockBounce
+            releaseAppName: bounce-us
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -155,6 +158,7 @@ jobs:
               MarketEye-TSX) feedDir=marketeye-tsx ;;
               MicroFTM) feedDir=microftm-us ;;
               MicroFTM-TSX) feedDir=microftm-tsx ;;
+              StockBounce) feedDir=bounce-us ;;
               *) continue ;;
             esac
             mkdir -p "public/updates/${feedDir}"

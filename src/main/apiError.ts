@@ -15,6 +15,12 @@ function messageFromResponseData(data: unknown): string | undefined {
     if (typeof record.detail === 'string' && record.detail.trim()) {
       return record.detail;
     }
+    if (typeof record.detail === 'object' && record.detail !== null) {
+      const detail = record.detail as Record<string, unknown>;
+      if (typeof detail.message === 'string' && detail.message.trim()) {
+        return detail.message;
+      }
+    }
     if (typeof record.message === 'string' && record.message.trim()) {
       return record.message;
     }
@@ -22,14 +28,23 @@ function messageFromResponseData(data: unknown): string | undefined {
   return undefined;
 }
 
+function codeFromResponseData(data: unknown): string | undefined {
+  if (typeof data !== 'object' || data === null) return undefined;
+  const { detail } = data as Record<string, unknown>;
+  if (typeof detail !== 'object' || detail === null) return undefined;
+  const { code } = detail as Record<string, unknown>;
+  return typeof code === 'string' && code.trim() ? code : undefined;
+}
+
 export function toApiError(error: unknown): ApiErrorPayload {
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError;
     const status = axiosError.response?.status;
     const responseMessage = messageFromResponseData(axiosError.response?.data);
+    const responseCode = codeFromResponseData(axiosError.response?.data);
 
     return {
-      code: status ? `HTTP_${status}` : 'NETWORK_ERROR',
+      code: responseCode ?? (status ? `HTTP_${status}` : 'NETWORK_ERROR'),
       status,
       message: responseMessage ?? axiosError.message,
     };

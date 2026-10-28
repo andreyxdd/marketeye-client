@@ -13,15 +13,13 @@ import 'regenerator-runtime/runtime';
 import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
-import axios from 'axios';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { IDataProps, IDateProps } from '../types';
 import { APP_MODE } from '../config/appMode';
 import { getFlavorIconDir } from '../config/buildFlavor';
 import { MARKET, showMarketWidePanel } from '../config/market';
-import { throwApiError } from './apiError';
+import { MarketEyeTransport } from './transport';
 
 const MARKETEYE_API_URL = process.env.MARKETEYE_API_URL ?? '';
 const MARKETEYE_API_KEY = process.env.MARKETEYE_API_KEY ?? '';
@@ -84,131 +82,34 @@ ipcMain.on('ipc-example', async (event, arg) => {
 // ---
 // Communication routes
 
-ipcMain.handle('get-ticker-analytics', async (_event, arg) => {
-  try {
-    const response = await axios.get(
-      `${MARKETEYE_API_URL}/analytics/get_ticker_analytics`,
-      {
-        params: {
-          date: arg.date,
-          ticker: arg.ticker,
-          criterion: arg.criterion,
-          market: MARKET,
-          api_key: MARKETEYE_API_KEY,
-        },
-      }
-    );
-
-    const tickerData: IDataProps = response.data;
-    return tickerData;
-  } catch (e) {
-    return throwApiError(e);
-  }
+const transport = new MarketEyeTransport({
+  baseUrl: MARKETEYE_API_URL,
+  apiKey: MARKETEYE_API_KEY,
+  market: MARKET,
 });
 
-ipcMain.handle('get-analytics-lists-by-criteria', async (_event, arg) => {
-  try {
-    const params: Record<string, string> = {
-      date: arg.date,
-      market: MARKET,
-      api_key: MARKETEYE_API_KEY,
-    };
-    if (arg.price_band) {
-      params.price_band = arg.price_band;
-    }
-    const response = await axios.get(
-      `${MARKETEYE_API_URL}/analytics/get_analytics_lists_by_criteria`,
-      {
-        params,
-      }
-    );
-    const { data } = response;
-    return data;
-  } catch (e) {
-    return throwApiError(e);
-  }
-});
-
-ipcMain.handle('get-analytics-lists-by-criterion', async (_event, arg) => {
-  try {
-    const params: Record<string, string> = {
-      date: arg.date,
-      criterion: arg.criterion,
-      market: MARKET,
-      api_key: MARKETEYE_API_KEY,
-    };
-    if (arg.price_band) {
-      params.price_band = arg.price_band;
-    }
-    const response = await axios.get(
-      `${MARKETEYE_API_URL}/analytics/get_analytics_lists_by_criterion`,
-      { params }
-    );
-    const { data } = response;
-    return data[arg.criterion];
-  } catch (e) {
-    return throwApiError(e);
-  }
-});
-
-ipcMain.handle('get-dates', async () => {
-  try {
-    const response = await axios.get(
-      `${MARKETEYE_API_URL}/analytics/get_dates`,
-      {
-        params: {
-          market: MARKET,
-          api_key: MARKETEYE_API_KEY,
-        },
-      }
-    );
-
-    const dates: IDateProps = response.data;
-    return dates;
-  } catch (e) {
-    return throwApiError(e);
-  }
-});
-
-ipcMain.handle('get-market-analytics', async (_event, arg) => {
-  if (!showMarketWidePanel) {
-    return null;
-  }
-  try {
-    const response = await axios.get(
-      `${MARKETEYE_API_URL}/analytics/get_market_analytics`,
-      {
-        params: {
-          date: arg.date,
-          api_key: MARKETEYE_API_KEY,
-        },
-      }
-    );
-    const { data } = response;
-    return data;
-  } catch (e) {
-    return throwApiError(e);
-  }
-});
-
-ipcMain.handle('notify-developer', async (_event, arg) => {
-  try {
-    await axios.post(
-      `${MARKETEYE_API_URL}/notifications/notify_developer`,
-      { email_body: arg.body, email_subject: arg.subject },
-      {
-        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-        params: {
-          api_key: MARKETEYE_API_KEY,
-        },
-      }
-    );
-    return { ok: true };
-  } catch (e) {
-    console.log(e);
-    return { ok: false, error: e };
-  }
-});
+ipcMain.handle('get-ticker-analytics', (_event, arg) =>
+  transport.getTickerAnalytics(arg)
+);
+ipcMain.handle('get-analytics-lists-by-criteria', (_event, arg) =>
+  transport.getAnalyticsListsByCriteria(arg)
+);
+ipcMain.handle('get-analytics-lists-by-criterion', (_event, arg) =>
+  transport.getAnalyticsListsByCriterion(arg)
+);
+ipcMain.handle('get-dates', () => transport.getDates());
+ipcMain.handle('get-market-analytics', (_event, arg) =>
+  showMarketWidePanel ? transport.getMarketAnalytics(arg) : null
+);
+ipcMain.handle('notify-developer', (_event, arg) =>
+  transport.notifyDeveloper(arg)
+);
+ipcMain.handle('get-bounce-sessions', (_event, arg) =>
+  transport.getBounceSessions(arg ?? {})
+);
+ipcMain.handle('get-bounce-results', (_event, arg) =>
+  transport.getBounceResults(arg)
+);
 
 // ---
 

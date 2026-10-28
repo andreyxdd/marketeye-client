@@ -2,13 +2,23 @@ import { FLAVOR_MANIFEST } from '../config/flavorManifest';
 import { getUpdatesFeedUrl } from '../config/buildFlavor';
 
 describe('FLAVOR_MANIFEST', () => {
-  it('defines four installable client flavors', () => {
+  it('defines five installable client flavors', () => {
     expect(Object.keys(FLAVOR_MANIFEST)).toEqual([
       'standard-us',
       'standard-to',
       'micro-us',
       'micro-to',
+      'bounce-us',
     ]);
+  });
+
+  it('defines unique StockBounce packaging identity', () => {
+    expect(FLAVOR_MANIFEST['bounce-us']).toMatchObject({
+      productName: 'StockBounce',
+      appId: 'com.marketeye.bounce.us',
+      releaseAppName: 'bounce-us',
+      executableName: 'StockBounce',
+    });
   });
 
   it('uses unique appIds across all flavors', () => {
@@ -45,6 +55,9 @@ describe('getUpdatesFeedUrl', () => {
     );
     expect(getUpdatesFeedUrl('micro', 'TO')).toBe(
       FLAVOR_MANIFEST['micro-to'].updatesFeedUrl
+    );
+    expect(getUpdatesFeedUrl('bounce', 'US')).toBe(
+      FLAVOR_MANIFEST['bounce-us'].updatesFeedUrl
     );
   });
 });

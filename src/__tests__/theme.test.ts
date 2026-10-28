@@ -54,4 +54,10 @@ describe('getThemeForBuild', () => {
       standardTo.palette.secondary?.main
     );
   });
+
+  it('uses the StockBounce green palette', () => {
+    const theme = getThemeForBuild('US', 'bounce');
+    expect(theme.palette.primary.main).toBe('#2C5F2D');
+    expect(theme.palette.secondary.main).toBe('#97BC62');
+  });
 });

@@ -4,6 +4,7 @@ import {
   IDataByTypesProps,
   IMarketDataProps,
 } from 'types';
+import { BounceTransport } from './renderer/bounce/types';
 
 export interface IRequest {
   date: string;
@@ -28,7 +29,7 @@ export interface IElectronAPIConn {
   once: () => Promise<void>;
 }
 
-export interface IElectronAPI {
+export interface IElectronAPI extends BounceTransport {
   getTickerAnalytics: (req: IRequest) => Promise<IDataProps>;
   getAnalyticsListsByCriteria: (req: IRequest) => Promise<IDataByTypesProps>;
   getAnalyticsListsByCriterion: (req: IRequest) => Promise<Array<IDataProps>>;

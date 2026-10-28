@@ -1,12 +1,14 @@
-export type AppMode = 'standard' | 'micro';
+export type AppMode = 'standard' | 'micro' | 'bounce';
 
-const SUPPORTED_MODES: AppMode[] = ['standard', 'micro'];
+const SUPPORTED_MODES: AppMode[] = ['standard', 'micro', 'bounce'];
 
 function normalizeMode(raw: string | undefined): AppMode {
   const mode = (raw ?? 'standard').toLowerCase();
   if (!SUPPORTED_MODES.includes(mode as AppMode)) {
     throw new Error(
-      `unsupported MARKETEYE_MODE: ${raw ?? '(empty)'}. Use standard or micro.`
+      `unsupported MARKETEYE_MODE: ${
+        raw ?? '(empty)'
+      }. Use standard, micro, or bounce.`
     );
   }
   return mode as AppMode;

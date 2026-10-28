@@ -10,7 +10,7 @@ const ASSETS = path.join(ROOT, 'assets');
 
 function normalizeMode(raw: string | undefined): AppMode {
   const mode = (raw ?? 'standard').toLowerCase();
-  if (mode !== 'standard' && mode !== 'micro') {
+  if (mode !== 'standard' && mode !== 'micro' && mode !== 'bounce') {
     throw new Error(`unsupported MARKETEYE_MODE: ${raw ?? '(empty)'}`);
   }
   return mode as AppMode;

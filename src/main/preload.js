@@ -8,6 +8,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.invoke('get-analytics-lists-by-criterion', req),
   getDates: () => ipcRenderer.invoke('get-dates'),
   getMarketAnalytics: (req) => ipcRenderer.invoke('get-market-analytics', req),
+  getBounceSessions: (req) => ipcRenderer.invoke('get-bounce-sessions', req),
+  getBounceResults: (req) => ipcRenderer.invoke('get-bounce-results', req),
   notifyDeveloper: (req) => ipcRenderer.invoke('notify-developer', req),
   conn: {
     myPing() {

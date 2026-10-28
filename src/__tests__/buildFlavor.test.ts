@@ -22,6 +22,11 @@ describe('getBuildFlavor', () => {
   it('returns micro-to for micro TO', () => {
     expect(getBuildFlavor('micro', 'TO')).toBe('micro-to');
   });
+
+  it('returns bounce-us only for bounce US', () => {
+    expect(getBuildFlavor('bounce', 'US')).toBe('bounce-us');
+    expect(() => getBuildFlavor('bounce', 'TO')).toThrow('US only');
+  });
 });
 
 describe('getUpdatesFeedUrl', () => {

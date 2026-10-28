@@ -16,4 +16,8 @@ describe('getDisplayName', () => {
   it('returns MicroFTM TSX for micro TO', () => {
     expect(getDisplayName('TO', 'micro')).toBe('MicroFTM TSX');
   });
+
+  it('returns StockBounce for bounce US', () => {
+    expect(getDisplayName('US', 'bounce')).toBe('StockBounce');
+  });
 });
