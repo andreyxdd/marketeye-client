@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "source": "andx-execute-and-review",
+  "plan": ".cursor/plans/bounce-us-flavor.plan.md",
+  "target_branch": "main",
+  "base_sha": "49201aeb78cdb68db08dac0ad2af679f977cf7d8",
+  "head_sha": "1f2247a98e27383b4e871bc74ed9bb16b83799df",
+  "reviewed_at": "2026-10-29T10:07:21Z",
+  "verdict": "PASS",
+  "secrets_scan": "NOT_RUN",
+  "findings": [
+    {"id":"stock-bounce-pagination-retry-loop","status":"confirmed","severity":"high","resolution":"fixed","location":"src/renderer/bounce/useBounceWorkflow.ts:130","finding":"Failed later-page pagination automatically retried indefinitely","reviewers":["react"]},
+    {"id":"stock-bounce-empty-session-loading","status":"confirmed","severity":"high","resolution":"fixed","location":"src/renderer/bounce/useBounceWorkflow.ts:260","finding":"Empty session history produced permanent results loading","reviewers":["react","ux-api"]},
+    {"id":"stock-bounce-ipc-error-metadata","status":"confirmed","severity":"medium","resolution":"fixed","location":"src/main/apiError.ts:60","finding":"Structured API codes and statuses were lost across Electron IPC","reviewers":["ux-api"]},
+    {"id":"stock-bounce-tracking-session-display","status":"confirmed","severity":"medium","resolution":"fixed","location":"src/renderer/bounce/BounceApp.tsx:141","finding":"Tracking did not identify the active tracking date and offset","reviewers":["ux-api"]},
+    {"id":"stock-bounce-accessibility-structure","status":"confirmed","severity":"medium","resolution":"fixed","location":"src/renderer/bounce/BounceApp.tsx:127","finding":"Main landmark and keyboard/focus regression coverage were missing","reviewers":["a11y"]},
+    {"id":"stock-bounce-unused-workflow-outputs","status":"confirmed","severity":"medium","resolution":"fixed","location":"src/renderer/bounce/useBounceWorkflow.ts:92","finding":"Workflow exposed unused origin ticker output; tracking date was retained to satisfy the UX contract","reviewers":["ponytail","audit"]},
+    {"id":"stock-bounce-unused-transport-default","status":"confirmed","severity":"medium","resolution":"fixed","location":"src/main/transport.ts:129","finding":"Unused default transport export","reviewers":["audit"]},
+    {"id":"stock-bounce-eslint-scope","status":"confirmed","severity":"low","resolution":"accepted","location":".eslintrc.js:2","finding":"ESLint root setting was outside plan touch but required for isolated nested-worktree linting and has no runtime behavior change","reviewers":["spec"]}
+  ]
+}
