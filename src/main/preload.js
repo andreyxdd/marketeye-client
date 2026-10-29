@@ -8,13 +8,14 @@ function asIpcError(payload) {
 }
 
 async function invoke(channel, req) {
+  let result;
   try {
-    const result = await ipcRenderer.invoke(channel, req);
-    if (result?.marketEyeError) throw asIpcError(result.marketEyeError);
-    return result;
+    result = await ipcRenderer.invoke(channel, req);
   } catch (error) {
     throw asIpcError(error);
   }
+  if (result?.marketEyeError) throw asIpcError(result.marketEyeError);
+  return result;
 }
 
 contextBridge.exposeInMainWorld('electronAPI', {
