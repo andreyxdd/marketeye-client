@@ -63,8 +63,9 @@ function ResultContent({ workflow }: { workflow: BounceWorkflow }) {
   if (workflow.result && workflow.result.rows.length === 0) {
     return (
       <Alert severity="info">
-        No stocks match this screen. Try another lookback period or close price
-        range.
+        {workflow.mode === 'tracking'
+          ? 'No observations for the tracked tickers on this session. Return to the originating screen or choose another tracking date.'
+          : 'No stocks match this screen. Try another lookback period or close price range.'}
       </Alert>
     );
   }
@@ -95,7 +96,7 @@ export default function BounceApp() {
 
   if (workflow.sessionsLoading) {
     return (
-      <Container maxWidth="xl" sx={{ py: 4 }}>
+      <Container component="main" maxWidth="xl" sx={{ py: 4 }}>
         <Alert severity="info" role="status">
           Loading sessions and bounce-ready history…
         </Alert>
@@ -105,7 +106,7 @@ export default function BounceApp() {
 
   if (workflow.sessionsError) {
     return (
-      <Container maxWidth="xl" sx={{ py: 4 }}>
+      <Container component="main" maxWidth="xl" sx={{ py: 4 }}>
         <Alert
           severity="error"
           action={
@@ -123,8 +124,35 @@ export default function BounceApp() {
     );
   }
 
+  if (!workflow.sessions.length) {
+    return (
+      <Container component="main" maxWidth="xl" sx={{ py: 4 }}>
+        <Alert
+          severity="info"
+          action={
+            <Button color="inherit" onClick={workflow.retrySessions}>
+              Retry sessions
+            </Button>
+          }
+        >
+          No bounce-ready sessions are available. Run publication or the
+          historical backfill, then retry.
+        </Alert>
+      </Container>
+    );
+  }
+
+  const originIndex = workflow.sessions.findIndex(
+    (session) => session.date_string === workflow.selectedDate
+  );
+  const trackingIndex = workflow.sessions.findIndex(
+    (session) => session.date_string === workflow.trackingDate
+  );
+  const activeTrackingOffset =
+    workflow.mode === 'tracking' ? trackingIndex - originIndex : null;
+
   return (
-    <Box>
+    <Box component="main">
       <Box sx={{ px: 4, py: 3 }}>
         <Typography variant="h4" component="h1" sx={{ fontSize: 28, mb: 1 }}>
           StockBounce
@@ -136,6 +164,12 @@ export default function BounceApp() {
       </Box>
       <Divider />
       <Container maxWidth="xl" sx={{ py: 3 }}>
+        {workflow.trackingDate ? (
+          <Typography component="h2" variant="h6" sx={{ mb: 2, fontSize: 18 }}>
+            Tracking {workflow.trackingDate} (T
+            {activeTrackingOffset ? `+${activeTrackingOffset}` : ''})
+          </Typography>
+        ) : null}
         <Grid container spacing={2} alignItems="flex-end">
           <Grid item xs={12} sm={4} md={3}>
             <TextField
@@ -200,7 +234,7 @@ export default function BounceApp() {
                 <Button
                   key={offset}
                   variant={
-                    workflow.mode === 'tracking' ? 'contained' : 'outlined'
+                    activeTrackingOffset === offset ? 'contained' : 'outlined'
                   }
                   onClick={() => workflow.track(offset)}
                   disabled={!workflow.trackingAvailability[offset]}

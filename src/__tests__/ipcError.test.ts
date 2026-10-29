@@ -37,6 +37,18 @@ describe('toApiError', () => {
       message: 'boom',
     });
   });
+
+  it('preserves structured fields when reserializing transport errors', () => {
+    const error = Object.assign(new Error('not ready'), {
+      code: 'BOUNCE_SESSION_NOT_READY',
+      status: 409,
+    });
+    expect(toApiError(error)).toEqual({
+      code: 'BOUNCE_SESSION_NOT_READY',
+      status: 409,
+      message: 'not ready',
+    });
+  });
 });
 
 describe('throwApiError', () => {

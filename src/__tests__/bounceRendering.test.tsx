@@ -47,7 +47,6 @@ function workflow(overrides: Partial<BounceWorkflow> = {}): BounceWorkflow {
     priceRange: '100to299_99',
     mode: 'screen',
     trackingDate: null,
-    originTickers: [],
     result: baseResult,
     resultLoading: false,
     resultError: null,
@@ -80,6 +79,7 @@ describe('BounceApp', () => {
     mockedHook.mockReturnValue(
       workflow({
         mode: 'tracking',
+        trackingDate: '2024-01-03',
         result: { ...baseResult, coverage: 'degraded' },
       })
     );
@@ -87,6 +87,13 @@ describe('BounceApp', () => {
 
     expect(screen.getByRole('alert')).toHaveTextContent('Degraded coverage');
     expect(screen.getByText('AAA')).toBeInTheDocument();
+    expect(screen.getByText('Tracking 2024-01-03 (T+1)')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Track T+1' })).toHaveClass(
+      'MuiButton-contained'
+    );
+    expect(screen.getByRole('button', { name: 'Track T' })).toHaveClass(
+      'MuiButton-outlined'
+    );
     expect(
       screen.getByRole('button', { name: 'Back to screen' })
     ).toBeEnabled();
@@ -127,5 +134,54 @@ describe('BounceApp', () => {
     render(<BounceApp />);
     fireEvent.click(screen.getByRole('button', { name: 'Retry sessions' }));
     expect(failed.retrySessions).toHaveBeenCalled();
+  });
+
+  it('shows an empty session state with retry instead of result loading', () => {
+    const empty = workflow({
+      sessions: [],
+      selectedDate: null,
+      result: undefined,
+      resultLoading: false,
+    });
+    mockedHook.mockReturnValue(empty);
+    render(<BounceApp />);
+
+    expect(screen.getByText(/No bounce-ready sessions/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Retry sessions' }));
+    expect(empty.retrySessions).toHaveBeenCalled();
+  });
+
+  it('uses tracking-specific empty guidance', () => {
+    mockedHook.mockReturnValue(
+      workflow({
+        mode: 'tracking',
+        trackingDate: '2024-01-03',
+        result: { ...baseResult, rows: [] },
+      })
+    );
+    render(<BounceApp />);
+
+    expect(
+      screen.getByText(/No observations for the tracked tickers/)
+    ).toBeInTheDocument();
+  });
+
+  it('provides a main landmark and keyboard-focusable native controls', () => {
+    const state = workflow();
+    mockedHook.mockReturnValue(state);
+    render(<BounceApp />);
+
+    expect(screen.getByRole('main')).toBeInTheDocument();
+    const session = screen.getByLabelText('Session');
+    session.focus();
+    expect(session).toHaveFocus();
+    fireEvent.change(session, { target: { value: '2024-01-01' } });
+    expect(state.selectDate).toHaveBeenCalledWith('2024-01-01');
+
+    const period = screen.getByLabelText('Lookback period');
+    period.focus();
+    expect(period).toHaveFocus();
+    fireEvent.change(period, { target: { value: '8' } });
+    expect(state.setPeriod).toHaveBeenCalledWith(8);
   });
 });

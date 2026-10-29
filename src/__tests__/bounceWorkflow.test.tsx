@@ -100,7 +100,7 @@ describe('useBounceWorkflow', () => {
       price_range: '100to299_99',
       tickers: ['AAA', 'BBB'],
     });
-    expect(workflow.originTickers).toEqual(['AAA', 'BBB']);
+    expect(workflow.trackingDate).toBe('2024-01-02');
 
     act(() => workflow.track(2));
     await waitFor(() => expect(workflow.result?.date).toBe('2024-01-03'));
@@ -141,5 +141,23 @@ describe('useBounceWorkflow', () => {
     await waitFor(() => expect(workflow.sessionsError).toBeTruthy());
     expect(workflow.sessionsLoading).toBe(false);
     expect(workflow.selectedDate).toBeNull();
+    const failedCallCount = (transport.getBounceSessions as jest.Mock).mock
+      .calls.length;
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(transport.getBounceSessions).toHaveBeenCalledTimes(failedCallCount);
+  });
+
+  it('returns an idle empty workflow when no bounce-ready sessions exist', async () => {
+    const transport = makeTransport();
+    transport.getBounceSessions = jest.fn(async () => ({
+      items: [],
+      next_cursor: null,
+    }));
+    renderWorkflow(transport);
+
+    await waitFor(() => expect(workflow.sessionsLoading).toBe(false));
+    expect(workflow.sessions).toEqual([]);
+    expect(workflow.selectedDate).toBeNull();
+    expect(workflow.resultLoading).toBe(false);
   });
 });

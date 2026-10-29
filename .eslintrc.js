@@ -1,4 +1,5 @@
 module.exports = {
+  // Prevent nested worktrees from inheriting the primary checkout's ESLint config.
   root: true,
   extends: 'erb',
   rules: {

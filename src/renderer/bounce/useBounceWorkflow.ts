@@ -99,7 +99,6 @@ export interface BounceWorkflow {
   priceRange: BouncePriceRange;
   mode: 'screen' | 'tracking';
   trackingDate: string | null;
-  originTickers: string[];
   result: BounceResult | undefined;
   resultLoading: boolean;
   resultError: unknown;
@@ -128,10 +127,10 @@ export default function useBounceWorkflow(
 
   const { hasNextPage, isFetchingNextPage, fetchNextPage } = sessionQuery;
   useEffect(() => {
-    if (hasNextPage && !isFetchingNextPage) {
+    if (!sessionQuery.error && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [sessionQuery.error, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const sessions = useMemo(
     () => sessionQuery.data?.pages.flatMap((page) => page.items) ?? [],
@@ -161,21 +160,6 @@ export default function useBounceWorkflow(
   const originIndex = sessions.findIndex(
     (item) => item.date_string === originDate
   );
-  const hasOriginRows = state.origin
-    ? state.origin.tickers.length > 0
-    : Boolean(state.selectedDate);
-  const baseTrackingAvailability = [0, 1, 2].reduce<Record<number, boolean>>(
-    (availability, offset) => {
-      availability[offset] =
-        hasOriginRows &&
-        originIndex >= 0 &&
-        Boolean(sessions[originIndex + offset]) &&
-        Boolean(state.origin || sessionQuery.data);
-      return availability;
-    },
-    {}
-  );
-
   const request = useMemo<BounceResultRequest | null>(() => {
     if (state.mode === 'tracking' && state.origin && state.trackingDate) {
       return {
@@ -204,7 +188,9 @@ export default function useBounceWorkflow(
   const trackingAvailability = [0, 1, 2].reduce<Record<number, boolean>>(
     (availability, offset) => {
       availability[offset] =
-        baseTrackingAvailability[offset] && hasTrackingRows;
+        hasTrackingRows &&
+        originIndex >= 0 &&
+        Boolean(sessions[originIndex + offset]);
       return availability;
     },
     {}
@@ -255,9 +241,9 @@ export default function useBounceWorkflow(
     priceRange: state.priceRange,
     mode: state.mode,
     trackingDate: state.trackingDate,
-    originTickers: state.origin?.tickers ?? [],
     result: resultQuery.data,
-    resultLoading: resultQuery.isLoading || resultQuery.isFetching,
+    resultLoading:
+      Boolean(request) && (resultQuery.isLoading || resultQuery.isFetching),
     resultError: resultQuery.error,
     retryResult: resultQuery.refetch,
     trackingAvailability,

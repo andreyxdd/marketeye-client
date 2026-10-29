@@ -1,4 +1,4 @@
-import { MarketEyeTransport } from '../main/transport';
+import MarketEyeTransport from '../main/transport';
 
 const get = jest.fn();
 const post = jest.fn();

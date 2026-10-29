@@ -19,7 +19,8 @@ import { resolveHtmlPath } from './util';
 import { APP_MODE } from '../config/appMode';
 import { getFlavorIconDir } from '../config/buildFlavor';
 import { MARKET, showMarketWidePanel } from '../config/market';
-import { MarketEyeTransport } from './transport';
+import MarketEyeTransport from './transport';
+import { toApiError } from './apiError';
 
 const MARKETEYE_API_URL = process.env.MARKETEYE_API_URL ?? '';
 const MARKETEYE_API_KEY = process.env.MARKETEYE_API_KEY ?? '';
@@ -88,27 +89,37 @@ const transport = new MarketEyeTransport({
   market: MARKET,
 });
 
+async function handleRequest(request: () => Promise<unknown>) {
+  try {
+    return await request();
+  } catch (error) {
+    return { marketEyeError: toApiError(error) };
+  }
+}
+
 ipcMain.handle('get-ticker-analytics', (_event, arg) =>
-  transport.getTickerAnalytics(arg)
+  handleRequest(() => transport.getTickerAnalytics(arg))
 );
 ipcMain.handle('get-analytics-lists-by-criteria', (_event, arg) =>
-  transport.getAnalyticsListsByCriteria(arg)
+  handleRequest(() => transport.getAnalyticsListsByCriteria(arg))
 );
 ipcMain.handle('get-analytics-lists-by-criterion', (_event, arg) =>
-  transport.getAnalyticsListsByCriterion(arg)
+  handleRequest(() => transport.getAnalyticsListsByCriterion(arg))
 );
-ipcMain.handle('get-dates', () => transport.getDates());
+ipcMain.handle('get-dates', () => handleRequest(() => transport.getDates()));
 ipcMain.handle('get-market-analytics', (_event, arg) =>
-  showMarketWidePanel ? transport.getMarketAnalytics(arg) : null
+  handleRequest(async () =>
+    showMarketWidePanel ? transport.getMarketAnalytics(arg) : null
+  )
 );
 ipcMain.handle('notify-developer', (_event, arg) =>
-  transport.notifyDeveloper(arg)
+  handleRequest(() => transport.notifyDeveloper(arg))
 );
 ipcMain.handle('get-bounce-sessions', (_event, arg) =>
-  transport.getBounceSessions(arg ?? {})
+  handleRequest(() => transport.getBounceSessions(arg ?? {}))
 );
 ipcMain.handle('get-bounce-results', (_event, arg) =>
-  transport.getBounceResults(arg)
+  handleRequest(() => transport.getBounceResults(arg))
 );
 
 // ---

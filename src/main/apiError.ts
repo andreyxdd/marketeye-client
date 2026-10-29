@@ -51,7 +51,12 @@ export function toApiError(error: unknown): ApiErrorPayload {
   }
 
   if (error instanceof Error) {
-    return { code: 'UNKNOWN_ERROR', message: error.message };
+    const structured = error as Error & Partial<ApiErrorPayload>;
+    return {
+      code: structured.code ?? 'UNKNOWN_ERROR',
+      status: structured.status,
+      message: error.message,
+    };
   }
 
   return { code: 'UNKNOWN_ERROR', message: String(error) };

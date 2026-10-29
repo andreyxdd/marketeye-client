@@ -14,7 +14,7 @@ interface TransportOptions {
   http?: Pick<typeof axios, 'get' | 'post'>;
 }
 
-export class MarketEyeTransport {
+export default class MarketEyeTransport {
   private readonly baseUrl: string;
 
   private readonly apiKey: string;
@@ -125,5 +125,3 @@ export class MarketEyeTransport {
     return this.get('/stock-bounce/v1/results', params);
   }
 }
-
-export default MarketEyeTransport;
